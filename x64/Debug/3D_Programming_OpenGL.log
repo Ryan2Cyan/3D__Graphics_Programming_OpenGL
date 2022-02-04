@@ -1,2 +1,14 @@
-﻿  main.cpp
-  3D_Programming_OpenGL.vcxproj -> C:\Users\camme\source\repos\3D_Programming_OpenGL\x64\Debug\3D_Programming_OpenGL.exe
+﻿main.obj : error LNK2019: unresolved external symbol SDL_CreateWindow referenced in function main
+main.obj : error LNK2019: unresolved external symbol SDL_GL_CreateContext referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glewInit referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewBindBuffer referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewBufferData referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewGenBuffers referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewVertexAttribPointer referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewBindVertexArray referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp___glewGenVertexArrays referenced in function main
+sdl_loop.obj : error LNK2019: unresolved external symbol SDL_GL_SwapWindow referenced in function "void __cdecl sdl_loop(struct SDL_Window *)" (?sdl_loop@@YAXPEAUSDL_Window@@@Z)
+sdl_loop.obj : error LNK2019: unresolved external symbol SDL_PollEvent referenced in function "void __cdecl sdl_loop(struct SDL_Window *)" (?sdl_loop@@YAXPEAUSDL_Window@@@Z)
+C:\Users\camme\source\repos\3D_Programming_OpenGL\Dependencies\SDL2\lib\SDL2.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\camme\source\repos\3D_Programming_OpenGL\Dependencies\GLEW\lib\glew32.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\camme\source\repos\3D_Programming_OpenGL\x64\Debug\3D_Programming_OpenGL.exe : fatal error LNK1120: 11 unresolved externals
