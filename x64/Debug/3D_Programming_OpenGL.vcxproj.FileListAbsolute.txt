@@ -1,2 +1,0 @@
-C:\Users\camme\source\repos\3D_Programming_OpenGL\x64\Debug\3D_Programming_OpenGL.exe
-C:\Users\camme\source\repos\3D_Programming_OpenGL\x64\Debug\3D_Programming_OpenGL.pdb
