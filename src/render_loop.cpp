@@ -1,4 +1,4 @@
-#include "sdl_loop.h"
+#include "render_loop.h"
 
 void sdl_loop(SDL_Window* window) {
 
