@@ -20,26 +20,11 @@ int main(int argc, char* argv[]) {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f
     };
-
     // Bind vertex data to GPU and store the buffer object(s)' ID:
-    GLuint triangle_buffer_id = vbo_set_and_clear(positions, 1, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    GLuint triangle_vbo_id = vbo_set_and_clear(positions, 1, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
-    // Create a VAO with data from the VBO:
-    GLuint vaoID = 0;                                    // Create ID for the VBO 
-    glGenVertexArrays(1, &vaoID);                        // Create a new VAO
-    if (!vaoID) throw std::exception();                  // Check for error
-    glBindVertexArray(vaoID);                            // Bind vertex array to the GPU
-    glBindBuffer(GL_ARRAY_BUFFER, triangle_buffer_id);       // Bind position vertex buffer to the GPU
-    glVertexAttribPointer(
-        0,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        3 * sizeof(GLfloat),
-        (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);                    // Reset vertex buffer
-    glBindVertexArray(0);                                // Reset vertex array
-
+    // Create a VAO and store layout of VBO:
+    GLuint triangle_vao_id = vao_set_and_clear(positions, triangle_vbo_id, 1, GL_ARRAY_BUFFER, GL_FALSE);
 
     // Input Loop:
     sdl_loop(window);
