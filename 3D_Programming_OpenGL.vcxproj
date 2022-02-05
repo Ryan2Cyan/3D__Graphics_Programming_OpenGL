@@ -163,11 +163,13 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sdl_functions.cpp" />
     <ClCompile Include="src\render_loop.cpp" />
+    <ClCompile Include="src\shader_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gl_functions.h" />
     <ClInclude Include="src\sdl_functions.h" />
     <ClInclude Include="src\render_loop.h" />
+    <ClInclude Include="src\shader_functions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
