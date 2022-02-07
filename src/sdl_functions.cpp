@@ -15,8 +15,7 @@ SDL_Window* sdl_init() {
 }
 
 // Change colour of SDL window:
-void change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclampf a, SDL_Window* window)
-{
+void change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclampf a, SDL_Window* window){
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT);
     SDL_GL_SwapWindow(window);
