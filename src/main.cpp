@@ -39,6 +39,29 @@ int main(int argc, char* argv[]) {
     std::string fragment_shader_src_str = read_shader_file(fragment_shader_filepath);
     const GLchar* fragment_shader_src_char = fragment_shader_src_str.c_str();  // convert from string to const GLchar*
     GLuint fragment_shader_id = create_shader_object(GL_FRAGMENT_SHADER, 1, fragment_shader_src_char);
+
+    // Create new shader program and attach shader objects:
+    GLuint program_id = glCreateProgram();
+    glAttachShader(program_id, vertex_shader_id);
+    glAttachShader(program_id, fragment_shader_id);
+    glBindAttribLocation(program_id, 0, "in_Position"); // Ensure the VAO "position" attribute stream gets set as the first position
+    glLinkProgram(program_id);
+    GLint success = 0;
+    glGetProgramiv(program_id, GL_LINK_STATUS, &success); // Check for link failure
+    if (!success) throw std::exception();
+    // Detach and destroy shader objects, as they are no longer needed:
+    glDetachShader(program_id, vertex_shader_id);
+    glDeleteShader(vertex_shader_id);
+    glDetachShader(program_id, fragment_shader_id);
+    glDeleteShader(fragment_shader_id);
+
+    // Instruct OpenGL to use the shader program and the VAO:
+    glUseProgram(program_id);
+    glBindVertexArray(triangle_vao_id);
+    glDrawArrays(GL_TRIANGLES, 0, 3); // Draw 3 vertices (triangle)
+    // Reset the state:
+    glBindVertexArray(0);
+    glUseProgram(0);
    
     // Input Loop:
     sdl_loop(window);

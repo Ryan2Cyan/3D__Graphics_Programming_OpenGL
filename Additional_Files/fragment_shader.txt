@@ -1,9 +1,4 @@
-#version 330 core
-out vec4 FragColor;
-
-in vec4 vertex_Color;
-
 void main()                       
 {                                 
-	FragColor = vertex_Color;
-}                                 
+	gl_FragColor = vec4(0, 0, 1, 1); 
+}                              

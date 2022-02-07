@@ -1,11 +1,6 @@
-#version 330 core
-layout (location = 0) in vec3 in_Position; // Position variable has attribute position of 0
-
-out vec4 vertex_Color; // Specify output color for fragment shader        
-                                               
+attribute vec3 in_Position;            
+                                       
 void main()                            
 {                                      
-	gl_Position = vec4(in_Position, 1.0);
-        vertex_Color = vec4(1.0, 0.0, 0.0, 1.0); // Set color to red 
-}
-                                
+	gl_Position = vec4(in_Position, 1.0); 
+}                          
