@@ -24,10 +24,13 @@
     <ClCompile Include="src\render_loop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl_functions.cpp">
+    <ClCompile Include="src\shader_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\shader_functions.cpp">
+    <ClCompile Include="src\vbo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vao.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +41,13 @@
     <ClInclude Include="src\render_loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gl_functions.h">
+    <ClInclude Include="src\shader_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\shader_functions.h">
+    <ClInclude Include="src\vbo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vao.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

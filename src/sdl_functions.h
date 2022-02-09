@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include <glew.h>
+#include "GL/glew.h"
 #include <iostream>
 
 // Initialisation of SDL and OpenGL context:
