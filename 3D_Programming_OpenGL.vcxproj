@@ -164,7 +164,7 @@
     <ClCompile Include="src\vbo.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\render_loop.cpp" />
+    <ClCompile Include="src\instance.cpp" />
     <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +172,7 @@
     <ClInclude Include="src\vao.h" />
     <ClInclude Include="src\vbo.h" />
     <ClInclude Include="src\window.h" />
-    <ClInclude Include="src\render_loop.h" />
+    <ClInclude Include="src\instance.h" />
     <ClInclude Include="src\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,5 @@
 #define SDL_MAIN_HANDLED  
-#include "render_loop.h"
+#include "instance.h"
 #include "window.h"
 #include "vbo.h"
 #include "vao.h"
@@ -87,58 +87,18 @@ int main(int argc, char* argv[]) {
 
 
     ///////////// SHADER PROGRAM ///////////
-    // Create new shader program and attach shader objects:
-    GLuint program_id = glCreateProgram();
-    glAttachShader(program_id, vertex_shader_id);
-    glAttachShader(program_id, fragment_shader_id);
-    glBindAttribLocation(program_id, 0, "in_Position"); // Ensure the VAO "position" attribute stream gets set as the first position
-    glBindAttribLocation(program_id, 1, "a_color");
-    glLinkProgram(program_id);
-    GLint success = 0;
-    glGetProgramiv(program_id, GL_LINK_STATUS, &success); // Check for link failure
-    if (!success) throw std::exception();
-    // Detach and destroy shader objects, as they are no longer needed:
-    glDetachShader(program_id, vertex_shader_id);
-    glDeleteShader(vertex_shader_id);
-    glDetachShader(program_id, fragment_shader_id);
-    glDeleteShader(fragment_shader_id);
-
     program_obj program = program_obj();
     program.generate();
-
-
+    program.attach_shaders(vertex_shader_id, fragment_shader_id);
+    program.bind_vertex_attribute("a_position");
+    program.bind_fragment_attribute("a_color");
+    program.link();
+    program.delete_shaders(vertex_shader_id, fragment_shader_id);
 
 
     ///////////// INPUT/RENDER LOOP ///////////
-    SDL_Event event;
-    bool running = true;
+    application application_1(window, program, vertex_array);
+    application_1.render_loop();
 
-    while (running) {
-        window.change_window_colour(1.0f, 0.0f, 0.0f, 1.0f);
-
-        glUseProgram(program_id);
-        glBindVertexArray(vertex_array.get_id());
-
-        // Draw 3 vertices (a triangle)
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        // Reset the state
-        glBindVertexArray(0);
-        glUseProgram(0);
-        SDL_GL_SwapWindow(window.get_window());
-        while (SDL_PollEvent(&event) != 0) {  // Check for user input
-            switch (event.type)
-            {
-            case SDL_QUIT:                    // Quit application
-                running = false;
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    //// Input Loop:
-    //sdl_loop(window);
     return 0; // Exit
 }
