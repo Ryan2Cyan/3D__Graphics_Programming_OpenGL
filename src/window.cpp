@@ -25,3 +25,5 @@ void sdl_window::change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclam
 
 /////////// GETTERS ///////////
 SDL_Window* sdl_window::get_window() { return window; }
+int sdl_window::get_width() { return width; }
+int sdl_window::get_height() { return height; }

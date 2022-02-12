@@ -23,4 +23,6 @@ public:
 
     /////////// GETTERS ///////////
     SDL_Window* get_window();
+    int get_width();
+    int get_height();
 };

@@ -96,8 +96,13 @@ int main(int argc, char* argv[]) {
     program.delete_shaders(vertex_shader_id, fragment_shader_id);
 
 
+    ///////////// SHADER TRANSFORMATIONS ///////////
+    // Find uniform locations:
+    GLuint model_mat_location = glGetUniformLocation(program.get_id(), "u_model");
+    GLuint projection_mat_location = glGetUniformLocation(program.get_id(), "u_projection");
+
     ///////////// INPUT/RENDER LOOP ///////////
-    application application_1(window, program, vertex_array);
+    application application_1(window, program, vertex_array, model_mat_location, projection_mat_location);
     application_1.render_loop();
 
     return 0; // Exit
