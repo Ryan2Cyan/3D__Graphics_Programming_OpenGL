@@ -1,7 +1,7 @@
 #include "vao.h"
 
 /////////// CONSTRUCTOR ///////////
-vao_obj::vao_obj(GLsizei input_num_of_buffers, GLboolean input_normalize)
+vao_obj::vao_obj(const GLsizei input_num_of_buffers, const GLboolean input_normalize)
     : num_of_buffers{ input_num_of_buffers }, normalize{input_normalize}
 {
     id = 0;
@@ -13,7 +13,7 @@ void vao_obj::generate() {  // Create a new VAO on the GPU and bind it to GPU.
     if (!id) throw std::exception();
 }
 
-void vao_obj::insert_data(vbo_obj vertex_buffer, GLuint input_index) {  // Assign layout of data (for VBO) to the VAO.
+void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index) {  // Assign layout of data (for VBO) to the VAO.
     // Bind:
     glBindVertexArray(id);
     glBindBuffer(vertex_buffer.get_binding_point(), vertex_buffer.get_id());
@@ -32,12 +32,12 @@ void vao_obj::insert_data(vbo_obj vertex_buffer, GLuint input_index) {  // Assig
     glBindBuffer(vertex_buffer.get_binding_point(), 0);
 }
 
-void vao_obj::bind(vbo_obj vertex_buffer) const {
+void vao_obj::bind(const vbo_obj vertex_buffer) const {
     glBindVertexArray(id);
     glBindBuffer(vertex_buffer.get_binding_point(), vertex_buffer.get_id());
 }
 
-void vao_obj::unbind(vbo_obj vertex_buffer) const {
+void vao_obj::unbind(const vbo_obj vertex_buffer) const {
     glBindVertexArray(0);
     glBindBuffer(vertex_buffer.get_binding_point(), 0);
 }

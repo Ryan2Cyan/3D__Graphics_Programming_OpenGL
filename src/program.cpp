@@ -8,7 +8,7 @@ program_obj::program_obj() : index_vertex{0}, index_fragment{1}, id{0} {}
 void program_obj::generate() {
 	id = glCreateProgram(); 
 }
-void program_obj::attach_shaders(GLuint vertex_id, GLuint fragment_id) {
+void program_obj::attach_shaders(const GLuint vertex_id, const GLuint fragment_id) {
 	glAttachShader(id, vertex_id);
 	glAttachShader(id, fragment_id);
 }

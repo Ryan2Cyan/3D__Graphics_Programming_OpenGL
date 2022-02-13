@@ -5,25 +5,25 @@
 
 class mat4_uniform {
 private:
-	GLuint location;
 	const GLchar* name;
+	const GLsizei count;
+	const GLboolean transpose;
+	GLuint location;
 	glm::mat4 value;
-	GLsizei count;
-	GLboolean transpose;
 
 public:
 	/////////// CONSTRUCTOR ///////////
-	mat4_uniform(const GLchar* input_name, GLsizei input_count, GLboolean input_transpose);
+	mat4_uniform(const GLchar* input_name, const GLsizei input_count, const GLboolean input_transpose);
 
 	/////////// UTILITY ///////////
-	void translate(glm::vec3 input_translation);
+	void translate(const glm::vec3 input_translation);
 
-	void rotate(GLfloat input_angle, glm::vec3 input_axis);
+	void rotate(const GLfloat input_angle, const glm::vec3 input_axis);
 
 	void upload_data();
 
 	/////////// SETTERS ///////////
-	void set_location(GLuint program_id);
+	void set_location(const GLuint program_id);
 
-	void set_value(glm::mat4 input_value);
+	void set_value(const glm::mat4 input_value);
 };

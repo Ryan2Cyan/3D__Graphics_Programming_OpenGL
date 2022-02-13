@@ -5,8 +5,8 @@
 
 
 /////////// CONSTRUCTOR ///////////
-application::application(sdl_window input_window, program_obj input_program, vao_obj input_vao, GLuint input_model_mat, GLuint input_proj_mat) :
-    window{ input_window }, program{input_program}, vertex_array{input_vao}, model_mat_location{input_model_mat}, projection_mat_location{input_proj_mat}
+application::application(const sdl_window input_window, const program_obj input_program, const vao_obj input_vao) :
+    window{ input_window }, program{input_program}, vertex_array{input_vao}
 {
     running = true;
 }

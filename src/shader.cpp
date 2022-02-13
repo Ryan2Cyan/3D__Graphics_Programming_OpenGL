@@ -21,7 +21,7 @@ const std::string read_shader_file(const GLchar* file_path) {
 }
 
 // Generates and compiles a shader from specified src code:
-GLuint create_shader_object(GLenum shader_type, GLsizei array_count, const GLchar* source_code) {
+GLuint create_shader_object(const GLenum shader_type, const GLsizei array_count, const GLchar* source_code) {
 	GLuint shader_id = glCreateShader(shader_type);
 	glShaderSource(shader_id, array_count, &source_code, NULL);
 	glCompileShader(shader_id);

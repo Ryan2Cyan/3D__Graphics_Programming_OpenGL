@@ -13,7 +13,7 @@ public:
 
 	/////////// UTILITY ///////////
 	void generate();
-	void attach_shaders(GLuint vertex_id, GLuint fragment_id);
+	void attach_shaders(const GLuint vertex_id, const GLuint fragment_id);
 	void bind_vertex_attribute(const GLchar* attribute_name);
 	void bind_fragment_attribute(const GLchar* attribute_name);
 	void link();
