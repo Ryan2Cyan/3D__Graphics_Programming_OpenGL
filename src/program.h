@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "GL/glew.h"
 
 class program_obj {
@@ -21,6 +20,6 @@ public:
 	void delete_shaders(GLuint vertex_id, GLuint fragment_id);
 
 	/////////// GETTERS ///////////
-	GLuint get_id();
+	GLuint get_id() const;
 
 };

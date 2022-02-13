@@ -22,24 +22,20 @@ int main(int argc, char* argv[]) {
         "Triangle OpenGL",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        600,
-        600,
+        800,
+        800,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
     );
     
     if (glewInit() != GLEW_OK) throw std::exception();
 
     // Define vertices of triangle:
-    std::vector<GLfloat> positions;
-    positions.push_back(0.0f);
-    positions.push_back(0.5f);
-    positions.push_back(0.0f);
-    positions.push_back(-0.5f);
-    positions.push_back(-0.5f);
-    positions.push_back(0.0f);
-    positions.push_back(0.5f);
-    positions.push_back(-0.5f);
-    positions.push_back(0.0f);
+    std::vector<GLfloat> positions{
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f
+    };
+   
 
     // Define color attributes of triangle:
     std::vector<GLfloat> colors{
@@ -50,7 +46,7 @@ int main(int argc, char* argv[]) {
 
     /////////// VERTEX BUFFER OBJECT [POSITIONS] ///////////
     // Bind vertex data to GPU and store the buffer object(s)' ID:
-    vbo_obj buffer_obj(positions, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    vbo_obj buffer_obj(1, positions, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     buffer_obj.generate();
     buffer_obj.bind();
     buffer_obj.buffer_data();
@@ -58,14 +54,14 @@ int main(int argc, char* argv[]) {
 
     /////////// VERTEX BUFFER OBJECT [COLORS] ///////////
     // Bind vertex data to GPU and store the buffer object(s)' ID:
-    vbo_obj color_buffer_obj(colors, 4, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    vbo_obj color_buffer_obj(1, colors, 4, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     color_buffer_obj.generate();
     color_buffer_obj.buffer_data();
 
 
     ///////////// VERTEX ARRAY OBJECT ///////////
        // Create a VAO and store layout of VBO:
-    vao_obj vertex_array(1);
+    vao_obj vertex_array(1, GL_FALSE);
     vertex_array.generate();
     vertex_array.insert_data(buffer_obj, 0);  // Insert position data
     vertex_array.insert_data(color_buffer_obj, 1);  // Insert color data

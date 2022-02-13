@@ -22,7 +22,7 @@ public:
     void change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
 
     /////////// GETTERS ///////////
-    SDL_Window* get_window();
-    int get_width();
-    int get_height();
+    SDL_Window* get_window() const;
+    int get_width() const;
+    int get_height() const;
 };

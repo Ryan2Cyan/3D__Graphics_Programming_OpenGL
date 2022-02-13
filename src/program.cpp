@@ -1,5 +1,5 @@
 #include "program.h"
-
+#include<iostream>
 
 /////////// CONSTRUCTOR ///////////
 program_obj::program_obj() : index_vertex{0}, index_fragment{1}, id{0} {}
@@ -33,5 +33,5 @@ void program_obj::delete_shaders(GLuint vertex_id, GLuint fragment_id) {
 
 
 /////////// GETTERS ///////////
-GLuint program_obj::get_id() { return id; }
+GLuint program_obj::get_id() const { return id; }
 

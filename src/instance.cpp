@@ -1,6 +1,6 @@
 #include "instance.h"
 #include "GL/glew.h"
-#include <glm.hpp>
+#include "mat4_uniform.h"
 #include <ext.hpp>
 
 
@@ -15,24 +15,40 @@ application::application(sdl_window input_window, program_obj input_program, vao
 void application::render_loop()
 {
     SDL_Event event;
-    float angle = 0;
+    GLfloat angle = 0;
+
 
     while (running) {
-        window.change_window_colour(1.0f, 0.0f, 0.0f, 1.0f);
-        glm::mat4 projection = glm::perspective(  // Prepare perspective projection matrix
-                glm::radians(45.0f),
-                (float)window.get_width() / (float)window.get_height(),
-                0.1f,
-                100.f
-            );
-        glm::mat4 model(1.0f);  // Prepare model matrix
-        model = glm::translate(model, glm::vec3(0, 0, -2.5f));
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
+        window.change_window_colour(0.4f, 0.7f, 0.9f, 1.0f);
+        
+        // Initialise model matrix:
+        mat4_uniform model_mat("u_model", 1, GL_FALSE);
+        model_mat.set_location(program.get_id());
+        model_mat.set_value(glm::mat4(1.0f));
+
+        // Initialise projection matrix:
+        mat4_uniform projection_mat("u_projection", 1, GL_FALSE);
+        projection_mat.set_location(program.get_id());
+        projection_mat.set_value(glm::perspective(
+            glm::radians(45.0f),
+            (float)window.get_width() / (float)window.get_height(),
+            0.1f,
+            100.f
+        ));
+
+        // Modify model matrix for rotation:
+        model_mat.translate(glm::vec3(0, 0, -2.5f));
+        model_mat.rotate(angle, glm::vec3(0, 1, 0));
+
         angle += 0.5f; // Increase angle next frame to rotate the triangle
+
         glUseProgram(program.get_id());
         glBindVertexArray(vertex_array.get_id());
-        glUniformMatrix4fv(model_mat_location, 1, GL_FALSE, glm::value_ptr(model));  // Upload model matrix
-        glUniformMatrix4fv(projection_mat_location, 1, GL_FALSE, glm::value_ptr(projection));  // Upload projection matrix
+        
+        // Upload matrix data:
+        model_mat.upload_data();
+        projection_mat.upload_data();
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
         SDL_GL_SwapWindow(window.get_window());

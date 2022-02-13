@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\mat4_uniform.cpp" />
     <ClCompile Include="src\program.cpp" />
     <ClCompile Include="src\vao.cpp" />
     <ClCompile Include="src\vbo.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\mat4_uniform.h" />
     <ClInclude Include="src\program.h" />
     <ClInclude Include="src\vao.h" />
     <ClInclude Include="src\vbo.h" />
