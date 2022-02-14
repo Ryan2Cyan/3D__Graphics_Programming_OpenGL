@@ -29,6 +29,7 @@ GLuint create_shader_object(const GLenum shader_type, const GLsizei array_count,
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success_vert);
 	if (!success_vert) {
 		std::cerr << "Could not compile shader:  " << shader_id << std::endl;
+		throw std::exception();
 		return -1;
 	}
 	return shader_id;

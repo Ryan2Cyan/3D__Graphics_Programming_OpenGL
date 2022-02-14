@@ -23,6 +23,13 @@ void sdl_window::change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclam
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void sdl_window::adjust_viewport() {
+    int width = 0;
+    int height = 0;
+    SDL_GetWindowSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+}
+
 /////////// GETTERS ///////////
 SDL_Window* sdl_window::get_window() const { return window; }
 int sdl_window::get_width() const { return width; }

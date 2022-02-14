@@ -4,8 +4,8 @@
 class program_obj {
 private:
 	GLuint id;
-	GLuint index_vertex;
-	GLuint index_fragment;
+	const GLuint index_vertex;
+	const GLuint index_fragment;
 
 public:
 	/////////// CONSTRUCTOR ///////////

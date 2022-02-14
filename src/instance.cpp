@@ -20,7 +20,8 @@ void application::render_loop()
 
     while (running) {
         window.change_window_colour(0.4f, 0.7f, 0.9f, 1.0f);
-        
+        window.adjust_viewport();
+
         // Initialise model matrix:
         mat4_uniform model_mat("u_model", 1, GL_FALSE);
         model_mat.set_location(program.get_id());

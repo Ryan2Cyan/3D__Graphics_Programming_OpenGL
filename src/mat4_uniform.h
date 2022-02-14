@@ -20,10 +20,15 @@ public:
 
 	void rotate(const GLfloat input_angle, const glm::vec3 input_axis);
 
+	void scale(const glm::vec3 input_scale);
+
 	void upload_data();
 
 	/////////// SETTERS ///////////
 	void set_location(const GLuint program_id);
 
 	void set_value(const glm::mat4 input_value);
+
+	/////////// GETTERS ///////////
+	glm::mat4 get_value();
 };

@@ -25,12 +25,14 @@ void program_obj::link() {
 	if (!success) throw std::exception();
 }
 void program_obj::delete_shaders(GLuint vertex_id, GLuint fragment_id) {
+
 	glDetachShader(id, vertex_id);
 	glDeleteShader(vertex_id);
+
 	glDetachShader(id, fragment_id);
 	glDeleteShader(fragment_id);
 }
-
+	
 
 /////////// GETTERS ///////////
 GLuint program_obj::get_id() const { return id; }
