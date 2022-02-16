@@ -60,6 +60,9 @@ void application::render_loop()
             {
             case SDL_QUIT:
                 running = false;
+                vertex_array.delete_vao();
+                program.delete_program();
+                window.delete_window();
                 break;
             default:
                 break;

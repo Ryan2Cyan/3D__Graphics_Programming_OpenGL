@@ -30,6 +30,10 @@ void sdl_window::adjust_viewport() {
     glViewport(0, 0, width, height);
 }
 
+void sdl_window::delete_window() {
+    SDL_DestroyWindow(window);
+}
+
 /////////// GETTERS ///////////
 SDL_Window* sdl_window::get_window() const { return window; }
 int sdl_window::get_width() const { return width; }

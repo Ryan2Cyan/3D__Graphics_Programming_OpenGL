@@ -1,13 +1,16 @@
-#define SDL_MAIN_HANDLED  
+#define SDL_MAIN_HANDLED 
 #include "instance.h"
 #include "window.h"
 #include "vbo.h"
 #include "vao.h"
 #include "shader.h"
-#include "program.h"
-#include "SDL.h"
+#include "program.h" 
+
+#include <SDL.h>
 #include <GL/glew.h>
-#include <glm.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
 #include <ext.hpp>
 #include <iostream>
 #include <vector>
@@ -29,6 +32,8 @@ int main(int argc, char* argv[]) {
     
     if (glewInit() != GLEW_OK) throw std::exception();
 
+
+    /////////// DATA ///////////
     // Define vertices of triangle:
     std::vector<GLfloat> positions{
         0.0f, 0.5f, 0.0f,
@@ -44,6 +49,12 @@ int main(int argc, char* argv[]) {
         0.0f, 0.0f, 1.0f, 1.0f
     };
 
+    int w = 0;
+    int h = 0;
+    unsigned char* data = stbi_load("Additional_Files/images/image_test.PNG", &w, &h, NULL, 4);
+    if (!data) throw std::exception();
+
+
     /////////// VERTEX BUFFER OBJECT [POSITIONS] ///////////
     // Bind vertex data to GPU and store the buffer object(s)' ID:
     vbo_obj buffer_obj(1, positions, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
@@ -58,13 +69,17 @@ int main(int argc, char* argv[]) {
     color_buffer_obj.generate();
     color_buffer_obj.buffer_data();
 
+    /////////// VERTEX BUFFER OBJECT [TEXTURE] ///////////
+    texture_vbo_obj texture(1, GL_TEXTURE_2D, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 0, data, w, h);
+    texture.generate();
+    texture.buffer_data();
 
     ///////////// VERTEX ARRAY OBJECT ///////////
        // Create a VAO and store layout of VBO:
     vao_obj vertex_array(1, GL_FALSE);
     vertex_array.generate();
     vertex_array.insert_data(buffer_obj, 0);  // Insert position data
-    vertex_array.insert_data(color_buffer_obj, 1);  // Insert color data
+    //vertex_array.insert_data(color_buffer_obj, 1);  // Insert color data
 
 
     ///////////// VERTEX SHADER ///////////
@@ -87,7 +102,7 @@ int main(int argc, char* argv[]) {
     program.generate();
     program.attach_shaders(vertex_shader_id, fragment_shader_id);
     program.bind_vertex_attribute("a_position");
-    program.bind_fragment_attribute("a_color");
+    program.bind_fragment_attribute("a_texture_coords");
     program.link();
     program.delete_shaders(vertex_shader_id, fragment_shader_id);
 
@@ -98,3 +113,4 @@ int main(int argc, char* argv[]) {
 
     return 0; // Exit
 }
+

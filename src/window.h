@@ -12,8 +12,6 @@ private:
     int y_pos;
     int width;
     int height;
-    int viewport_width;
-    int viewport_height;
     Uint32 flags;
 
 public:
@@ -24,6 +22,8 @@ public:
     void change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
 
     void adjust_viewport();
+
+    void delete_window();
 
     /////////// GETTERS ///////////
     SDL_Window* get_window() const;

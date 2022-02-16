@@ -22,9 +22,41 @@ public:
     void unbind() const;
     void buffer_data() const;
 
+   /* void generate_texture();
+    void bind_texture() const;
+    void unbind_texture() const;
+    void buffer_texture_data() const;*/
+
     GLuint get_size() const;
     GLuint get_id() const;
     GLenum get_binding_point() const;
     std::vector<GLfloat> get_data() const;
 };
 
+
+
+class texture_vbo_obj {
+private:
+    GLsizei width;
+    GLsizei height;
+    const GLuint level;
+    const GLint internal_format;
+    const GLenum format;
+    const GLenum type;
+    const GLint border;
+    const GLsizei num_of_buffers;
+    const GLenum binding_point;
+    unsigned char* data;
+    GLuint id;
+public:
+    /////////// CONSTRUCTOR ///////////
+    texture_vbo_obj(GLsizei input_num_of_buffers, GLenum input_binding_point, GLuint input_level,
+        GLint input_internal_format, GLenum input_format, GLenum input_type, GLint input_border,
+        unsigned char* input_data, GLsizei input_width, GLsizei input_height);
+
+    /////////// UTILITY ///////////
+    void generate();
+    void bind() const;
+    void unbind() const;
+    void buffer_data() const;
+};

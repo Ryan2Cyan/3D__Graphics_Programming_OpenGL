@@ -32,6 +32,10 @@ void program_obj::delete_shaders(GLuint vertex_id, GLuint fragment_id) {
 	glDetachShader(id, fragment_id);
 	glDeleteShader(fragment_id);
 }
+
+void program_obj::delete_program() {
+	glDeleteProgram(id);
+}
 	
 
 /////////// GETTERS ///////////

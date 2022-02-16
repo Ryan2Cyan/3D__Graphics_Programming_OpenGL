@@ -16,7 +16,7 @@ void vao_obj::generate() {  // Create a new VAO on the GPU and bind it to GPU.
 void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index) {  // Assign layout of data (for VBO) to the VAO.
     // Bind:
     glBindVertexArray(id);
-    glBindBuffer(vertex_buffer.get_binding_point(), vertex_buffer.get_id());
+    vertex_buffer.bind();
     // Insert Data:
     glVertexAttribPointer(
         input_index,
@@ -29,8 +29,9 @@ void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index)
     glEnableVertexAttribArray(input_index);
     // Unbind:
     glBindVertexArray(0);
-    glBindBuffer(vertex_buffer.get_binding_point(), 0);
+    vertex_buffer.unbind();
 }
+
 
 void vao_obj::bind(const vbo_obj vertex_buffer) const {
     glBindVertexArray(id);
@@ -40,6 +41,10 @@ void vao_obj::bind(const vbo_obj vertex_buffer) const {
 void vao_obj::unbind(const vbo_obj vertex_buffer) const {
     glBindVertexArray(0);
     glBindBuffer(vertex_buffer.get_binding_point(), 0);
+}
+
+void vao_obj::delete_vao() {
+    glDeleteVertexArrays(num_of_buffers, &id);
 }
 
 /////////// GETTERS ///////////
