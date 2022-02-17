@@ -5,8 +5,9 @@
 
 
 /////////// CONSTRUCTOR ///////////
-application::application(const sdl_window input_window, const program_obj input_program, const vao_obj input_vao) :
-    window{ input_window }, program{input_program}, vertex_array{input_vao}
+application::application(const sdl_window input_window, const program_obj input_program, const vao_obj input_vao,
+    GLuint input_texture) :
+    window{ input_window }, program{input_program}, vertex_array{input_vao}, texture{input_texture}
 {
     running = true;
 }
@@ -50,7 +51,10 @@ void application::render_loop()
         model_mat.upload_data();
         projection_mat.upload_data();
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // Bind texture:
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindVertexArray(vertex_array.get_id());
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
         SDL_GL_SwapWindow(window.get_window());
 

@@ -11,6 +11,7 @@ vbo_obj::vbo_obj(GLsizei input_num_of_buffers, std::vector<GLfloat> input_data, 
     id = 0;
 }
 
+
 /////////// UTILITY ///////////
 void vbo_obj::generate() {
     glGenBuffers(num_of_buffers, &id);

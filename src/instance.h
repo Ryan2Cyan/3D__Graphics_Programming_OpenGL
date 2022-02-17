@@ -10,10 +10,12 @@ private:
     bool running;
     program_obj program;
     vao_obj vertex_array;
+    GLuint texture;
 
 public:
     /////////// CONSTRUCTOR ///////////
-    application(const sdl_window input_window, const program_obj input_program, const vao_obj input_vao);
+    application(const sdl_window input_window, const program_obj input_program, const vao_obj input_vao,
+        GLuint input_texture );
 
     /////////// UTILITY ///////////
     void render_loop();

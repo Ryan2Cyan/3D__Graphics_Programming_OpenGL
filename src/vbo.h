@@ -17,15 +17,11 @@ public:
     vbo_obj(GLsizei input_num_of_buffers, std::vector<GLfloat> input_data, GLuint input_size, GLenum
         input_binding_point, GLenum input_data_usage);
 
+
     void generate();
     void bind() const;
     void unbind() const;
     void buffer_data() const;
-
-   /* void generate_texture();
-    void bind_texture() const;
-    void unbind_texture() const;
-    void buffer_texture_data() const;*/
 
     GLuint get_size() const;
     GLuint get_id() const;

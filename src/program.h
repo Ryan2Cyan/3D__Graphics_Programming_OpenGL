@@ -6,6 +6,7 @@ private:
 	GLuint id;
 	const GLuint index_vertex;
 	const GLuint index_fragment;
+	const GLuint index_texture_coords;
 
 public:
 	/////////// CONSTRUCTOR ///////////
@@ -19,6 +20,8 @@ public:
 	void bind_vertex_attribute(const GLchar* attribute_name);
 
 	void bind_fragment_attribute(const GLchar* attribute_name);
+
+	void bind_texture_coords_attribute(const GLchar* attribute_name);
 
 	void link();
 

@@ -13,7 +13,7 @@ void vao_obj::generate() {  // Create a new VAO on the GPU and bind it to GPU.
     if (!id) throw std::exception();
 }
 
-void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index) {  // Assign layout of data (for VBO) to the VAO.
+void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index, GLuint data_type) {  // Assign layout of data (for VBO) to the VAO.
     // Bind:
     glBindVertexArray(id);
     vertex_buffer.bind();
@@ -21,9 +21,9 @@ void vao_obj::insert_data(const vbo_obj vertex_buffer, const GLuint input_index)
     glVertexAttribPointer(
         input_index,
         vertex_buffer.get_size(),
-        GL_FLOAT,
+        data_type,
         normalize,
-        vertex_buffer.get_size() * sizeof(GLfloat),
+        vertex_buffer.get_size() * sizeof(data_type),
         (void*)0
     );
     glEnableVertexAttribArray(input_index);

@@ -15,7 +15,7 @@ public:
     /////////// UTILITY ///////////
     void generate();
 
-    void insert_data(const vbo_obj vertex_buffer, const GLuint input_index);
+    void insert_data(const vbo_obj vertex_buffer, const GLuint input_index, GLuint data_type);
 
     void bind(const vbo_obj vertex_buffer) const;
 
