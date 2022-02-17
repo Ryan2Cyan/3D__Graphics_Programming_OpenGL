@@ -28,54 +28,19 @@ int main(int argc, char* argv[]) {
     if (glewInit() != GLEW_OK) throw std::exception();
     
 
-    // Define vertices of triangle:
-    std::vector<GLfloat> positions{
-        0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f
-    };
     // Indices for Element Buffer Object:
     std::vector<GLuint> indices{
         0, 1, 3,  // first triangle
         1, 2, 3   // second triangle
     };
 
-    // Define color attributes of triangle:
-    std::vector<GLfloat> colors{
-        1.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f
-    };
-
-
-    /////////// TEXTURE ///////////
-    // Define texture coordinates:
-    std::vector<GLfloat> texture_coordinates{
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-    };
-
-
-    /////////// VERTEX BUFFER OBJECT [POSITIONS] ///////////
-    // Bind vertex data to GPU and store the buffer object(s)' ID:
-    vbo_obj buffer_obj(1, positions, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    buffer_obj.generate();
-    buffer_obj.bind();
-    buffer_obj.buffer_data();
-    buffer_obj.unbind();
-
-
-
-    /////////// VERTEX BUFFER OBJECT [COLORS] ///////////
-    // Bind vertex data to GPU and store the buffer object(s)' ID:
-    vbo_obj color_buffer_obj(1, colors, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    color_buffer_obj.generate();
-    color_buffer_obj.buffer_data();
-
-
+	std::vector<GLfloat> vertices{
+		// positions          // colors           // texture coords
+		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+	};
 
     /////////// ELEMENT BUFFER OBJECT [INDICES] ///////////
     GLuint element_buffer_id;
@@ -87,15 +52,28 @@ int main(int argc, char* argv[]) {
 
 
     ///////////// VERTEX ARRAY OBJECT ///////////
-       // Create a VAO and store layout of VBO:
-    vao_obj vertex_array(1, GL_FALSE);
-    vertex_array.generate();
-    vertex_array.insert_data(buffer_obj, 0, GL_FLOAT);  // Insert position data
-    vertex_array.insert_data(color_buffer_obj, 1, GL_FLOAT);  // Insert color data
+	unsigned int VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
-    glBindVertexArray(vertex_array.get_id());
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
-    glBindVertexArray(2);
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices.at(0)), &vertices.at(0), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices.at(0)), &indices.at(0), GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 
 
@@ -106,7 +84,7 @@ int main(int argc, char* argv[]) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // Load image:
     int w, h, channels;
-    unsigned char* data = stbi_load("Additional_Files/images/image_test.PNG", &w, &h, &channels, 4);
+    unsigned char* data = stbi_load("Additional_Files/images/image_test_flip.PNG", &w, &h, &channels, 4);
     if (!data) throw std::exception();
 
     GLuint texture_id = 0;
@@ -176,23 +154,24 @@ int main(int argc, char* argv[]) {
 
         angle += 0.5f; // Increase angle next frame to rotate the triangle
 
-        glBindVertexArray(vertex_array.get_id());
+        /*glBindVertexArray(vertex_array.get_id());*/
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);
+		glBindTexture(GL_TEXTURE_2D, texture_id);
         glUseProgram(program.get_id());
+		glBindVertexArray(VAO);
 
         // Upload matrix data:
         model_mat.upload_data();
         projection_mat.upload_data();
 
-        // Bind texture:
-        /*glBindTexture(GL_TEXTURE_2D, texture_buffer_obj.get_id());*/
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-
-        // Draw Call!
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // Wireframe mode
+        // Draw Call:
+		/*glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);*/
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        /*glDrawArrays(GL_TRIANGLES, 0, 3);*/
         SDL_GL_SwapWindow(window.get_window());
+		/*glDisable(GL_CULL_FACE);*/
 
         glBindVertexArray(0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -203,9 +182,12 @@ int main(int argc, char* argv[]) {
             {
             case SDL_QUIT:
                 running = false;
-                vertex_array.delete_vao();
+				glDeleteVertexArrays(1, &VAO);
+				glDeleteBuffers(1, &VBO);
+				glDeleteBuffers(1, &EBO);
+                /*vertex_array.delete_vao();
                 program.delete_program();
-                window.delete_window();
+                window.delete_window();*/
                 break;
             case SDL_WINDOWEVENT:
                 // Adjust OpenGL viewport on window resize
