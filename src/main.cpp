@@ -26,41 +26,16 @@ int main(int argc, char* argv[]) {
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
     // Init GLEW:
     if (glewInit() != GLEW_OK) throw std::exception();
-    
 
-    // Define vertices of triangle:
+ 
+
+    /////////// POSITIONS [VBO] ///////////
     std::vector<GLfloat> positions{
         0.5f, 0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         -0.5f, 0.5f, 0.0f
     };
-    // Indices for Element Buffer Object:
-    std::vector<GLuint> indices{
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
-    };
-
-    // Define color attributes of triangle:
-    std::vector<GLfloat> colors{
-        1.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f
-    };
-
-
-    /////////// TEXTURE ///////////
-    // Define texture coordinates:
-    std::vector<GLfloat> texture_coordinates{
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-    };
-
-
-    /////////// VERTEX BUFFER OBJECT [POSITIONS] ///////////
-    // Bind vertex data to GPU and store the buffer object(s)' ID:
     vbo_obj buffer_obj(1, positions, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     buffer_obj.generate();
     buffer_obj.bind();
@@ -69,20 +44,43 @@ int main(int argc, char* argv[]) {
 
 
 
-    /////////// VERTEX BUFFER OBJECT [COLORS] ///////////
-    // Bind vertex data to GPU and store the buffer object(s)' ID:
+    /////////// COLORS [VBO] ///////////
+    std::vector<GLfloat> colors{
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f
+    };
     vbo_obj color_buffer_obj(1, colors, 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     color_buffer_obj.generate();
     color_buffer_obj.buffer_data();
 
 
 
-    /////////// ELEMENT BUFFER OBJECT [INDICES] ///////////
+    /////////// INDICES [VBO] ///////////
+    std::vector<GLuint> indices{
+        0, 1, 3,  // first triangle
+        1, 2, 3   // second triangle
+    };
     GLuint element_buffer_id;
     glGenBuffers(1, &element_buffer_id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices.at(0)), &indices.at(0), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+    /////////// TEXTURE [VBO] ///////////
+  // Define texture coordinates:
+    std::vector<GLfloat> texture_coordinates{
+        0.75f, 0.75f,
+        0.75f, 0.25f,
+        0.25f, 0.25f,
+        0.25f, 0.75f,
+    };
+    vbo_obj texture_coords_buffer(1, texture_coordinates, 4, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    texture_coords_buffer.generate();
+    texture_coords_buffer.bind();
+    texture_coords_buffer.buffer_data();
+    texture_coords_buffer.unbind();
 
 
 
@@ -92,10 +90,7 @@ int main(int argc, char* argv[]) {
     vertex_array.generate();
     vertex_array.insert_data(buffer_obj, 0, GL_FLOAT);  // Insert position data
     vertex_array.insert_data(color_buffer_obj, 1, GL_FLOAT);  // Insert color data
-
-    glBindVertexArray(vertex_array.get_id());
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
-    glBindVertexArray(2);
+    vertex_array.insert_data(texture_coords_buffer, 2, GL_FLOAT);  // Insert texture coord data
 
 
 
