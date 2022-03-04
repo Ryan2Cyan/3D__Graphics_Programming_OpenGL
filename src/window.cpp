@@ -20,7 +20,7 @@ sdl_window::sdl_window(const char* input_title, int input_x, int input_y, int in
 /////////// UTILITY ///////////
 void sdl_window::change_window_colour(GLclampf r, GLclampf g, GLclampf b, GLclampf a) {
     glClearColor(r, g, b, a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void sdl_window::adjust_viewport() {
