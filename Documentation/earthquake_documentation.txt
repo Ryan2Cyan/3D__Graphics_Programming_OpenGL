@@ -1,0 +1,12 @@
+Project Earthquake Documentation:
+
+10/03/22:
+- LNK: Wavefront library. [solved]
+
+- CP: GLfloat - illegal use of this type as an expression. [solved]
+      GLfloat is a typedef of a float, so you can't compare it to an int?
+      Yep, you must use GL_FLOAT instead, what's the difference?
+      Ah, GLfloat is the typedef (OpenGL version of float) and GL_FLOAT is an enum.
+      Hence why GL_FLOAT can be compared with an int, as an enum is an int.
+
+       
