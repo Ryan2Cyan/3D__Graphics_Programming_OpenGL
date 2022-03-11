@@ -1,6 +1,7 @@
 #include "shader.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 // Reads contents of a shader txt file:
 const std::string read_shader_file(const GLchar* file_path) {
@@ -26,11 +27,13 @@ GLuint create_shader_object(const GLenum shader_type, const GLsizei array_count,
 	glShaderSource(shader_id, array_count, &source_code, NULL);
 	glCompileShader(shader_id);
 	GLint success = 0;
-	GLchar infoLog[512];
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
 	if (!success) {
-		glGetShaderInfoLog(shader_id, 512, NULL, infoLog);
-		std::cerr << "Could not compile shader\n Error:" << infoLog << std::endl;
+		GLint max_length = 0;
+		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &max_length);
+		std::vector<GLchar> error_log(max_length);
+		glGetShaderInfoLog(shader_id, max_length, &max_length, &error_log[0]);
+		std::cerr << "Could not compile shader\n Error:" << &error_log.at(0) << std::endl;
 		throw std::exception();
 		return -1;
 	}

@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
 	if (glewInit() != GLEW_OK) throw std::exception();
 
 
-
 	///////////// LOAD MODEL ///////////
 	WfModel curuthers = { 0 };
 	if (WfModelLoad(model_filepath, &curuthers) != 0) throw std::exception();
@@ -100,7 +99,6 @@ int main(int argc, char* argv[]) {
 		projection_mat.upload_data();
 
 		// Bind texture:
-		/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);*/
 		glBindTexture(GL_TEXTURE_2D, curuthers.textureId);
 
 		// Draw Call!
@@ -112,7 +110,6 @@ int main(int argc, char* argv[]) {
 		glDisable(GL_DEPTH_TEST);
 
 		glBindVertexArray(0);
-		/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
 		while (SDL_PollEvent(&event) != 0)
 		{

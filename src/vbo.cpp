@@ -1,4 +1,5 @@
 #include "vbo.h"
+#include <ext.hpp>
 
 // Default Buffer:
 
@@ -69,5 +70,88 @@ void texture_vbo_obj::buffer_data() const {
     unbind();
 }
 
+
+class vertex_object {
+private:
+    GLuint id;
+    int components;
+    std::vector<GLfloat> data;
+    bool dirty;
+    int type;
+
+public:
+    vertex_object() {
+        dirty = false;
+    };
+
+    // Destructor: Unbind and delete buffer:
+    ~vertex_object(){
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        GLuint del_id = id;
+        glDeleteBuffers(1, &del_id); 
+    }
+
+    // Add vec2 GLfloat to the buffer:
+    void add(glm::vec2 value){
+        if (type != 0 && type != GL_FLOAT_VEC2) { 
+            std::cout << "Error: mixing of types" << std::endl;
+            throw std::exception();
+        }
+        data.push_back(value.x);
+        data.push_back(value.y);
+        dirty = true;
+    }
+
+    // Add vec3 GLfloat to the buffer:
+    void add(glm::vec3 value){
+        if (type != 0 && type != GL_FLOAT_VEC3) { 
+            std::cout << "Error: mixing of types" << std::endl;
+            throw std::exception();
+        }
+        data.push_back(value.x);
+        data.push_back(value.y);
+        data.push_back(value.z);
+        dirty = true;
+    }
+
+    // Add vec4 GLfloat to the buffer:
+    void add(glm::vec4 value){
+        if (type != 0 && type != GL_FLOAT_VEC4) { 
+            std::cout << "Error: mixing of types." << std::endl;
+            throw std::exception();
+        }
+        data.push_back(value.x);
+        data.push_back(value.y);
+        data.push_back(value.z);
+        data.push_back(value.w);
+        dirty = true;
+    }
+
+    int get_components() {
+        return components;
+    }
+
+    int get_data_size() {
+        if (type == GL_FLOAT_VEC2) { return data.size() / 2; }
+        else if (type == GL_FLOAT_VEC3) { return data.size() / 3; }
+        else if (type == GL_FLOAT_VEC3) { return data.size() / 4; }
+        else throw std::exception();
+    }
+
+    // Binds buffer, then buffers all the data held within it. Then resets the state:
+    GLuint get_id(){
+        glBindBuffer(GL_ARRAY_BUFFER, id);
+
+        if (type == GL_FLOAT || type == GL_FLOAT_VEC2 || type == GL_FLOAT_VEC3 || type == GL_FLOAT_VEC4) {
+            glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(data.at(0)), &data.at(0), GL_STATIC_DRAW);
+        }
+        else {
+            std::cout << "Error: invalid buffer data type." << std::endl;
+            throw std::exception();
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        dirty = false; // Data has been sent to the GPU.
+    }
+};
 
 
