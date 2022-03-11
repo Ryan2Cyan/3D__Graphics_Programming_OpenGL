@@ -1,6 +1,6 @@
 #pragma once
 #include "GL/glew.h"
-#include "vbo.h"
+#include "buffer.h"
 
 class vao_obj {
 private:

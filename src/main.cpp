@@ -1,7 +1,7 @@
 #define SDL_MAIN_HANDLED 
 #include "instance.h"
 #include "window.h"
-#include "vbo.h"
+#include "buffer.h"
 #include "vao.h"
 #include "shader.h"
 #include "program.h" 
