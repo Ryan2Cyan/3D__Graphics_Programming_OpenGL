@@ -1,30 +1,21 @@
-#define SDL_MAIN_HANDLED 
-#include "instance.h"
-#include "window.h"
-#include "buffer.h"
-#include "vao.h"
-#include "shader.h"
-#include "program.h"
-#include "mat4_uniform.h"
-#include <wavefront/wavefront.h>
+// Dear ImGui: standalone example application for SDL2 + OpenGL
+// (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
+// Read online: https://github.com/ocornut/imgui/tree/master/docs
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+#include <stdio.h>
 #include <SDL.h>
-#include <GL/glew.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_opengl3.h>
-#include <imgui/imgui_impl_sdl.h>
+#if defined(IMGUI_IMPL_OPENGL_ES2)
+#include <SDL_opengles2.h>
+#else
+#include <SDL_opengl.h>
+#endif
 
-//#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-#include <ext.hpp>
-#include <iostream>
-#include <vector>
-
-const GLchar* font_filepath = "Additional_Files\\fonts\\JetBrainsMono-Light.ttf";
-const GLchar* vertex_shader_filepath = "Additional_Files/vertex_shader.txt";
-const GLchar* fragment_shader_filepath = "Additional_Files/fragment_shader.txt";
-const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
-
-int main()
+// Main code
+int main(int, char**)
 {
     // Setup SDL
     // (Some versions of SDL before <2.0.10 appears to have performance/stalling issues on a minority of Windows systems,
@@ -96,9 +87,20 @@ int main()
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    // Load custom font for imgui windows [JetBrainsMono-Light.ttf]:
-    io.Fonts->AddFontFromFileTTF(font_filepath, 16.0f);
-   
+    // Load Fonts
+    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
+    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
+    // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
+    // - Read 'docs/FONTS.md' for more instructions and details.
+    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
+    //io.Fonts->AddFontDefault();
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
+    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+    //IM_ASSERT(font != NULL);
 
     // Our state
     bool show_demo_window = true;

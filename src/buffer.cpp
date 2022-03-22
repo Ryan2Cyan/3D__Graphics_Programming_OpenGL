@@ -90,6 +90,7 @@ int buffer::get_components() {
     return components;
 }
 
+// Returns number of coordinates in the buffer (e.g. 3 vertices):
 int buffer::get_data_size() {
     if (type == GL_FLOAT_VEC2) { return data.size() / 2; }
     else if (type == GL_FLOAT_VEC3) { return data.size() / 3; }

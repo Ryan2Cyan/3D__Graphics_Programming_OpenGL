@@ -9,4 +9,9 @@ Project Earthquake Documentation:
       Ah, GLfloat is the typedef (OpenGL version of float) and GL_FLOAT is an enum.
       Hence why GL_FLOAT can be compared with an int, as an enum is an int.
 
+11/03/22:
+-CP: Member function already defined or declared [buffer::add()] - the compiler doesn't seem to like the 
+     multiple implementations of the add() func (overloaded), wonder why? [solved]
+     The GLM library was not included in the .h file.
+     
        
