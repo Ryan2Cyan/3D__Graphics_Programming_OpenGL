@@ -99,7 +99,6 @@ int main()
     // Load custom font for imgui windows [JetBrainsMono-Light.ttf]:
     io.Fonts->AddFontFromFileTTF(font_filepath, 16.0f);
    
-
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -107,6 +106,7 @@ int main()
 
     // Main loop
     bool done = false;
+    bool window_open = true;
     while (!done)
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -115,6 +115,7 @@ int main()
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         SDL_Event event;
+        io.WantCaptureMouse = true;
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
@@ -134,15 +135,12 @@ int main()
             ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        if(window_open)
         {
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Begin("Hello, world!", &window_open);                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color

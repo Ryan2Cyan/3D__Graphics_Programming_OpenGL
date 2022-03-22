@@ -167,6 +167,7 @@
     <ClCompile Include="Dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\context.cpp" />
+    <ClCompile Include="src\debug.cpp" />
     <ClCompile Include="src\mat4_uniform.cpp" />
     <ClCompile Include="src\program.cpp" />
     <ClCompile Include="src\vao.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="Dependencies\imgui\imstb_truetype.h" />
     <ClInclude Include="src\context.h" />
+    <ClInclude Include="src\debug.h" />
     <ClInclude Include="src\mat4_uniform.h" />
     <ClInclude Include="src\program.h" />
     <ClInclude Include="src\vao.h" />
