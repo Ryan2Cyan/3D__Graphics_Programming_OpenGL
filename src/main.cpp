@@ -1,10 +1,6 @@
 #define SDL_MAIN_HANDLED 
-#include "instance.h"
-#include "window.h"
-#include "buffer.h"
-#include "vao.h"
-#include "shader.h"
-#include "program.h"
+
+#include "debug.h"
 #include "mat4_uniform.h"
 #include <wavefront/wavefront.h>
 #include <SDL.h>
@@ -101,12 +97,13 @@ int main()
    
     // Our state
     bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    bool show_another_window = false;/*
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
 
     // Main loop
     bool done = false;
     bool window_open = true;
+    Debug::debug_state debug;
     while (!done)
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -134,25 +131,7 @@ int main()
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        if(window_open)
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!", &window_open);                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
+        debug.RenderWindow();
 
         // 3. Show another simple window.
         if (show_another_window)
@@ -167,7 +146,8 @@ int main()
         // Rendering
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        ImVec4 curr_background_col = debug.background_color;
+        glClearColor(curr_background_col.x * curr_background_col.w, curr_background_col.y * curr_background_col.w, curr_background_col.z * curr_background_col.w, curr_background_col.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
