@@ -10,9 +10,21 @@ namespace Debug {
 
         ImGui::Begin("Debug Window");                          
 
-        BackgroundColor(&background_color);
+        // Collapsing header containing all debug window toggles:
+        if (ImGui::TreeNode("Display Toggles"))
+        {
+            ImGui::Checkbox("Background Color Changer", &show_bg_color_change);
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::Checkbox("FPS Counter", &show_fps_counter);
+
+            ImGui::TreePop();
+        }
+
+        // Toggle background color:
+        if(show_bg_color_change) BackgroundColor(&background_color);
+
+        // Show FPS of application:
+        if(show_fps_counter) ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
         ImGui::End();
 
