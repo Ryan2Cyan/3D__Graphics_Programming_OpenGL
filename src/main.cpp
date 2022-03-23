@@ -1,13 +1,13 @@
 #define SDL_MAIN_HANDLED 
 
-#include "debug.h"
-#include "mat4_uniform.h"
+#include "gp.h"
 #include <wavefront/wavefront.h>
 #include <SDL.h>
 #include <GL/glew.h>
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_sdl.h>
+#include <memory>
 
 //#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -65,9 +65,10 @@ int main()
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui context
+    // Setup Dear ImGui and Gp contexts:
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    std::shared_ptr<GpContext> context = CreateContext(); 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -97,13 +98,13 @@ int main()
    
     // Our state
     bool show_demo_window = true;
-    bool show_another_window = false;/*
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
+    bool show_another_window = false;
 
     // Main loop
     bool done = false;
     bool window_open = true;
-    Debug::debug_state debug;
+    
+
     while (!done)
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -131,12 +132,13 @@ int main()
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-        debug.RenderWindow();
+        // Display debug window:
+        context->ShowDebugWindow();
 
         // Rendering
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-        ImVec4 curr_background_col = debug.background_color;
+        ImVec4 curr_background_col = context->GetDebug().background_color;
         glClearColor(curr_background_col.x * curr_background_col.w, curr_background_col.y * curr_background_col.w, curr_background_col.z * curr_background_col.w, curr_background_col.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

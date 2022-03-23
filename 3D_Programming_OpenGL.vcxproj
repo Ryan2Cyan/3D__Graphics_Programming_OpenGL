@@ -166,16 +166,11 @@
     <ClCompile Include="Dependencies\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\context.cpp" />
     <ClCompile Include="src\debug.cpp" />
-    <ClCompile Include="src\mat4_uniform.cpp" />
-    <ClCompile Include="src\program.cpp" />
-    <ClCompile Include="src\vao.cpp" />
-    <ClCompile Include="src\buffer.cpp" />
+    <ClCompile Include="src\gp.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\instance.cpp" />
-    <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\imgui\imconfig.h" />
@@ -187,15 +182,10 @@
     <ClInclude Include="Dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="Dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="Dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\Buffer.h" />
     <ClInclude Include="src\context.h" />
     <ClInclude Include="src\debug.h" />
-    <ClInclude Include="src\mat4_uniform.h" />
-    <ClInclude Include="src\program.h" />
-    <ClInclude Include="src\vao.h" />
-    <ClInclude Include="src\buffer.h" />
-    <ClInclude Include="src\window.h" />
-    <ClInclude Include="src\instance.h" />
-    <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\gp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
