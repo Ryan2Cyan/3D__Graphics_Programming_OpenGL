@@ -68,7 +68,10 @@ int main()
     // Setup Dear ImGui and Gp contexts:
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    std::shared_ptr<GpContext> context = CreateContext(); 
+
+    // Create context for Gp:
+    std::shared_ptr<GpContext> context = Gp::CreateContext(); 
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -134,6 +137,9 @@ int main()
 
         // Display debug window:
         context->ShowDebugWindow();
+
+        //// Render Triangle:
+        //context->RenderTriangle();
 
         // Rendering
         ImGui::Render();

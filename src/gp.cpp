@@ -1,16 +1,22 @@
 #include "gp.h"
 #include <memory>
+#include <GL/glew.h>
 
-std::shared_ptr<GpContext> CreateContext() {
+namespace Gp {
 
-	std::shared_ptr<GpContext> rtn = std::make_shared<GpContext>();
-	if (glewInit() != GLEW_OK) { 
-		throw std::exception("Failed to initialise glew."); 
+	// Creates a Gp context:
+	std::shared_ptr<GpContext> CreateContext() {
+
+		std::shared_ptr<GpContext> rtn = std::make_shared<GpContext>();
+		if (glewInit() != GLEW_OK) {
+			throw std::exception("Failed to initialise glew.");
+			return NULL;
+		}
+
+		rtn->self = rtn;
+
+		return rtn;
 	}
-
-	rtn->self = rtn;
-
-	return rtn;
 }
 
 

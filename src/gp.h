@@ -1,6 +1,13 @@
 #pragma once
 #include "context.h"
 #include "buffer.h"
+#include <vector>
 
-std::shared_ptr<GpContext> CreateContext();
+namespace Gp {
+	std::shared_ptr<GpContext> CreateContext();
+
+}
+
+
+
 

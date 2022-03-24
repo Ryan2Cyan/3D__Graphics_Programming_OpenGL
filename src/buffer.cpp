@@ -13,7 +13,7 @@ Buffer::Buffer() {
 void Buffer::Buffer::Add(glm::vec2 val) {
 
 	if (type != 0 && type != GL_FLOAT_VEC2) {
-		throw std::exception("Buffer type mismatch in buffer [Add()].");
+		throw std::exception("Buffer type mismatch in buffer.");
 	}
 	type = GL_FLOAT_VEC2;
 	data.push_back(val.x);
@@ -24,7 +24,7 @@ void Buffer::Buffer::Add(glm::vec2 val) {
 void Buffer::Add(glm::vec3 val) {
 
 	if (type != 0 && type != GL_FLOAT_VEC3) {
-		throw std::exception("Buffer type mismatch in buffer [Add()].");
+		throw std::exception("Buffer type mismatch in buffer.");
 	}
 	type = GL_FLOAT_VEC3;
 	data.push_back(val.x);
@@ -36,7 +36,7 @@ void Buffer::Add(glm::vec3 val) {
 void Buffer::Add(glm::vec4 val) {
 
 	if (type != 0 && type != GL_FLOAT_VEC4) {
-		throw std::exception("Buffer type mismatch in buffer [Add()].");
+		throw std::exception("Buffer type mismatch in buffer.");
 	}
 	type = GL_FLOAT_VEC4;
 	data.push_back(val.x);
@@ -60,7 +60,7 @@ const int Buffer::GetComponents() {
 		return data.size() / 4;
 		break;
 	default:
-		throw std::exception("Buffer type invalid [GetComponents()].");
+		throw std::exception("Buffer type invalid.");
 	}
 }
 
@@ -69,7 +69,7 @@ const int Buffer::GetDataSize() {
 		return data.size() * sizeof(data.at(0));
 	}
 	else {
-		throw std::exception("No data in vector - invalid size [GetDataSize()].");
+		throw std::exception("No data in vector - invalid size.");
 	}
 }
 

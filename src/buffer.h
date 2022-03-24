@@ -1,7 +1,10 @@
 #pragma once
-#include "GL/glew.h"
+#include "context.h"
+#include <GL/glew.h>
 #include <vector>
+#include <memory>
 #include <ext.hpp>
+
 
 // OpenGL Objects:
 struct Buffer
@@ -14,6 +17,9 @@ struct Buffer
 	const int GetDataSize();
 	const GLuint GetId();
 private:
+	friend struct GpContext;
+
+	std::shared_ptr<GpContext> context;
 	GLuint id;
 	int components;
 	int type;
