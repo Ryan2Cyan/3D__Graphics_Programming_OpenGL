@@ -17,6 +17,7 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 		std::getline(my_file, line);
 		vert_src += line + "\n";
 	}
+	my_file.close();
 
 	// Load in fragment shader source code:
 	my_file.open(frag_path.c_str());
@@ -27,7 +28,7 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 		std::getline(my_file, line);
 		frag_src += line + "\n";
 	}
-	
+	my_file.close();
 	
 	id = 0;
 	dirty = true;

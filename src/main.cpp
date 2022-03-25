@@ -50,7 +50,10 @@ int main()
 	// Background color:
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
 
-	std::shared_ptr<VertexArray> triangle = context->CreateTriangle();
+    glm::vec3 vert_1 = { 0.0f, 0.5f, 0.0f };
+    glm::vec3 vert_2 = { -0.5f, -0.5f, 0.0f };
+    glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
+ 	std::shared_ptr<VertexArray> triangle = context->CreateTriangle(&vert_1, &vert_2, &vert_3);
 	std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 	
 

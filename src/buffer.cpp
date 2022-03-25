@@ -26,7 +26,7 @@ void Buffer::BufferData() {
 }
 
 // Add functions will insert data into the buffer:
-void Buffer::Buffer::Add(glm::vec2 val) {
+void Buffer::Add(glm::vec2 val) {
 
 	if (type != 0 && type != GL_FLOAT_VEC2) {
 		throw std::exception("Buffer type mismatch in buffer.");

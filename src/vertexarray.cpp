@@ -1,5 +1,5 @@
 #include "VertexArray.h"
-#include "buffer.h"
+#include "Buffer.h"
 
 VertexArray::VertexArray() {
 	id = 0;

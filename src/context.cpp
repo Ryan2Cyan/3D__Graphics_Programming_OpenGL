@@ -1,7 +1,4 @@
-#include "Context.h"
-#include "Shader.h"
 #include "Gp.h"
-#include <ext.hpp>
 #include <iostream>
 
 
@@ -29,18 +26,14 @@ std::shared_ptr<Shader> GpContext::CreateShader(std::string vert_path, std::stri
 	return shader;
 }
 
-std::shared_ptr<VertexArray> GpContext::CreateTriangle() {
-
-	// Define triangle vertices:
-	glm::vec3 vert_1 = { 0.0f, 0.5f, 0.0f };
-	glm::vec3 vert_2 = { -0.5f, -0.5f, 0.0f };
-	glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
+std::shared_ptr<VertexArray> GpContext::CreateTriangle(const glm::vec3* v_1, const glm::vec3* v_2,
+	const glm::vec3* v_3) {
 
 	// Initialise buffer:
 	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
-	pos_buffer->Add(glm::vec3(vert_1));
-	pos_buffer->Add(glm::vec3(vert_2));
-	pos_buffer->Add(glm::vec3(vert_3));
+	pos_buffer->Add(glm::vec3(*v_1));
+	pos_buffer->Add(glm::vec3(*v_2));
+	pos_buffer->Add(glm::vec3(*v_3));
 
 	// Initialise vertex array:
 	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
