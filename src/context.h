@@ -1,22 +1,22 @@
 #pragma once
-#include "buffer.h"
-#include "vertexarray.h"
+#include "VertexArray.h"
 #include <memory>
 #include <GL/glew.h>
 
 
 struct Buffer;
 struct VertexArray;
+struct Shader;
 
 struct  GpContext
 {
-
 	// Utility functions:
-	void RenderTriangle();
+	std::shared_ptr<VertexArray> CreateTriangle();
 
 	// Create object functions:
 	std::shared_ptr<Buffer> CreateBuffer(); 
 	std::shared_ptr<VertexArray> CreateVertexArray();
+	std::shared_ptr<Shader> CreateShader(std::string vert_path, std::string frag_path);
 
 	std::weak_ptr<GpContext> self;
 
