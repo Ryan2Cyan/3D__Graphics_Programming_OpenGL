@@ -6,10 +6,11 @@
 #include <ext.hpp>
 
 
-// OpenGL Objects:
+// Buffer Object class:
 struct Buffer
 {
 	Buffer();
+	void BufferData();
 	void Add(glm::vec2 val);
 	void Add(glm::vec3 val);
 	void Add(glm::vec4 val);

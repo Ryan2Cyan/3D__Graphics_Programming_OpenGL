@@ -9,6 +9,15 @@ Buffer::Buffer() {
 	dirty = false;
 }
 
+// Sends data contained within the buffer to the GPU:
+void Buffer::BufferData() {
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * data.at(0), &data.at(0), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	dirty = false; 
+}
+
 // Add functions will insert data into the buffer:
 void Buffer::Buffer::Add(glm::vec2 val) {
 
@@ -64,6 +73,7 @@ const int Buffer::GetComponents() {
 	}
 }
 
+// Getter functions:
 const int Buffer::GetDataSize() {
 	if (data.at(0)) {
 		return data.size() * sizeof(data.at(0));
@@ -75,6 +85,5 @@ const int Buffer::GetDataSize() {
 
 // TODO: Implement GetId func.
 const GLuint Buffer::GetId() {
-
 	return id;
 }
