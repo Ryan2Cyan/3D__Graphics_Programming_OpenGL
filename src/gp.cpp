@@ -1,4 +1,4 @@
-#include "gp.h"
+#include "Gp.h"
 #include <memory>
 #include <GL/glew.h>
 

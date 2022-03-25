@@ -1,10 +1,10 @@
 #pragma once
-#include "context.h"
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
 #include <ext.hpp>
 
+struct GpContext;
 
 // Buffer Object class:
 struct Buffer
@@ -22,7 +22,6 @@ private:
 
 	std::shared_ptr<GpContext> context;
 	GLuint id;
-	int components;
 	int type;
 	std::vector<GLfloat> data;
 	bool dirty;

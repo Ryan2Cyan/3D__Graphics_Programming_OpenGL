@@ -1,18 +1,25 @@
-#include "buffer.h"
+#include "Buffer.h"
 #include <iostream>
 
 // Buffer:
 Buffer::Buffer() {
 	id = 0;
-	components = 0;
 	type = 0;
 	dirty = false;
 }
 
 // Sends data contained within the buffer to the GPU:
 void Buffer::BufferData() {
+	// Generate the buffer:
+	
+	if(!id)
+		glGenBuffers(1, &id);
+	if (!id)
+		throw std::exception("Failed to initialise vertex buffer");
+
+	// Send buffer data to VAO:
 	glBindBuffer(GL_ARRAY_BUFFER, id);
-	glBufferData(GL_ARRAY_BUFFER, data.size() * data.at(0), &data.at(0), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(data.at(0)), &data.at(0), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	dirty = false; 
@@ -85,5 +92,7 @@ const int Buffer::GetDataSize() {
 
 // TODO: Implement GetId func.
 const GLuint Buffer::GetId() {
+	if (dirty)
+		BufferData();
 	return id;
 }
