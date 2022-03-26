@@ -67,13 +67,13 @@ const int Buffer::GetComponents() {
 
 	switch (type) {
 	case GL_FLOAT_VEC2:
-		return data.size() / 2;
+		return 2;
 		break;
 	case GL_FLOAT_VEC3:
-		return data.size() / 3;
+		return 3;
 		break;
 	case GL_FLOAT_VEC4:
-		return data.size() / 4;
+		return 4;
 		break;
 	default:
 		throw std::exception("Buffer type invalid.");

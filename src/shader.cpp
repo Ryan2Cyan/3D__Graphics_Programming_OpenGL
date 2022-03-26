@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include <fstream>
 #include <iostream>
+#include <GL/glew.h>
 
 
 // Fetch the source codes for the vertex and fragment shaders:
@@ -35,78 +36,93 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	dirty = true;
 }
 
-void SetUniform(const std::string& u_name, glm::mat4 value) {
+void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 
 }
 
-void SetSampler(const std::string& t_name, const std::shared_ptr<Sampler> sampler_arg) {
+void Shader::SetSampler(const std::string& t_name, const std::shared_ptr<Sampler> sampler_arg) {
 
+}
+
+// TODO: Implement render func:
+void Shader::Render(const int w, const int h, glm::vec4 bg_col) {
+	/*glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glUseProgram(id);
+	glViewport(0, 0, w, h);
+	glClearColor(bg_col.x * bg_col.w, bg_col.y * bg_col.w, bg_col.z * bg_col.w, bg_col.w);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 }
 
 GLuint Shader::GetId() {
 
-	// Create a new vertex shader:
-	const char* vert_src = this->vert_src.c_str();
-	GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader_id, 1, &vert_src, NULL);
-	glCompileShader(vertex_shader_id);
+	if (dirty) {
+		// Create a new vertex shader:
+		const char* vert_src = this->vert_src.c_str();
+		GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex_shader_id, 1, &vert_src, NULL);
+		glCompileShader(vertex_shader_id);
 
-	GLint success = 0;
-	glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		GLint max_length = 0;
-		glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH,
-			&max_length);
-		std::vector<GLchar> errorLog(max_length);
-		glGetShaderInfoLog(vertex_shader_id, max_length,
-			&max_length, &errorLog[0]);
-		std::cout << &errorLog.at(0) << std::endl;
-		throw std::exception();
+		GLint success = 0;
+		glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			GLint max_length = 0;
+			glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH,
+				&max_length);
+			std::vector<GLchar> errorLog(max_length);
+			glGetShaderInfoLog(vertex_shader_id, max_length,
+				&max_length, &errorLog[0]);
+			std::cout << &errorLog.at(0) << std::endl;
+			throw std::exception();
+		}
+
+		// Create a new fragment shader:
+		const char* frag_src = this->frag_src.c_str();
+		GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment_shader_id, 1, &frag_src, NULL);
+		glCompileShader(fragment_shader_id);
+		glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &success);
+
+		if (!success)
+		{
+			GLint max_length = 0;
+			glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH,
+				&max_length);
+			std::vector<GLchar> errorLog(max_length);
+			glGetShaderInfoLog(fragment_shader_id, max_length,
+				&max_length, &errorLog[0]);
+			std::cout << &errorLog.at(0) << std::endl;
+			throw std::exception();
+		}
+
+		// Create program object:
+		id = glCreateProgram();
+		glAttachShader(id, vertex_shader_id);
+		glAttachShader(id, fragment_shader_id);
+
+		// Attribute streams go here:
+		glBindAttribLocation(id, 0, "a_Position");
+		glBindAttribLocation(id, 1, "a_TexCoord");
+		glBindAttribLocation(id, 2, "a_Normal");
+
+		glLinkProgram(id);
+		glGetProgramiv(id, GL_LINK_STATUS, &success);
+
+		if (!success)
+		{
+			throw std::exception();
+		}
+
+		glDetachShader(id, vertex_shader_id);
+		glDeleteShader(vertex_shader_id);
+		glDetachShader(id, fragment_shader_id);
+		glDeleteShader(fragment_shader_id);
+
+		dirty = false;
 	}
 
-	// Create a new fragment shader:
-	const char* frag_src = this->frag_src.c_str();
-	GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader_id, 1, &frag_src, NULL);
-	glCompileShader(fragment_shader_id);
-	glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		GLint max_length = 0;
-		glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH,
-			&max_length);
-		std::vector<GLchar> errorLog(max_length);
-		glGetShaderInfoLog(fragment_shader_id, max_length,
-			&max_length, &errorLog[0]);
-		std::cout << &errorLog.at(0) << std::endl;
-		throw std::exception();
-	}
-	
-	// Create program object:
-	id = glCreateProgram();
-	glAttachShader(id, vertex_shader_id);
-	glAttachShader(id, fragment_shader_id);
-
-	// Attribute streams go here:
-	glBindAttribLocation(id, 0, "a_Position");
-	glBindAttribLocation(id, 1, "a_TexCoord");
-	glBindAttribLocation(id, 2, "a_Normal");
-
-	glLinkProgram(id);
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
-
-	if (!success)
-	{
-		throw std::exception();
-	}
-
-	glDetachShader(id, vertex_shader_id);
-	glDeleteShader(vertex_shader_id);
-	glDetachShader(id, fragment_shader_id);
-	glDeleteShader(fragment_shader_id);
-
-	dirty = false;
 	return id;
 }

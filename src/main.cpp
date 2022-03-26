@@ -12,8 +12,8 @@
 
 const GLchar* font_filepath = "Additional_Files\\fonts\\JetBrainsMono-Light.ttf";
 const GLchar* vertex_shader_filepath = "Additional_Files/vertex_shader.txt";
-const GLchar* basic_v_filepath = "Additional_Files/basic_vert.txt";
-const GLchar* basic_f_filepath = "Additional_Files/basic_frag.txt";
+const GLchar* basic_v_filepath = "Additional_Files/basic_vert2.txt";
+const GLchar* basic_f_filepath = "Additional_Files/basic_frag2.txt";
 const GLchar* fragment_shader_filepath = "Additional_Files/fragment_shader.txt";
 const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
@@ -41,6 +41,12 @@ int main()
     // Create context for Gp:
     std::shared_ptr<GpContext> context = Gp::CreateContext(); 
 	
+    // Create texture:
+    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
+
+    // Create vertex array:
+    std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
+    
 
     // Main loop
     bool done = false;
@@ -48,15 +54,6 @@ int main()
     
 	// Background color:
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
-
-    // Create triangle:
-    glm::vec3 vert_1 = { 0.0f, 0.5f, 0.0f };
-    glm::vec3 vert_2 = { -0.5f, -0.5f, 0.0f };
-    glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
- 	std::shared_ptr<VertexArray> triangle = context->CreateTriangle(&vert_1, &vert_2, &vert_3);
-
-    // Create texture/image:
-    /*std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);*/
 
     // Create Shader:
 	std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
@@ -76,20 +73,34 @@ int main()
         }
 
         // Rendering:
+        glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_CULL_FACE);
+	    glEnable(GL_BLEND);
+	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glViewport(0, 0, window_width, window_height);
         glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Bind texture:
+        glBindTexture(GL_TEXTURE_2D, texture->GetId());
+
+        // Bind VAO:
+        glBindVertexArray(image->GetId());
+
 		// Instruct OpenGL to use our shader program and our VAO
 		glUseProgram(shader->GetId());
-		glBindVertexArray(triangle->GetId());
+		
 
 		// Draw 3 vertices (a triangle)
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		// Reset the state
+		// Reset the state:
+        glBindTexture(GL_TEXTURE_2D, 0);
 		glBindVertexArray(0);
 		glUseProgram(0);
+        glDisable(GL_BLEND); 
+        glDisable(GL_CULL_FACE); 
+        glDisable(GL_DEPTH_TEST); 
 
         SDL_GL_SwapWindow(window);
     }

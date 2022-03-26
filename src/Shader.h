@@ -13,6 +13,7 @@ struct Shader {
 	Shader(std::string vert_path, std::string frag_path);
 	void SetUniform(const std::string& u_name, glm::mat4 value);
 	void SetSampler(const std::string& t_name, const std::shared_ptr<Sampler> sampler_arg);
+	void Render(const int w, const int h, glm::vec4 bg_col);
 	GLuint GetId();
 
 private:

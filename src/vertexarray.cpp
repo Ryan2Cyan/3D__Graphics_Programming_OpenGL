@@ -21,7 +21,7 @@ void VertexArray::SendLayoutData() {
 		glBindVertexArray(id);
 		GLuint buff = buffers[i]->GetId();
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[i]->GetId());
-		glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		glVertexAttribPointer(i, buffers[i]->GetComponents(), GL_FLOAT, GL_FALSE, 0, (void*)0);
 		glEnableVertexAttribArray(i);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
