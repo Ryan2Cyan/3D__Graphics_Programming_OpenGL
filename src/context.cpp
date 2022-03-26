@@ -2,6 +2,34 @@
 #include <iostream>
 
 
+// Utility functions:
+// Creates a 2D triangle - three vertices can be passed in:
+std::shared_ptr<VertexArray> GpContext::CreateTriangle(const glm::vec3* v_1, const glm::vec3* v_2,
+	const glm::vec3* v_3) {
+
+	// Initialise buffer:
+	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
+	pos_buffer->Add(glm::vec3(*v_1));
+	pos_buffer->Add(glm::vec3(*v_2));
+	pos_buffer->Add(glm::vec3(*v_3));
+
+	// Initialise vertex array:
+	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
+
+	// Add pos buffer to the vertex array:
+	vertex_array->AddBuffer(pos_buffer);
+
+	return vertex_array;
+}
+
+// Creates a 2D image - filepath to the image can be passed in:
+std::shared_ptr<VertexArray> GpContext::Create2DImage(std::string filepath) {
+	std::shared_ptr<Texture> texture = CreateTexture(filepath);
+
+	return NULL;
+}
+
+// Object functions:
 // Creates a vertex buffer object and returns its ID:
 std::shared_ptr<Buffer> GpContext::CreateBuffer() {
 
@@ -26,20 +54,11 @@ std::shared_ptr<Shader> GpContext::CreateShader(std::string vert_path, std::stri
 	return shader;
 }
 
-std::shared_ptr<VertexArray> GpContext::CreateTriangle(const glm::vec3* v_1, const glm::vec3* v_2,
-	const glm::vec3* v_3) {
-
-	// Initialise buffer:
-	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
-	pos_buffer->Add(glm::vec3(*v_1));
-	pos_buffer->Add(glm::vec3(*v_2));
-	pos_buffer->Add(glm::vec3(*v_3));
-
-	// Initialise vertex array:
-	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
-
-	// Add pos buffer to the vertex array:
-	vertex_array->AddBuffer(pos_buffer);
-
-	return vertex_array;
+std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>(tex_path);
+	texture->context = self.lock();
+	return texture;
 }
+
+
+
