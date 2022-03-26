@@ -3,6 +3,7 @@
 #include <iostream>
 
 
+// Fetch the source codes for the vertex and fragment shaders:
 Shader::Shader(std::string vert_path, std::string frag_path) {
 
 
@@ -32,6 +33,14 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	
 	id = 0;
 	dirty = true;
+}
+
+void SetUniform(const std::string& u_name, glm::mat4 value) {
+
+}
+
+void SetSampler(const std::string& t_name, const std::shared_ptr<Sampler> sampler_arg) {
+
 }
 
 GLuint Shader::GetId() {
