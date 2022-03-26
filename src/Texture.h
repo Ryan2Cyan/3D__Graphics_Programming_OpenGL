@@ -14,6 +14,7 @@ struct Texture {
 private:
 	friend struct GpContext;
 
+
 	std::shared_ptr<GpContext> context;
 	std::string filepath;
 	GLuint id;

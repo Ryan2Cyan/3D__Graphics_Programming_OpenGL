@@ -102,5 +102,11 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
+std::shared_ptr<Sampler> GpContext::CreateSampler() {
+	std::shared_ptr<Sampler> sampler = std::make_shared<Sampler>();
+	sampler->context = self.lock();
+	return sampler;
+}
+
 
 

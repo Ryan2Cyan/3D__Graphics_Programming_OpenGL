@@ -1,10 +1,13 @@
 #include "Sampler.h"
-#include <memory>
+#include "Texture.h"
 
-struct GpContext;
 
-struct Sampler {
+// Adds texture to the sampler:
+void Sampler::Add(const std::shared_ptr<Texture> arg) {
+	texture = arg;
+}
 
-private:
-	std::shared_ptr<GpContext> context;
-};
+// Getters:
+std::shared_ptr<Texture> Sampler::GetTexture() {
+	return texture;
+}

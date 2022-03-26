@@ -41,8 +41,16 @@ int main()
     // Create context for Gp:
     std::shared_ptr<GpContext> context = Gp::CreateContext(); 
 	
+    // Create Shader:
+    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
+
     // Create texture:
     std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
+
+    // Create sampler:
+    std::shared_ptr<Sampler> sampler = context->CreateSampler();
+    sampler->Add(texture);
+    shader->AddSampler(sampler);
 
     // Create vertex array:
     std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
@@ -54,9 +62,6 @@ int main()
     
 	// Background color:
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
-
-    // Create Shader:
-	std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 	
 
     
