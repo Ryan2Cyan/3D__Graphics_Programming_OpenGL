@@ -19,8 +19,9 @@ void VertexArray::SendLayoutData() {
 	for (size_t i = 0; i < buffers.size(); i++)
 	{
 		glBindVertexArray(id);
+		GLuint buff = buffers[i]->GetId();
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[i]->GetId());
-		glVertexAttribPointer(i, buffers[i]->GetComponents(), GL_FLOAT, GL_FALSE, 0, (void*)0);
+		glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		glEnableVertexAttribArray(i);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -35,12 +36,6 @@ void VertexArray::AddBuffer(std::shared_ptr<Buffer> buffer_arg) {
 	dirty = true;
 }
 
-// Getters:
-const int VertexArray::GetVertexCount() {
-	if (buffers[0])
-		return buffers[0]->GetComponents(); // See how much data is in a buffer to get the vertex count
-	return 0;
-}
 
 const GLuint VertexArray::GetId() {
 	if (dirty)

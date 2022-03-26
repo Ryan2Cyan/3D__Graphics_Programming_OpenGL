@@ -13,8 +13,7 @@ struct Texture;
 struct  GpContext
 {
 	// Utility functions:
-	std::shared_ptr<VertexArray> CreateTriangle(const glm::vec3* v_1, const glm::vec3* v_2,
-		const glm::vec3* v_3);
+	std::shared_ptr<VertexArray> CreateTriangle();
 	std::shared_ptr<VertexArray> Create2DImage(std::string filepath);
 
 	// Create object functions:

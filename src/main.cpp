@@ -28,7 +28,7 @@ int main()
     }
 
     // Create window with graphics context
-	int window_width = 1280;
+	int window_width = 720;
 	int window_height = 720;
 
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -50,21 +50,22 @@ int main()
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
 
     // Create triangle:
-    /*glm::vec3 vert_1 = { 0.0f, 0.5f, 0.0f };
+    glm::vec3 vert_1 = { 0.0f, 0.5f, 0.0f };
     glm::vec3 vert_2 = { -0.5f, -0.5f, 0.0f };
     glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
- 	std::shared_ptr<VertexArray> triangle = context->CreateTriangle(&vert_1, &vert_2, &vert_3);*/
+ 	std::shared_ptr<VertexArray> triangle = context->CreateTriangle(&vert_1, &vert_2, &vert_3);
 
     // Create texture/image:
-    std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
+    /*std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);*/
 
     // Create Shader:
 	std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 	
 
-
+    
     while (!done)
-    {
+    { 
+        // Input loop:
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
@@ -81,10 +82,10 @@ int main()
 
 		// Instruct OpenGL to use our shader program and our VAO
 		glUseProgram(shader->GetId());
-		/*glBindVertexArray(triangle->GetId());*/
+		glBindVertexArray(triangle->GetId());
 
 		// Draw 3 vertices (a triangle)
-		/*glDrawArrays(GL_TRIANGLES, 0, 3);*/
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// Reset the state
 		glBindVertexArray(0);
@@ -94,7 +95,6 @@ int main()
     }
 
     // Cleanup:
-
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();

@@ -9,9 +9,18 @@ std::shared_ptr<VertexArray> GpContext::CreateTriangle(const glm::vec3* v_1, con
 
 	// Initialise buffer:
 	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
-	pos_buffer->Add(glm::vec3(*v_1));
-	pos_buffer->Add(glm::vec3(*v_2));
-	pos_buffer->Add(glm::vec3(*v_3));
+	glm::vec3 vert_1 = { -0.5f, 0.5f, 0.0f };
+	glm::vec3 vert_2 = { 0.5f, 0.5f, 0.0f };
+	glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
+	glm::vec3 vert_4 = { 0.5f, -0.5f, 0.0f };
+	glm::vec3 vert_5 = { -0.5f, -0.5f, 0.0f };
+	glm::vec3 vert_6 = { -0.5f, 0.5f, 0.0f };
+	pos_buffer->Add(vert_1);
+	pos_buffer->Add(vert_2);
+	pos_buffer->Add(vert_3);
+	pos_buffer->Add(vert_4);
+	pos_buffer->Add(vert_5);
+	pos_buffer->Add(vert_6);
 
 	// Initialise vertex array:
 	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
@@ -24,8 +33,6 @@ std::shared_ptr<VertexArray> GpContext::CreateTriangle(const glm::vec3* v_1, con
 
 // Creates a 2D image - filepath to the image can be passed in:
 std::shared_ptr<VertexArray> GpContext::Create2DImage(std::string filepath) {
-	std::shared_ptr<Texture> texture = CreateTexture(filepath);
-
 	return NULL;
 }
 
