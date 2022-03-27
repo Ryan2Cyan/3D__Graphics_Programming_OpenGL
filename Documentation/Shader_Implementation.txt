@@ -1,0 +1,54 @@
+VariableInfo:
+ + attrib = false
+ + type = GL_FLOAT_MAT4
+ + loc = NULL;
+ + mat4_v = [perspective_mat]
+
+
+
+Shader::Render
+
+glEnable(GL_DEPTH_TEST); pollForError();
+glEnable(GL_CULL_FACE); pollForError();
+glEnable(GL_BLEND); pollForError();
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+// 1.) Take all uniform locations you have, and set them within the shaders:
+int activeTexture = 0;
+int vertices = -1;
+
+if(attrib == false){
+   if(type == GL_FLOAT_MAT4){
+       glUniform4f(loc, 1, false, mat4_v);
+    }
+   else if(type == GL_FLOAT_VEC2)
+   .
+   .
+   .
+   // 2.) Make sure to iterate through all the samplers too:
+   if(type == GL_SAMPLER_2D){
+      glActiveTexture(GL_TEXTURE0 + activeTexture);
+      glBindTexture(GL_TEXTURE_2D, sampler->GetTexture()->GetId());
+      glUniform1i(loc, activeTexture);
+      activeTexture++;
+   }
+}
+// 3.) Here we handle attribute data instead of shader data:
+else{
+   
+   // 4.) Calculate the size of the data that needs to be passed in:
+   int size = 0;
+   if(type == GL_FLOAT_VEC2) size == 2
+   .
+   .
+   .
+
+   // 5.) Bind the data from the variable's buffer and send layout via vertex array:
+   glBindBuffer(GL_ARRAY_BUFFER, buffer_v->GetId());
+   glVertexAttribPointer(loc, size, GL_FLOAT, GL_FALSE, 0, 0);
+   glEnableVertexAttribArray(loc);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   
+
+}

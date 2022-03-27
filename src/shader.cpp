@@ -41,51 +41,18 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 
+	// Get location of the uniform within the shader program:
+	const GLchar* name = u_name.c_str();
+	GLint loc = glGetUniformLocation(id, name);
+	if (loc == -1)
+		throw std::exception("Name of uniform does not correspond with uniform value");
+
+	// Specify the value for the uniform:
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
 	samplers.push_back(arg);
-}
-
-// TODO: Implement render func:
-void Shader::Render(const int w, const int h, glm::vec4 bg_col, std::shared_ptr<VertexArray> &vao,
-	std::shared_ptr<Texture> &tex) {
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glViewport(0, 0, w, h);
-	glClearColor(bg_col.x * bg_col.w, bg_col.y * bg_col.w, bg_col.z * bg_col.w, bg_col.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//// Bind from samplers:
-	////for (size_t t = 0; t < samplers.size(); t++)
-	////{
-	////	glActiveTexture(GL_TEXTURE0 + t);
-	////	glBindTexture(GL_TEXTURE_2D, samplers[0]->GetTexture()->GetId());
-	////	/*glUniform1i(location_of_sampler, active_texture);*/
-	////}
-
-	// Bind texture:
-	glBindTexture(GL_TEXTURE_2D, tex->GetId());
-
-	// Bind VAO:
-	glBindVertexArray(vao->GetId());
-
-	// Instruct OpenGL to use our shader program and our VAO
-	glUseProgram(this->GetId());
-
-	// Draw 6 vertices (a square):
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-	// Reset the state:
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
-	glUseProgram(0);
-	glDisable(GL_BLEND);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
 }
 
 GLuint Shader::GetId() {

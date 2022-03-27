@@ -54,16 +54,20 @@ int main()
 
     // Create vertex array:
     std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
-    
 
-    // Main loop
+    // Main loop state:
     bool done = false;
     bool window_open = true;
+    bool backface_cull = false;
+
+    // Object state:
+    float angle = 45.0f;
+    float rot_speed = 2.0f;
+    glm::vec3 position = { 0.0f, 0.0f, -2.5f };
     
 	// Background color:
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
 	
-
     
     while (!done)
     { 
@@ -77,7 +81,54 @@ int main()
                 done = true;
         }
 
-        shader->Render(window_width, window_height, background_col, image, texture);
+        // Render:
+        glEnable(GL_DEPTH_TEST);
+        if(backface_cull) glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glViewport(0, 0, window_width, window_height);
+        glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Bind from samplers:
+        for (size_t t = 0; t < shader->samplers.size(); t++)
+        {
+            glActiveTexture(GL_TEXTURE0 + t);
+            glBindTexture(GL_TEXTURE_2D, shader->samplers[t]->GetTexture()->GetId());
+        }
+
+        // Instruct OpenGL to use our shader program and our VAO
+        glUseProgram(shader->GetId());
+
+        // Prepare the perspective projection matrix
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+            (float)window_width / (float)window_height, 0.1f, 100.f);
+
+        // Prepare the model matrix
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, position);
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
+
+        // Increase the float angle so next frame the triangle rotates further
+        angle += rot_speed;
+
+        // Parse in matrix data:
+        shader->SetUniform("u_Model", model);
+        shader->SetUniform("u_Projection", projection);
+
+        // Bind VAO:
+        glBindVertexArray(image->GetId());
+
+        // Draw 6 vertices (a square):
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Reset the state:
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindVertexArray(0);
+        glUseProgram(0);
+        glDisable(GL_BLEND);
+        if (backface_cull) glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
 
         SDL_GL_SwapWindow(window);
     }
