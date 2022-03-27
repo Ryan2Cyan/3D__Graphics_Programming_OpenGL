@@ -16,6 +16,7 @@ struct Mesh {
 	glm::vec3 GetPos();
 	void SetPos(glm::vec3 arg);
 
+
 private:
 	friend struct GpContext;
 

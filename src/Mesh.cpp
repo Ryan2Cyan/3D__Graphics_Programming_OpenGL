@@ -29,3 +29,4 @@ void Mesh::SetPos(glm::vec3 arg) {
 	position = arg;
 }
 
+
