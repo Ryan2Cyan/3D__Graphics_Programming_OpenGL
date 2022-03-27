@@ -11,6 +11,7 @@ struct Shader;
 struct Texture;
 struct Sampler;
 struct Mesh;
+struct Camera;
 
 struct  GpContext
 {
@@ -23,8 +24,9 @@ struct  GpContext
 	std::shared_ptr<VertexArray> CreateVertexArray();
 	std::shared_ptr<Shader> CreateShader(std::string vert_path, std::string frag_path);
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
-	std::shared_ptr<Sampler> CreateSampler();
+	/*std::shared_ptr<Sampler> CreateSampler();*/
 	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
+	std::shared_ptr<Camera> CreateCamera(glm::vec3 position, glm::vec3 target);
 
 	std::weak_ptr<GpContext> self;
 

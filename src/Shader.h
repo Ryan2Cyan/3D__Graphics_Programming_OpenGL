@@ -10,6 +10,7 @@ struct Sampler;
 struct VertexArray;
 struct Texture;
 struct Mesh;
+struct Camera;
 
 struct Shader {
 
@@ -19,7 +20,8 @@ struct Shader {
 	void SetUniform(const std::string& u_name, glm::vec3 value);
 	/*void AddSampler(const std::shared_ptr<Sampler> arg);*/
 	GLuint GetId();
-	void Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float& angle);
+	void Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size, 
+		glm::vec4 background_col, bool backface_cull, float& angle);
 	
 
 private:

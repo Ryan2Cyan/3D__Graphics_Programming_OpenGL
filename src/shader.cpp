@@ -1,8 +1,4 @@
-#include "Shader.h"
-#include "Sampler.h"
-#include "Texture.h"
-#include "VertexArray.h"
-#include "Mesh.h"
+#include "gp.h"
 #include <fstream>
 #include <iostream>
 #include <GL/glew.h>
@@ -144,7 +140,8 @@ GLuint Shader::GetId() {
 	return id;
 }
 
-void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float &angle) {
+void Shader::Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size,
+	glm::vec4 background_col, bool backface_cull, float& angle) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
@@ -169,13 +166,6 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
 			(float)window_size.x / (float)window_size.y, 0.1f, 100.f);
 
-		// Create view matrix:
-		glm::mat4 view;
-		glm::vec3 camera_pos = { 0.0f, 0.0f, 3.0f };
-		glm::vec3 camera_tar = { 0.0f, 1.0f, 0.0f };
-		glm::vec3 camera_up = { 0.0f, 1.0f, 0.0f };
-		view = glm::lookAt(camera_pos, camera_tar, camera_up);
-		
 		// Prepare the model matrix
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
@@ -185,12 +175,14 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 		// Increase the float angle so next frame the triangle rotates further
 		angle += 1.0f;
 
+		// Refresh camera:
+		camera->view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
+
 		// Parse in matrix data:
-		
 		SetUniform("u_Model", model);
-		SetUniform("u_View", view);
+		SetUniform("u_View", camera->view);
 		SetUniform("u_Projection", projection);
-		SetUniform("u_ViewPos", camera_pos); //NOT WORKING
+		SetUniform("u_ViewPos", camera->pos); 
 
 		// Render Model:
 		glBindVertexArray(meshes[i]->GetWfModel().vaoId);

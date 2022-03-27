@@ -6,6 +6,7 @@
 #include "Sampler.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "Camera.h"
 
 namespace Gp {
 

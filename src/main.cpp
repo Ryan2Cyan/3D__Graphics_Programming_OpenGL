@@ -65,10 +65,20 @@ int main()
     shader->AddMeshToRender(curuthers2);
     shader->AddMeshToRender(curuthers3);
 
+    // Create camera:
+    std::shared_ptr<Camera> main_cam = context->CreateCamera(
+        glm::vec3(1.0f, 1.0f, -1.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f)
+    );
+
     // Main loop state:
     bool done = false;
     bool window_open = true;
     bool backface_cull = false;
+    float camera_speed = 0.05f;
+    float delta_time = 0;
+    Uint64 last = 0;
+    Uint64 now = SDL_GetPerformanceCounter();
 
     // Object state:
     float angle = 45.0f;
@@ -79,36 +89,79 @@ int main()
     
     while (!done)
     { 
+        // Calc deltatime:
+        last = now;
+        now = SDL_GetPerformanceCounter();
+        delta_time = (float)((now - last) * 1000 / (float)SDL_GetPerformanceFrequency());
+
         // Input loop:
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT)
+            switch (event.type) {
+            case SDL_QUIT:
                 done = true;
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+                break;
+
+            case SDL_WINDOWEVENT_CLOSE:
                 done = true;
-            if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_a) {
-                    glm::vec3 mod{ 0.5f, 0.0f, 0.0f };
-                    curuthers->SetPos(curuthers->GetPos() - mod);
+                break;
+            }
+           
+            if (event.key.repeat == 0 && event.type == SDL_KEYDOWN) {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_w:
+                    main_cam->vel += delta_time * camera_speed * main_cam->front;
+                    break;
+                case SDLK_s:
+                    main_cam->vel -= delta_time * camera_speed * main_cam->front;
+                    break;
+                case SDLK_a:
+                    main_cam->vel -= glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
+                    break;
+                case SDLK_d:
+                    main_cam->vel += glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
+                    break;
+                default:
+                    break;
                 }
-                if (event.key.keysym.sym == SDLK_d) {
-                    glm::vec3 mod{ -0.5f, 0.0f, 0.0f };
-                    curuthers->SetPos(curuthers->GetPos() - mod);
-                }
-                if (event.key.keysym.sym == SDLK_s) {
-                    glm::vec3 mod{ 0.0f, 0.5f, 0.0f };
-                    curuthers->SetPos(curuthers->GetPos() - mod);
-                }
-                if (event.key.keysym.sym == SDLK_w) {
-                    glm::vec3 mod{ 0.0f, -0.5f, 0.0f };
-                    curuthers->SetPos(curuthers->GetPos() - mod);
+            }
+            if (event.key.repeat == 0 && event.type == SDL_KEYUP) {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_w:
+                    main_cam->vel -= delta_time * camera_speed * main_cam->front;
+                    break;
+                case SDLK_s:
+                    main_cam->vel += delta_time * camera_speed * main_cam->front;
+                    break;
+                case SDLK_a:
+                    main_cam->vel += glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
+                    break;
+                case SDLK_d:
+                    main_cam->vel -= glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
+                    break;
+                default:
+                    break;
                 }
             }
         }
 
+        // Clamp velocity to prevent pos changing from small values:
+        if (main_cam->vel.x < 0.05f && main_cam->vel.x > -0.05f)
+            main_cam->vel.x = 0.0f;
+        if (main_cam->vel.y < 0.05f && main_cam->vel.y > -0.05f)
+            main_cam->vel.y = 0.00f;
+        if (main_cam->vel.z < 0.05f && main_cam->vel.z > -0.05f)
+            main_cam->vel.z = 0.0f;
+
+        // Update position:
+        main_cam->pos += main_cam->vel;
+        
+      
         // Render:
-        shader->Render(window_size, background_col, backface_cull, angle);
+        shader->Render(main_cam, window_size, background_col, backface_cull, angle);
         SDL_GL_SwapWindow(window);
     }
 
