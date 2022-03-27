@@ -16,6 +16,7 @@ struct Shader {
 	Shader(std::string vert_path, std::string frag_path);
 	void AddMeshToRender(std::shared_ptr<Mesh> arg);
 	void SetUniform(const std::string& u_name, glm::mat4 value);
+	void SetUniform(const std::string& u_name, glm::vec3 value);
 	/*void AddSampler(const std::shared_ptr<Sampler> arg);*/
 	GLuint GetId();
 	void Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float& angle);

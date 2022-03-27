@@ -57,6 +57,18 @@ void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void Shader::SetUniform(const std::string& u_name, glm::vec3 value) {
+
+	// Get location of the uniform within the shader program:
+	const GLchar* name = u_name.c_str();
+	GLint loc = glGetUniformLocation(id, name);
+	if (loc == -1)
+		throw std::exception("Name of uniform does not correspond with uniform value");
+
+	// Specify the value for the uniform:
+	glUniform3fv(loc, 1, glm::value_ptr(value));
+}
+
 //void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
 //	samplers.push_back(arg);
 //}
@@ -157,6 +169,13 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
 			(float)window_size.x / (float)window_size.y, 0.1f, 100.f);
 
+		// Create view matrix:
+		glm::mat4 view;
+		glm::vec3 camera_pos = { 0.0f, 0.0f, 3.0f };
+		glm::vec3 camera_tar = { 0.0f, 1.0f, 0.0f };
+		glm::vec3 camera_up = { 0.0f, 1.0f, 0.0f };
+		view = glm::lookAt(camera_pos, camera_tar, camera_up);
+		
 		// Prepare the model matrix
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
@@ -167,7 +186,9 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 		angle += 1.0f;
 
 		// Parse in matrix data:
+		/*SetUniform("u_ViewPos", camera_pos);*/ //NOT WORKING
 		SetUniform("u_Model", model);
+		SetUniform("u_View", view);
 		SetUniform("u_Projection", projection);
 
 		// Render Model:

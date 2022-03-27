@@ -5,7 +5,6 @@
 #include <SDL.h>
 #include <GL/glew.h>
 #include <memory>
-
 #include <ext.hpp>
 #include <iostream>
 #include <vector>
