@@ -9,6 +9,7 @@
 #include <ext.hpp>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 const GLchar* font_filepath = "Additional_Files\\fonts\\JetBrainsMono-Light.ttf";
 const GLchar* vertex_shader_filepath = "Additional_Files/vertex_shader.txt";
@@ -44,16 +45,22 @@ int main()
     // Create Shader:
     std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 
-    // Create texture:
-    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
+    // Load in model:
+    WfModel curuthers;
+    if (WfModelLoad(model_filepath, &curuthers) != 0) {
+        throw std::exception("Could not load model");
+    }
 
-    // Create sampler:
-    std::shared_ptr<Sampler> sampler = context->CreateSampler();
-    sampler->Add(texture);
-    shader->AddSampler(sampler);
+    //// Create texture:
+    //std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
 
-    // Create vertex array:
-    std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
+    //// Create sampler:
+    //std::shared_ptr<Sampler> sampler = context->CreateSampler();
+    //sampler->Add(texture);
+    //shader->AddSampler(sampler);
+
+    //// Create vertex array:
+    //std::shared_ptr<VertexArray> image = context->Create2DImage(image_filepath);
 
     // Main loop state:
     bool done = false;
@@ -63,7 +70,7 @@ int main()
     // Object state:
     float angle = 45.0f;
     float rot_speed = 2.0f;
-    glm::vec3 position = { 0.0f, 0.0f, -2.5f };
+    glm::vec3 position = { 0.0f, 0.0f, -10.5f };
     
 	// Background color:
 	glm::vec4 background_col = { 0.6f, 0.7f, 0.8f, 1.0f };
@@ -79,6 +86,20 @@ int main()
                 done = true;
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_a) {
+                    position.x += -0.5f;
+                }
+                if (event.key.keysym.sym == SDLK_d) {
+                    position.x += 0.5f;
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    position.y += -0.5f;
+                }
+                if (event.key.keysym.sym == SDLK_w) {
+                    position.y += 0.5f;
+                }
+            }
         }
 
         // Render:
@@ -90,12 +111,14 @@ int main()
         glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Bind from samplers:
-        for (size_t t = 0; t < shader->samplers.size(); t++)
-        {
-            glActiveTexture(GL_TEXTURE0 + t);
-            glBindTexture(GL_TEXTURE_2D, shader->samplers[t]->GetTexture()->GetId());
-        }
+        //// Bind from samplers:
+        //for (size_t t = 0; t < shader->samplers.size(); t++)
+        //{
+        //    glActiveTexture(GL_TEXTURE0 + t);
+        //    glBindTexture(GL_TEXTURE_2D, shader->samplers[t]->GetTexture()->GetId());
+        //}
+
+        glBindTexture(GL_TEXTURE_2D, curuthers.textureId);
 
         // Instruct OpenGL to use our shader program and our VAO
         glUseProgram(shader->GetId());
@@ -116,11 +139,13 @@ int main()
         shader->SetUniform("u_Model", model);
         shader->SetUniform("u_Projection", projection);
 
-        // Bind VAO:
-        glBindVertexArray(image->GetId());
+        //// Render Image:
+        //glBindVertexArray(image->GetId());
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        // Draw 6 vertices (a square):
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // Render Model:
+        glBindVertexArray(curuthers.vaoId);
+        glDrawArrays(GL_TRIANGLES, 0, curuthers.vertexCount);
 
         // Reset the state:
         glBindTexture(GL_TEXTURE_2D, 0);

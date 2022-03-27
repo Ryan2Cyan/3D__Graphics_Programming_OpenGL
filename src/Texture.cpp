@@ -1,5 +1,5 @@
 #include "Texture.h"
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 Texture::Texture(std::string tex_path) {
