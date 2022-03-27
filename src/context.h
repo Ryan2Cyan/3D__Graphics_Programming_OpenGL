@@ -10,6 +10,7 @@ struct VertexArray;
 struct Shader;
 struct Texture;
 struct Sampler;
+struct Mesh;
 
 struct  GpContext
 {
@@ -23,6 +24,7 @@ struct  GpContext
 	std::shared_ptr<Shader> CreateShader(std::string vert_path, std::string frag_path);
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
 	std::shared_ptr<Sampler> CreateSampler();
+	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
 
 	std::weak_ptr<GpContext> self;
 

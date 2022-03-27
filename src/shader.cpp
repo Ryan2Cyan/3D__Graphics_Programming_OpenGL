@@ -2,6 +2,7 @@
 #include "Sampler.h"
 #include "Texture.h"
 #include "VertexArray.h"
+#include "Mesh.h"
 #include <fstream>
 #include <iostream>
 #include <GL/glew.h>
@@ -39,6 +40,11 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	dirty = true;
 }
 
+// Adds mesh to shader vector - all meshes within this vector will be rendered in loop:
+void Shader::AddMeshToRender(std::shared_ptr<Mesh> arg) {
+	meshes.push_back(arg);
+}
+
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 
 	// Get location of the uniform within the shader program:
@@ -51,9 +57,9 @@ void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
-	samplers.push_back(arg);
-}
+//void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
+//	samplers.push_back(arg);
+//}
 
 GLuint Shader::GetId() {
 
@@ -124,4 +130,57 @@ GLuint Shader::GetId() {
 	}
 
 	return id;
+}
+
+void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float &angle) {
+
+	// Render set up:
+	glEnable(GL_DEPTH_TEST);
+	if (backface_cull) glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glViewport(0, 0, window_size.x, window_size.y);
+	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Render each mesh in 'meshes' vector:
+	 // Render each mesh:
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+
+		glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);
+
+		// Instruct OpenGL to use our shader program and our VAO
+		glUseProgram(GetId());
+
+		// Prepare the perspective projection matrix
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+			(float)window_size.x / (float)window_size.y, 0.1f, 100.f);
+
+		// Prepare the model matrix
+		glm::mat4 model = meshes[i]->GetModelMat();
+		glm::vec3 pos = meshes[i]->GetPos();
+		model = glm::translate(model, pos);
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 1, 0));
+
+		// Increase the float angle so next frame the triangle rotates further
+		angle += 1.0f;
+
+		// Parse in matrix data:
+		SetUniform("u_Model", model);
+		SetUniform("u_Projection", projection);
+
+		// Render Model:
+		glBindVertexArray(meshes[i]->GetWfModel().vaoId);
+		glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
+
+		// Reset the state:
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindVertexArray(0);
+		glUseProgram(0);
+		glDisable(GL_BLEND);
+		if (backface_cull) glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+
+	}
 }

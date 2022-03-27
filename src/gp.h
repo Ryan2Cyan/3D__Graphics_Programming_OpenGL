@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Sampler.h"
 #include "Texture.h"
+#include "Mesh.h"
 
 namespace Gp {
 
