@@ -186,10 +186,11 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 		angle += 1.0f;
 
 		// Parse in matrix data:
-		/*SetUniform("u_ViewPos", camera_pos);*/ //NOT WORKING
+		
 		SetUniform("u_Model", model);
 		SetUniform("u_View", view);
 		SetUniform("u_Projection", projection);
+		SetUniform("u_ViewPos", camera_pos); //NOT WORKING
 
 		// Render Model:
 		glBindVertexArray(meshes[i]->GetWfModel().vaoId);
