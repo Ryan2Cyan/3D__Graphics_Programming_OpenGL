@@ -27,5 +27,4 @@ struct  GpContext
 	std::weak_ptr<GpContext> self;
 
 private:
-	bool show_debug_window = true;
 };

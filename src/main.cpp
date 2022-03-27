@@ -77,35 +77,7 @@ int main()
                 done = true;
         }
 
-        // Rendering:
-        glEnable(GL_DEPTH_TEST);
-	    glEnable(GL_CULL_FACE);
-	    glEnable(GL_BLEND);
-	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glViewport(0, 0, window_width, window_height);
-        glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Bind texture:
-        glBindTexture(GL_TEXTURE_2D, texture->GetId());
-
-        // Bind VAO:
-        glBindVertexArray(image->GetId());
-
-		// Instruct OpenGL to use our shader program and our VAO
-		glUseProgram(shader->GetId());
-		
-
-		// Draw 3 vertices (a triangle)
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		// Reset the state:
-        glBindTexture(GL_TEXTURE_2D, 0);
-		glBindVertexArray(0);
-		glUseProgram(0);
-        glDisable(GL_BLEND); 
-        glDisable(GL_CULL_FACE); 
-        glDisable(GL_DEPTH_TEST); 
+        shader->Render(window_width, window_height, background_col, image, texture);
 
         SDL_GL_SwapWindow(window);
     }

@@ -16,14 +16,17 @@ Texture::Texture(std::string tex_path) {
 GLuint Texture::GetId() {
 
 	if (dirty) {
+
 		// Load image/texture from filepath:
 		int w = 0;
 		int h = 0;
 		const char* s = filepath.c_str();
 		unsigned char* data = stbi_load(s, &w, &h, NULL, 4);
-
-		// Generate the texture:
-		glGenTextures(1, &id);
+		
+		if (!id) {
+			// Generate the texture:
+			glGenTextures(1, &id);
+		}
 		if (!id)
 			throw std::exception("Unable to generate texture");
 
