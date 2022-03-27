@@ -11,11 +11,15 @@
 #include <vector>
 #include <fstream>
 
-const GLchar* font_filepath = "Additional_Files\\fonts\\JetBrainsMono-Light.ttf";
-const GLchar* vertex_shader_filepath = "Additional_Files/vertex_shader.txt";
-const GLchar* basic_v_filepath = "Additional_Files/basic_vert2.txt";
-const GLchar* basic_f_filepath = "Additional_Files/basic_frag2.txt";
-const GLchar* fragment_shader_filepath = "Additional_Files/fragment_shader.txt";
+// Shaders filepaths:
+const GLchar* vertex_shader_filepath = "Additional_Files/shaders/vertex_shader.txt";
+const GLchar* basic_v_filepath = "Additional_Files/shaders/basic_vert2.txt";
+const GLchar* basic_f_filepath = "Additional_Files/shaders/basic_frag2.txt";
+const GLchar* fragment_shader_filepath = "Additional_Files/shaders/fragment_shader.txt";
+const GLchar* f_basic_lighting = "Additional_Files/shaders/basic_lighting_frag.txt";
+const GLchar* v_basic_lighting = "Additional_Files/shaders/basic_lighting_vert.txt";
+
+// Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
 
@@ -43,7 +47,7 @@ int main()
     std::shared_ptr<GpContext> context = Gp::CreateContext(); 
 	
     // Create Shader:
-    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
+    std::shared_ptr<Shader> shader = context->CreateShader(v_basic_lighting, f_basic_lighting);
 
     // Load in model:
     glm::vec3 position = { 0.0f, 0.0f, -10.5f };
