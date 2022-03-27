@@ -170,6 +170,7 @@
     <ClCompile Include="src\context.cpp" />
     <ClCompile Include="src\gp.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Sampler.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="src\Buffer.h" />
     <ClInclude Include="src\context.h" />
     <ClInclude Include="src\gp.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Sampler.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />

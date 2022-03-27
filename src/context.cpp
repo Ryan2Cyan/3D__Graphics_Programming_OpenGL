@@ -108,5 +108,11 @@ std::shared_ptr<Sampler> GpContext::CreateSampler() {
 	return sampler;
 }
 
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::string filepath, glm::vec3 pos_arg) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath, pos_arg);
+	mesh->context = self.lock();
+	return mesh;
+}
+
 
 
