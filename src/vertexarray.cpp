@@ -6,6 +6,11 @@ VertexArray::VertexArray() {
 	dirty = false;
 }
 
+VertexArray::~VertexArray() {
+	GLuint del_id = id;
+	glDeleteVertexArrays(1, &del_id);
+}
+
 // Sends the data contained within each buffer (within the buffers vector), to the GPU:
 void VertexArray::SendLayoutData() {
 

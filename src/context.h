@@ -12,12 +12,13 @@ struct Texture;
 struct Sampler;
 struct Mesh;
 struct Camera;
+struct RenderTexture;
 
 struct  GpContext
 {
 	// Utility functions:
 	std::shared_ptr<VertexArray> CreateTriangle();
-	std::shared_ptr<VertexArray> Create2DImage(std::string filepath);
+	std::shared_ptr<VertexArray> Create2DImage();
 
 	// Create object functions:
 	std::shared_ptr<Buffer> CreateBuffer(); 
@@ -27,6 +28,7 @@ struct  GpContext
 	/*std::shared_ptr<Sampler> CreateSampler();*/
 	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
 	std::shared_ptr<Camera> CreateCamera(glm::vec3 position, glm::vec3 target);
+	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);
 
 	std::weak_ptr<GpContext> self;
 

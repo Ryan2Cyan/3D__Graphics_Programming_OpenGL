@@ -36,6 +36,11 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	dirty = true;
 }
 
+Shader::~Shader() {
+	GLuint del_id = id;
+	glDeleteProgram(del_id);
+}
+
 // Adds mesh to shader vector - all meshes within this vector will be rendered in loop:
 void Shader::AddMeshToRender(std::shared_ptr<Mesh> arg) {
 	meshes.push_back(arg);
@@ -140,8 +145,8 @@ GLuint Shader::GetId() {
 	return id;
 }
 
-void Shader::Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size,
-	glm::vec4 background_col, bool backface_cull, float& angle) {
+// Render the scene using default framebuffer:
+void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float& angle) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
@@ -162,10 +167,6 @@ void Shader::Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size,
 		// Instruct OpenGL to use our shader program and our VAO
 		glUseProgram(GetId());
 
-		// Prepare the perspective projection matrix
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-			(float)window_size.x / (float)window_size.y, 0.1f, 100.f);
-
 		// Prepare the model matrix
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
@@ -175,14 +176,8 @@ void Shader::Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size,
 		// Increase the float angle so next frame the triangle rotates further
 		angle += 1.0f;
 
-		// Refresh camera:
-		camera->view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
-
 		// Parse in matrix data:
 		SetUniform("u_Model", model);
-		SetUniform("u_View", camera->view);
-		SetUniform("u_Projection", projection);
-		SetUniform("u_ViewPos", camera->pos); 
 
 		// Render Model:
 		glBindVertexArray(meshes[i]->GetWfModel().vaoId);
@@ -197,4 +192,32 @@ void Shader::Render(std::shared_ptr<Camera> camera, glm::ivec2 window_size,
 	glDisable(GL_BLEND);
 	if (backface_cull) glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
+}
+
+
+// Render the scene using custom framebuffer and shader (for post-processing):
+void Shader::Render(std::shared_ptr<RenderTexture> target, std::shared_ptr<Shader> framebuffer_shader,
+	std::shared_ptr<VertexArray> quad, glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull, float& angle) {
+
+	// Set up rendering for custom framebuffer:
+	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Render into the custom framebuffer:
+	Render(window_size, background_col, backface_cull, angle);
+
+	// Set up rendering for default framebuffer:
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// Render the framebuffer to the screen:
+	glUseProgram(framebuffer_shader->GetId());
+	glBindVertexArray(quad->GetId());
+	glBindTexture(GL_TEXTURE_2D, target->id);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
 }

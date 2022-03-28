@@ -17,6 +17,8 @@ const GLchar* basic_f_filepath = "Additional_Files/shaders/basic_frag2.txt";
 const GLchar* fragment_shader_filepath = "Additional_Files/shaders/fragment_shader.txt";
 const GLchar* f_basic_lighting = "Additional_Files/shaders/basic_lighting_frag.txt";
 const GLchar* v_basic_lighting = "Additional_Files/shaders/basic_lighting_vert.txt";
+const GLchar* f_off_screen = "Additional_Files/shaders/off_screen_frag.txt";
+const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
 
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
@@ -45,8 +47,14 @@ int main()
     // Create context for Gp:
     std::shared_ptr<GpContext> context = Gp::CreateContext(); 
 	
-    // Create Shader:
+    // Create render texture:
+    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
+
+    // Create Shader for on-screen rendering:
     std::shared_ptr<Shader> shader = context->CreateShader(v_basic_lighting, f_basic_lighting);
+
+    // Create Shader for off-screen rendering:
+    std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
     // Load in model:
     glm::vec3 position = { 0.0f, 0.0f, -10.5f };
@@ -60,10 +68,17 @@ int main()
     glm::vec3 position3 = { 0.0f, -6.0f, -10.5f };
     std::shared_ptr<Mesh> curuthers3 = context->CreateMesh(model_filepath, position3);
 
-    // Vector of all models to load:
+    // Vector of all meshes [heirarchy]:
     shader->AddMeshToRender(curuthers);
     shader->AddMeshToRender(curuthers2);
     shader->AddMeshToRender(curuthers3);
+
+    // Create quad for render texture:
+    std::shared_ptr<VertexArray> quad = context->Create2DImage();
+
+    // Handle Uniforms:
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+        (float)window_size.x / (float)window_size.y, 0.1f, 100.f);
 
     // Create camera:
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
@@ -158,10 +173,21 @@ int main()
 
         // Update position:
         main_cam->pos += main_cam->vel;
-        
+
+        // Refresh camera:
+        main_cam->view = glm::lookAt(main_cam->pos, main_cam->pos + main_cam->front, main_cam->up);
+
+        // Parse matrix data:
+        glUseProgram(shader->GetId());
+        shader->SetUniform("u_View", main_cam->view);
+        shader->SetUniform("u_Projection", projection);
+        shader->SetUniform("u_ViewPos", main_cam->pos);
+        glUseProgram(0);
+
       
         // Render:
-        shader->Render(main_cam, window_size, background_col, backface_cull, angle);
+        shader->Render(render_texture, shader_off, quad, window_size, 
+            background_col, backface_cull, angle);
         SDL_GL_SwapWindow(window);
     }
 

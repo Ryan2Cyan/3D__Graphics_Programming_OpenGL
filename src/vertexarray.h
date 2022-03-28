@@ -11,6 +11,7 @@ struct GpContext;
 struct VertexArray
 {
 	VertexArray();
+	~VertexArray();
 	void SendLayoutData();
 	void AddBuffer(std::shared_ptr<Buffer> buffer_arg);
 	const GLuint GetId();
