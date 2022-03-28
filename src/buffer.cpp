@@ -1,11 +1,17 @@
 #include "Buffer.h"
 #include <iostream>
 
-// Buffer:
+
 Buffer::Buffer() {
 	id = 0;
 	type = 0;
 	dirty = false;
+}
+
+Buffer::~Buffer() {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	GLuint del_id = id;
+	glDeleteBuffers(1, &del_id);
 }
 
 // Sends data contained within the buffer to the GPU:

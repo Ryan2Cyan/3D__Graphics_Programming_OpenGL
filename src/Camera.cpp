@@ -8,5 +8,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 target) {
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	front = glm::vec3(0.0f, 0.0f, -1.0f);
 	view = glm::lookAt(pos, tar, up);
+	float yaw = -90.0f;
+	float pitch = 0.0f;
 }
 

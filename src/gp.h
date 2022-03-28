@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Camera.h"
+#include "RenderTexture.h"
 
 namespace Gp {
 

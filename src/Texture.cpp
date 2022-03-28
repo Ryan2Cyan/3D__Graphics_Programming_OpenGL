@@ -12,6 +12,11 @@ Texture::Texture(std::string tex_path) {
 	dirty = true;
 }
 
+Texture::~Texture() {
+	GLuint del_id = id;
+	glDeleteTextures(1, &del_id);
+}
+
 // Sends the loaded texture to the GPU and returns the texture ID:
 GLuint Texture::GetId() {
 

@@ -14,6 +14,8 @@ struct Camera {
 	glm::vec3 tar;
 	glm::vec3 up;
 	glm::vec3 front;
+	float yaw;
+	float pitch;
 
 
 private:
