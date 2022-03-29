@@ -146,18 +146,18 @@ GLuint Shader::GetId() {
 }
 
 // Render the scene using default framebuffer:
-void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull) {
+void Shader::Render(std::shared_ptr<Camera> cam, glm::ivec2 window_size, glm::vec4 background_col,
+	bool backface_cull) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
 	if (backface_cull) glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glViewport(0, 0, window_size.x, window_size.y);
+	glViewport(0, 0, cam->dimensions.x, cam->dimensions.y);
 	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Render each mesh in 'meshes' vector:
 	 // Render each mesh:
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -173,6 +173,9 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 
 		// Parse in matrix data:
 		SetUniform("u_Model", model);
+		SetUniform("u_View", cam->view);
+		SetUniform("u_Projection", cam->proj);
+		SetUniform("u_ViewPos", cam->pos);
 
 		// Render Model:
 		glBindVertexArray(meshes[i]->GetWfModel().vaoId);
@@ -191,8 +194,9 @@ void Shader::Render(glm::ivec2 window_size, glm::vec4 background_col, bool backf
 
 
 // Render the scene using custom framebuffer and shader (for post-processing):
-void Shader::Render(std::shared_ptr<RenderTexture> target, std::shared_ptr<Shader> framebuffer_shader,
-	std::shared_ptr<VertexArray> quad, glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull) {
+void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
+	std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad,
+	glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull) {
 
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
@@ -201,7 +205,7 @@ void Shader::Render(std::shared_ptr<RenderTexture> target, std::shared_ptr<Shade
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Render into the custom framebuffer:
-	Render(window_size, background_col, backface_cull);
+	Render(cam, window_size, background_col, backface_cull);
 
 	// Set up rendering for default framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

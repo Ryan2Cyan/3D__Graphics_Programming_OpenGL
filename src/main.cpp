@@ -58,11 +58,11 @@ int main()
     std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
     // Load in meshes:
-    glm::vec3 position = { 1.0f, 20.0f, 0.5f };
+    glm::vec3 position = { 1.0f, 20.0f, 0.0f };
     std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position);
 
     // Load in meshes:
-    glm::vec3 position2 = { 0.0f, 8.0f, 0.5f };
+    glm::vec3 position2 = { 0.0f, 0.0f, 0.0f };
     std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
 
 
@@ -79,8 +79,11 @@ int main()
 
     // Create camera:
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
-        glm::vec3(1.0f, 1.0f, 30.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f)
+        false,
+        glm::vec2((float)window_size.x, (float)window_size.y),
+        glm::vec3(0.0f, 0.0f, 0.0f),  // position
+        glm::vec3(0.0f, 0.0f, 0.0f),   // target
+        45.0f
     );
 
     // Main loop state:
@@ -179,16 +182,16 @@ int main()
         // Refresh camera:
         main_cam->view = glm::lookAt(main_cam->pos, main_cam->pos + main_cam->front, main_cam->up);
 
-        // Parse matrix data:
-        glUseProgram(shader->GetId());
-        shader->SetUniform("u_View", main_cam->view);
-        shader->SetUniform("u_Projection", projection);
-        shader->SetUniform("u_ViewPos", main_cam->pos);
-        glUseProgram(0);
+        //// Parse matrix data:
+        //glUseProgram(shader->GetId());
+        //shader->SetUniform("u_View", main_cam->view);
+        //shader->SetUniform("u_Projection", projection);
+        //shader->SetUniform("u_ViewPos", main_cam->pos);
+        //glUseProgram(0);
 
       
         // Render:
-        shader->Render(render_texture, shader_off, quad, window_size, 
+        shader->Render(main_cam, render_texture, shader_off, quad, window_size, 
             background_col, backface_cull);
         SDL_GL_SwapWindow(window);
     }

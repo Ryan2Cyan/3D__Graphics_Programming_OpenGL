@@ -27,7 +27,8 @@ struct  GpContext
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
 	/*std::shared_ptr<Sampler> CreateSampler();*/
 	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
-	std::shared_ptr<Camera> CreateCamera(glm::vec3 position, glm::vec3 target);
+	std::shared_ptr<Camera> CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
+		float fov_arg);
 	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);
 
 	std::weak_ptr<GpContext> self;
