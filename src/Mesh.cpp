@@ -9,7 +9,10 @@ Mesh::Mesh(std::string filepath, glm::vec3 pos_arg) {
 	}
 
 	position = pos_arg;
+
+	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
+	model_mat = glm::translate(model_mat, position);
 }
 
 

@@ -23,7 +23,6 @@ const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
-const GLchar* ground_filepath = "Additional_Files/models/PSX_tree/PSX_style_tree.obj";
 
 int main()
 {
@@ -59,11 +58,17 @@ int main()
     std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
     // Load in meshes:
-    glm::vec3 position = { 0.0f, 0.0f, 9.5f };
+    glm::vec3 position = { 1.0f, 20.0f, 0.5f };
     std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position);
+
+    // Load in meshes:
+    glm::vec3 position2 = { 0.0f, 8.0f, 0.5f };
+    std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
+
 
     // Vector of all meshes [heirarchy]:
     shader->AddMeshToRender(curuthers);
+    shader->AddMeshToRender(curuthers2);
 
     // Create quad for render texture:
     std::shared_ptr<VertexArray> quad = context->Create2DImage();
