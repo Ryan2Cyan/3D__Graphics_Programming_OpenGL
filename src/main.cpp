@@ -23,6 +23,8 @@ const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
+const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
+const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
 
 int main()
 {
@@ -59,7 +61,7 @@ int main()
 
 
     // Load in meshes:
-    glm::vec3 position = { 1.0f, 20.0f, 0.0f };
+    glm::vec3 position = { 0.0f, 0.0f, 0.0f };
     std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position);
 
     // Load in meshes:
@@ -78,9 +80,9 @@ int main()
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
         false,
         glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(0.0f, 0.0f, 0.0f),  // position
-        glm::vec3(0.0f, 0.0f, 0.0f),   // target
-        45.0f
+        glm::vec3(0.0f, 0.0f, 10.0f),  // position
+        glm::vec3(0.0f, 0.0f, 0.0f),  // target
+        70.0f                          //fov
     );
 
     // Main loop state:
@@ -93,7 +95,7 @@ int main()
     bool mouse_motion = false;
     float mouse_x = 0;
     float mouse_y = 0;
-    float mouse_s = 0.1f;
+    float mouse_s = 0.001f;
     Uint64 last = 0;
     Uint64 now = SDL_GetPerformanceCounter();
 
@@ -102,13 +104,13 @@ int main()
     
 	// Background color:
 	glm::vec4 background_col = { 0.9f, 0.9f, 0.0f, 1.0f };
-	
-    
+
     while (!done)
     { 
         // Calc deltatime:
         last = now;
         now = SDL_GetPerformanceCounter();
+
         delta_time = (float)((now - last) * 1000 / (float)SDL_GetPerformanceFrequency());
 
         // Input loop:
@@ -124,64 +126,17 @@ int main()
                 done = true;
                 break;
             }
-           
-            if (event.key.repeat == 0 && event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_w:
-                    main_cam->vel += delta_time * camera_speed * main_cam->front;
-                    break;
-                case SDLK_s:
-                    main_cam->vel -= delta_time * camera_speed * main_cam->front;
-                    break;
-                case SDLK_a:
-                    main_cam->vel -= glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
-                    break;
-                case SDLK_d:
-                    main_cam->vel += glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
-                    break;
-                default:
-                    break;
-                }
-            }
-            if (event.key.repeat == 0 && event.type == SDL_KEYUP) {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_w:
-                    main_cam->vel -= delta_time * camera_speed * main_cam->front;
-                    break;
-                case SDLK_s:
-                    main_cam->vel += delta_time * camera_speed * main_cam->front;
-                    break;
-                case SDLK_a:
-                    main_cam->vel += glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
-                    break;
-                case SDLK_d:
-                    main_cam->vel -= glm::normalize(glm::cross(main_cam->front, main_cam->up)) * camera_speed * delta_time;
-                    break;
-                default:
-                    break;
-                }
-            }
+            // Move camera based on user input:
+            main_cam->MoveCam(event, delta_time, camera_speed);
+           /* main_cam->MouseMovement(event, (float)event.motion.x, (float)event.motion.y, mouse_s, delta_time);*/
         }
 
-        // Clamp velocity to prevent pos changing from small values:
-        if (main_cam->vel.x < 0.09f && main_cam->vel.x > -0.09f)
-            main_cam->vel.x = 0.0f;
-        if (main_cam->vel.y < 0.09f && main_cam->vel.y > -0.09f)
-            main_cam->vel.y = 0.00f;
-        if (main_cam->vel.z < 0.09f && main_cam->vel.z > -0.09f)
-            main_cam->vel.z = 0.0f;
+        // Refresh camera after user input:
+        main_cam->Refresh();
 
-        // Update position:
-        main_cam->pos += main_cam->vel;
-
-        // Refresh camera:
-        main_cam->view = glm::lookAt(main_cam->pos, main_cam->pos + main_cam->front, main_cam->up);
 
         // Render:
-        shader->Render(main_cam, render_texture, shader_off, quad, window_size, 
-            background_col, backface_cull);
+        shader->Render(main_cam, render_texture, shader_off, quad, backface_cull);
         SDL_GL_SwapWindow(window);
     }
 
