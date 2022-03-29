@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 
+
 // Fetch the source codes for the vertex and fragment shaders:
 Shader::Shader(std::string vert_path, std::string frag_path) {
 
@@ -146,16 +147,16 @@ GLuint Shader::GetId() {
 }
 
 // Render the scene using default framebuffer:
-void Shader::Render(std::shared_ptr<Camera> cam, glm::ivec2 window_size, glm::vec4 background_col,
-	bool backface_cull) {
+void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
 	if (backface_cull) glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glViewport(0, 0, cam->dimensions.x, cam->dimensions.y);
-	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glViewport(0, 0, (int)cam->dimensions.x, (int)cam->dimensions.y);
+	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w, 
+		cam->back_col.z * cam->back_col.w, cam->back_col.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	 // Render each mesh:
@@ -195,22 +196,23 @@ void Shader::Render(std::shared_ptr<Camera> cam, glm::ivec2 window_size, glm::ve
 
 // Render the scene using custom framebuffer and shader (for post-processing):
 void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
-	std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad,
-	glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull) {
+	std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad, bool backface_cull) {
 
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w, 
+		cam->back_col.z * cam->back_col.w, cam->back_col.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Render into the custom framebuffer:
-	Render(cam, window_size, background_col, backface_cull);
+	Render(cam, backface_cull);
 
 	// Set up rendering for default framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
-	glClearColor(background_col.x * background_col.w, background_col.y * background_col.w, background_col.z * background_col.w, background_col.w);
+	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w,
+		cam->back_col.z * cam->back_col.w, cam->back_col.w);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Render the framebuffer to the screen:

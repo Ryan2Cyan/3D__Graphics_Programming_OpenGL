@@ -1,7 +1,7 @@
 uniform sampler2D u_Texture;
 
 varying vec2 v_TexCoord;
-bool greyscale = true;
+bool greyscale = false;
 
 void main()
 {

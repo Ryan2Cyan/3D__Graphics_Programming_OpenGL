@@ -22,11 +22,10 @@ struct Shader {
 	/*void AddSampler(const std::shared_ptr<Sampler> arg);*/
 	GLuint GetId();
 
-	void Render(std::shared_ptr<Camera> cam, glm::ivec2 window_size, glm::vec4 background_col, 
-		bool backface_cull);
+	void Render(std::shared_ptr<Camera> cam, bool backface_cull);
 	void Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target, 
 		std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad, 
-		glm::ivec2 window_size, glm::vec4 background_col, bool backface_cull);
+		bool backface_cull);
 
 
 private:
