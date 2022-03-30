@@ -2,25 +2,18 @@
 #include <iostream>
 
 
-// Utility functions:
-// Creates a 2D triangle - three vertices can be passed in:
-std::shared_ptr<VertexArray> GpContext::CreateTriangle() {
+// Create 2D asset (without texture):
+std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coords) {
 
 	// Initialise buffer:
 	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
-	glm::vec3 vert_1 = { -0.5f, 0.5f, 0.0f };
-	glm::vec3 vert_2 = { 0.5f, 0.5f, 0.0f };
-	glm::vec3 vert_3 = { 0.5f, -0.5f, 0.0f };
-	glm::vec3 vert_4 = { 0.5f, -0.5f, 0.0f };
-	glm::vec3 vert_5 = { -0.5f, -0.5f, 0.0f };
-	glm::vec3 vert_6 = { -0.5f, 0.5f, 0.0f };
-	pos_buffer->Add(vert_1);
-	pos_buffer->Add(vert_2);
-	pos_buffer->Add(vert_3);
-	pos_buffer->Add(vert_4);
-	pos_buffer->Add(vert_5);
-	pos_buffer->Add(vert_6);
 
+	// Add pos coords to the buffer:
+	for (size_t i = 0; i < pos_coords.size(); i++)
+	{
+		pos_buffer->Add(pos_coords[i]);
+	}
+	
 	// Initialise vertex array:
 	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
 
@@ -30,48 +23,40 @@ std::shared_ptr<VertexArray> GpContext::CreateTriangle() {
 	return vertex_array;
 }
 
-// Creates a 2D image VAO - filepath to the image can be passed in:
-std::shared_ptr<VertexArray> GpContext::Create2DImage() {
+// Create 2D asset (with texture):
+std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coords,
+	std::vector<glm::vec2> tex_coords) {
 
-	// Create positions buffer:
+	// Initialise buffers:
 	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
-	glm::vec3 vert_0 = { -1.0f, 1.0f, 0.0f };
-	glm::vec3 vert_1 = { -1.0f, -1.0f, 0.0f };
-	glm::vec3 vert_2 = { 1.0f, -1.0f, 0.0f };
-	glm::vec3 vert_3 = { -1.0f, 1.0f, 0.0f };
-	glm::vec3 vert_4 = { 1.0f, -1.0f, 0.0f };
-	glm::vec3 vert_5 = { 1.0f, 1.0f, 0.0f };
-	pos_buffer->Add(vert_0);
-	pos_buffer->Add(vert_1);
-	pos_buffer->Add(vert_2);
-	pos_buffer->Add(vert_3);
-	pos_buffer->Add(vert_4);
-	pos_buffer->Add(vert_5);
+	std::shared_ptr<Buffer> tex_coord_buffer = CreateBuffer();
 
-	// Create texture coords buffer:
-	std::shared_ptr<Buffer> tex_buffer = CreateBuffer();
-	glm::vec2 tex_0 = { 0.0f, 1.0f };
-	glm::vec2 tex_1 = { 0.0f, 0.0f };
-	glm::vec2 tex_2 = { 1.0f, 0.0f };
-	glm::vec2 tex_3 = { 0.0f, 1.0f };
-	glm::vec2 tex_4 = { 1.0f, 0.0f };
-	glm::vec2 tex_5 = { 1.0f, 1.0f };
-	tex_buffer->Add(tex_0);
-	tex_buffer->Add(tex_1);
-	tex_buffer->Add(tex_2);
-	tex_buffer->Add(tex_3);
-	tex_buffer->Add(tex_4);
-	tex_buffer->Add(tex_5);
+	// Add pos coords to the buffer:
+	if (pos_coords.size() != tex_coords.size())
+		throw std::exception("Mismatched attribute vector sizes");
+	else {
+		for (size_t i = 0; i < pos_coords.size(); i++)
+		{
+			pos_buffer->Add(pos_coords[i]);
+			tex_coord_buffer->Add(tex_coords[i]);
+		}
+	}
 
-	// Create vertex array:
+	// Initialise vertex array:
 	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
+
+	// Add buffers to the vertex array:
 	vertex_array->AddBuffer(pos_buffer);
-	vertex_array->AddBuffer(tex_buffer);
+	vertex_array->AddBuffer(tex_coord_buffer);
 
 	return vertex_array;
 }
 
-
+// Process user input during the input loop:
+void GpContext::ProcessInput(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+}
 
 // Object functions:
 // Creates a vertex buffer object and returns its ID:
@@ -81,23 +66,27 @@ std::shared_ptr<Buffer> GpContext::CreateBuffer() {
 	buffer->context = self.lock();
 	return buffer;
 }
+
 std::shared_ptr<VertexArray> GpContext::CreateVertexArray() {
 
 	std::shared_ptr<VertexArray> vertex_array = std::make_shared<VertexArray>();
 	vertex_array->context = self.lock();
 	return vertex_array;
 }
+
 std::shared_ptr<Shader> GpContext::CreateShader(std::string vert_path, std::string frag_path) {
 
 	std::shared_ptr<Shader> shader = std::make_shared<Shader>(vert_path, frag_path);
 	shader->context = self.lock();
 	return shader;
 }
+
 std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	std::shared_ptr<Texture> texture = std::make_shared<Texture>(tex_path);
 	texture->context = self.lock();
 	return texture;
 }
+
 //std::shared_ptr<Sampler> GpContext::CreateSampler() {
 //	std::shared_ptr<Sampler> sampler = std::make_shared<Sampler>();
 //	sampler->context = self.lock();
@@ -108,6 +97,14 @@ std::shared_ptr<Mesh> GpContext::CreateMesh(std::string filepath, glm::vec3 pos_
 	mesh->context = self.lock();
 	return mesh;
 }
+
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao_arg,
+	std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao_arg, tex_arg, pos_arg);
+	mesh->context = self.lock();
+	return mesh;
+}
+
 std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 	float fov_arg) {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(ortho, win_size, position, target, fov_arg);
@@ -115,6 +112,7 @@ std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, 
 	camera->context = self.lock();
 	return camera;
 }
+
 std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
 	std::shared_ptr<RenderTexture> render_texture = std::make_shared<RenderTexture>(size);
 	render_texture->context = self.lock();

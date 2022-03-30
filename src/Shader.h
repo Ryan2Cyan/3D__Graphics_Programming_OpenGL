@@ -19,6 +19,8 @@ struct Shader {
 	void AddMeshToRender(std::shared_ptr<Mesh> arg);
 	void SetUniform(const std::string& u_name, glm::mat4 value);
 	void SetUniform(const std::string& u_name, glm::vec3 value);
+	void SetUniform(const std::string& u_name, glm::vec4 value);
+	void SetUniform(const std::string& u_name, GLuint value);
 	/*void AddSampler(const std::shared_ptr<Sampler> arg);*/
 	GLuint GetId();
 
@@ -37,4 +39,5 @@ private:
 	bool dirty;
 	std::string vert_src;
 	std::string frag_src;
+	bool polygon_mode;
 };

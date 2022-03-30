@@ -18,6 +18,7 @@ struct Buffer
 	const int GetComponents();
 	const int GetDataSize();
 	const GLuint GetId();
+	const int GetVertices();
 private:
 	friend struct GpContext;
 

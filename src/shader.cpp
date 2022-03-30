@@ -34,6 +34,7 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	my_file.close();
 	
 	id = 0;
+	polygon_mode = false;
 	dirty = true;
 }
 
@@ -71,6 +72,30 @@ void Shader::SetUniform(const std::string& u_name, glm::vec3 value) {
 	glUniform3fv(loc, 1, glm::value_ptr(value));
 }
 
+void Shader::SetUniform(const std::string& u_name, glm::vec4 value) {
+
+	// Get location of the uniform within the shader program:
+	const GLchar* name = u_name.c_str();
+	GLint loc = glGetUniformLocation(id, name);
+	if (loc == -1)
+		throw std::exception("Name of uniform does not correspond with uniform value");
+
+	// Specify the value for the uniform:
+	glUniform4fv(loc, 1, glm::value_ptr(value));
+}
+
+void Shader::SetUniform(const std::string& u_name, GLuint value) {
+
+	// Get location of the uniform within the shader program:
+	const GLchar* name = u_name.c_str();
+	GLint loc = glGetUniformLocation(id, name);
+	if (loc == -1)
+		throw std::exception("Name of uniform does not correspond with uniform value");
+
+	// Specify the value for the uniform:
+	glUniform1i(loc, value);
+}
+
 //void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
 //	samplers.push_back(arg);
 //}
@@ -95,7 +120,7 @@ GLuint Shader::GetId() {
 			glGetShaderInfoLog(vertex_shader_id, max_length,
 				&max_length, &errorLog[0]);
 			std::cout << &errorLog.at(0) << std::endl;
-			throw std::exception();
+			throw std::exception("Unable to compile vertex shader");
 		}
 
 		// Create a new fragment shader:
@@ -114,7 +139,7 @@ GLuint Shader::GetId() {
 			glGetShaderInfoLog(fragment_shader_id, max_length,
 				&max_length, &errorLog[0]);
 			std::cout << &errorLog.at(0) << std::endl;
-			throw std::exception();
+			throw std::exception("Unable to compile fragment shader");
 		}
 
 		// Create program object:
@@ -162,25 +187,33 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 	 // Render each mesh:
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
-
-		glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);
+		// Bind Texture:
+		if (meshes[i]->is_wf) glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);
+		else glBindTexture(GL_TEXTURE_2D, meshes[i]->tex->GetId());
+		
 
 		// Instruct OpenGL to use our shader program and our VAO
 		glUseProgram(GetId());
 
-		// Prepare the model matrix
+		// Prepare the model matrix data:
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
 
-		// Parse in matrix data:
-		SetUniform("u_Model", model);
-		SetUniform("u_View", cam->view);
-		SetUniform("u_Projection", cam->proj);
-		SetUniform("u_ViewPos", cam->pos);
+		//// Parse in matrix data from mesh:
+		//SetUniform("u_Model", model);
+		/*SetUniform("u_View", cam->view);
+		SetUniform("u_Projection", cam->proj);*/
+		//SetUniform("u_ViewPos", cam->pos);
 
-		// Render Model:
-		glBindVertexArray(meshes[i]->GetWfModel().vaoId);
-		glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
+		// Bind VAO:
+		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
+		else glBindVertexArray(meshes[i]->vao->GetId());
+		
+
+		// Final render:
+		if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (meshes[i]->is_wf) glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
+		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
 
 	}
 
@@ -219,6 +252,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 	glUseProgram(framebuffer_shader->GetId());
 	glBindVertexArray(quad->GetId());
 	glBindTexture(GL_TEXTURE_2D, target->id);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawArrays(GL_TRIANGLES, 0, quad->GetVertices());
 
 }

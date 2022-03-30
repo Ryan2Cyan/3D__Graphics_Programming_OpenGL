@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <ext.hpp>
 #include <string>
+#include <glfw/glfw3.h>
+#include <vector>
 
 
 struct Buffer;
@@ -17,8 +19,10 @@ struct RenderTexture;
 struct  GpContext
 {
 	// Utility functions:
-	std::shared_ptr<VertexArray> CreateTriangle();
-	std::shared_ptr<VertexArray> Create2DImage();
+	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords);
+	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords, 
+		std::vector<glm::vec2> tex_coords);
+	void ProcessInput(GLFWwindow* window);
 
 	// Create object functions:
 	std::shared_ptr<Buffer> CreateBuffer(); 
@@ -27,6 +31,8 @@ struct  GpContext
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
 	/*std::shared_ptr<Sampler> CreateSampler();*/
 	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
+	std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<VertexArray> vao_arg, 
+		std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg);
 	std::shared_ptr<Camera> CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 		float fov_arg);
 	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);

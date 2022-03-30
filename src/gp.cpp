@@ -1,5 +1,6 @@
 #include "Gp.h"
 #include <memory>
+#include <glfw/glfw3.h>
 #include <GL/glew.h>
 
 namespace Gp {
@@ -16,7 +17,6 @@ namespace Gp {
 		rtn->self = rtn;
 		return rtn;
 	}
-
 }
 
 

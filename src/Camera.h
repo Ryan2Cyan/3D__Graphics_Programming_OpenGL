@@ -12,6 +12,7 @@ struct Camera {
 	Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 		float fov_arg);
 	void MoveCam(SDL_Event& event, float deltaT, float cam_speed);
+	glm::vec3 MouseCallback(float x, float y);
 	void Refresh();
 
 
@@ -19,6 +20,7 @@ struct Camera {
 	glm::vec3 pos;
 	glm::vec3 up;
 	glm::vec3 front;
+	glm::vec3 dir;
 	glm::mat4 view;
 	float yaw;
 	float pitch;

@@ -47,3 +47,7 @@ const GLuint VertexArray::GetId() {
 		SendLayoutData();
 	return id;
 }
+
+const int VertexArray::GetVertices() {
+	return buffers[0]->GetVertices();
+}

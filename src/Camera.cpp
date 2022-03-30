@@ -21,14 +21,14 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	front = glm::vec3(0.0f, 0.0f, -1.0f);
 	view = glm::lookAt(pos, tar, up);
-	float yaw = 0.0f;
+	float yaw = -90.0f;
 	float pitch = 0.0f;
 
 	// Set physics values:
 	vel = { 0.0f, 0.0f, 0.0f };
 
 	// Set other values:
-	back_col = { 0.9f, 0.9f, 0.0f, 1.0f };
+	back_col = { 0.2f, 0.3f, 0.3f, 1.0f };
 }
 
 void Camera::MoveCam(SDL_Event &event, float deltaT, float cam_speed) {

@@ -3,6 +3,7 @@
 #include "Gp.h"
 //#include <wavefront/wavefront.h>
 #include <SDL.h>
+#include <glfw/glfw3.h>
 #include <GL/glew.h>
 #include <memory>
 #include <ext.hpp>
@@ -12,7 +13,7 @@
 
 // Shaders filepaths:
 const GLchar* vertex_shader_filepath = "Additional_Files/shaders/vertex_shader.txt";
-const GLchar* basic_v_filepath = "Additional_Files/shaders/basic_vert2.txt";
+const GLchar* basic_v_filepath = "Additional_Files/shaders/basic_vert.txt";
 const GLchar* basic_f_filepath = "Additional_Files/shaders/basic_frag2.txt";
 const GLchar* fragment_shader_filepath = "Additional_Files/shaders/fragment_shader.txt";
 const GLchar* f_basic_lighting = "Additional_Files/shaders/basic_lighting_frag.txt";
@@ -21,129 +22,130 @@ const GLchar* f_off_screen = "Additional_Files/shaders/off_screen_frag.txt";
 const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
 
 // Resource filepaths:
-const GLchar* image_filepath = "Additional_Files/images/image_test.PNG";
+const GLchar* image_filepath = "Additional_Files/images/wall.jpg";
+const GLchar* image_filepath2 = "Additional_Files/images/awesomeface.png";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
 const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
 const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
 
+
 int main()
 {
-    // Setup SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
-    {
-        printf("Error: %s\n", SDL_GetError());
-        return -1;
-    }
-
     // Create window with graphics context
     glm::ivec2 window_size{ 720, 720 };
-    glm::ivec2 window_size2{ 360, 360 };
-
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-    SDL_Window* window = SDL_CreateWindow("3DGP Assignment 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-        window_size.x, window_size.y, window_flags);
-    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, gl_context);
-    SDL_GL_SetSwapInterval(1); // Enable vsync
-
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(window_size.x, window_size.y, "3DGP Assignment 2", NULL, NULL);
+    if (!window) {
+        throw std::exception("Cannot initialise GLFW window");
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
 
     // Create context for Gp:
-    std::shared_ptr<GpContext> context = Gp::CreateContext(); 
-	
-    // Create render texture:
-    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
+    std::shared_ptr<GpContext> context = Gp::CreateContext();
+
+	// Create triangle, return the vertex array:
+    std::vector<glm::vec3> position = {
+        { 0.5f, -0.5f, 0.0f }, 
+        { 0.5f, 0.5f, 0.0f },
+        { -0.5f, -0.5f, 0.0f },
+        { 0.5f, 0.5f, 0.0f },
+        { -0.5f, 0.5f, 0.0f },
+        { -0.5f, -0.5f, 0.0f }
+    };
+    std::vector<glm::vec2> tex_coords = {
+        { 1.0f, 0.0f },
+        { 1.0f, 1.0f },
+        { 0.0f, 0.0f },
+        { 1.0f, 1.0f },
+        { 0.0f, 1.0f },
+        { 0.0f, 0.0f }
+    };
+    std::shared_ptr<VertexArray> quad = context->Create2D(position, tex_coords);
+    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
+    std::shared_ptr<Texture> texture2 = context->CreateTexture(image_filepath2);
+
+ //   // Create render texture:
+ //   std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
 
     // Create Shader for on-screen rendering:
-    std::shared_ptr<Shader> shader = context->CreateShader(v_basic_lighting, f_basic_lighting);
+    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 
-    // Create Shader for off-screen rendering:
-    std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
+ //   // Create Shader for off-screen rendering:
+ //   std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
 
     // Load in meshes:
-    glm::vec3 position = { 0.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position);
+    glm::vec3 position0 = { 0.0f, 0.0f, 10.0f };
+    std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
+    shader->AddMeshToRender(quad_mesh);
 
-    // Load in meshes:
-    glm::vec3 position2 = { 0.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
+ //   // Load in meshes:
+ //   glm::vec3 position2 = { 0.0f, 0.0f, 0.0f };
+ //   std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
 
 
-    // Vector of all meshes [heirarchy]:
-    shader->AddMeshToRender(curuthers);
-    shader->AddMeshToRender(curuthers2);
+ //   // Vector of all meshes [heirarchy]:
+ //   shader->AddMeshToRender(curuthers);
+ //   shader->AddMeshToRender(curuthers2);
 
-    // Create quad for render texture:
-    std::shared_ptr<VertexArray> quad = context->Create2DImage();
+ //   // Create quad for render texture:
+ //   std::shared_ptr<VertexArray> quad = context->Create2DImage();
 
     // Create camera:
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
         false,
         glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(0.0f, 0.0f, 10.0f),  // position
+        glm::vec3(0.0f, 0.0f, 0.0f),  // position
         glm::vec3(0.0f, 0.0f, 0.0f),  // target
         70.0f                          //fov
     );
 
-    // Main loop state:
-    bool done = false;
-    bool window_open = true;
-    bool backface_cull = false;
-    float camera_speed = 0.05f;
-    float delta_time = 0;
-    bool first_mouse = true;
-    bool mouse_motion = false;
-    float mouse_x = 0;
-    float mouse_y = 0;
-    float mouse_s = 0.001f;
-    Uint64 last = 0;
-    Uint64 now = SDL_GetPerformanceCounter();
+ //   // Main loop state:
+ //   bool window_open = true;
+ //   bool backface_cull = false;
+ //   float camera_speed = 0.05f;
+ //   float delta_time = 0;
+ //   bool first_mouse = true;
+ //   bool mouse_motion = false;
+ //   float mouse_x = 0;
+ //   float mouse_y = 0;
+ //   float mouse_s = 0.001f;
+ //   Uint64 last = 0;
+ //   Uint64 now = SDL_GetPerformanceCounter();
 
-    // Object state:
-    float angle = 45.0f;
-    
-	// Background color:
-	glm::vec4 background_col = { 0.9f, 0.9f, 0.0f, 1.0f };
+ //   // Object state:
+ //   float angle = 45.0f;
+ //   
 
-    while (!done)
+  
+    // Render loop (called each frame):
+    while (!glfwWindowShouldClose(window))
     { 
-        // Calc deltatime:
-        last = now;
-        now = SDL_GetPerformanceCounter();
-
-        delta_time = (float)((now - last) * 1000 / (float)SDL_GetPerformanceFrequency());
-
         // Input loop:
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type) {
-            case SDL_QUIT:
-                done = true;
-                break;
+        context->ProcessInput(window);
 
-            case SDL_WINDOWEVENT_CLOSE:
-                done = true;
-                break;
-            }
-            // Move camera based on user input:
-            main_cam->MoveCam(event, delta_time, camera_speed);
-           /* main_cam->MouseMovement(event, (float)event.motion.x, (float)event.motion.y, mouse_s, delta_time);*/
-        }
-
-        // Refresh camera after user input:
-        main_cam->Refresh();
-
+        // Uniforms:
+        float timeValue = glfwGetTime() * 4;
+        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+        glm::vec4 newColor = { 0.0f , greenValue, greenValue, 1.0f };
+        
+        glUseProgram(shader->GetId());
+        shader->SetUniform("newColor", newColor);
 
         // Render:
-        shader->Render(main_cam, render_texture, shader_off, quad, backface_cull);
-        SDL_GL_SwapWindow(window);
+        shader->Render(main_cam, true);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
     }
 
-    // Cleanup:
-    SDL_GL_DeleteContext(gl_context);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-
+    // Clean up:
+    glfwTerminate();
     return 0;
 }

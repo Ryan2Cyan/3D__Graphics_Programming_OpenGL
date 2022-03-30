@@ -96,9 +96,12 @@ const int Buffer::GetDataSize() {
 	}
 }
 
-// TODO: Implement GetId func.
 const GLuint Buffer::GetId() {
 	if (dirty)
 		BufferData();
 	return id;
+}
+
+const int Buffer::GetVertices() {
+	return data.size() / GetComponents();
 }
