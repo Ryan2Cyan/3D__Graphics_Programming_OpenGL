@@ -12,6 +12,7 @@
 namespace Gp {
 
 	std::shared_ptr<GpContext> CreateContext();
+	GLFWwindow* CreateWindow(glm::vec2 resolution);
 }
 
 

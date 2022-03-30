@@ -23,7 +23,7 @@ const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
 
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/wall.jpg";
-const GLchar* image_filepath2 = "Additional_Files/images/awesomeface.png";
+const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
 const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
 const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
@@ -31,24 +31,20 @@ const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj
 
 int main()
 {
-    // Create window with graphics context
+
+    // Create window and assign OpenGL context:
     glm::ivec2 window_size{ 720, 720 };
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(window_size.x, window_size.y, "3DGP Assignment 2", NULL, NULL);
-    if (!window) {
-        throw std::exception("Cannot initialise GLFW window");
-        glfwTerminate();
-        return -1;
-    }
+    GLFWwindow* window = Gp::CreateWindow(window_size);
     glfwMakeContextCurrent(window);
 
-    // Create context for Gp:
+    // Create context:
     std::shared_ptr<GpContext> context = Gp::CreateContext();
 
-	// Create triangle, return the vertex array:
+
+    // Create Shader for on-screen rendering:
+    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
+
+	// Object 1:
     std::vector<glm::vec3> position = {
         { 0.5f, -0.5f, 0.0f }, 
         { 0.5f, 0.5f, 0.0f },
@@ -66,23 +62,18 @@ int main()
         { 0.0f, 0.0f }
     };
     std::shared_ptr<VertexArray> quad = context->Create2D(position, tex_coords);
-    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
-    std::shared_ptr<Texture> texture2 = context->CreateTexture(image_filepath2);
+    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath2);
+    glm::vec3 position0 = { 0.0f, 0.0f, 10.0f };
+    std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
+    shader->AddMeshToRender(quad_mesh);
 
  //   // Create render texture:
  //   std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
 
-    // Create Shader for on-screen rendering:
-    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
 
  //   // Create Shader for off-screen rendering:
  //   std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
-
-    // Load in meshes:
-    glm::vec3 position0 = { 0.0f, 0.0f, 10.0f };
-    std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
-    shader->AddMeshToRender(quad_mesh);
 
  //   // Load in meshes:
  //   glm::vec3 position2 = { 0.0f, 0.0f, 0.0f };
@@ -106,7 +97,6 @@ int main()
     );
 
  //   // Main loop state:
- //   bool window_open = true;
  //   bool backface_cull = false;
  //   float camera_speed = 0.05f;
  //   float delta_time = 0;
@@ -116,11 +106,6 @@ int main()
  //   float mouse_y = 0;
  //   float mouse_s = 0.001f;
  //   Uint64 last = 0;
- //   Uint64 now = SDL_GetPerformanceCounter();
-
- //   // Object state:
- //   float angle = 45.0f;
- //   
 
   
     // Render loop (called each frame):
@@ -131,9 +116,24 @@ int main()
 
         // Uniforms:
         float timeValue = glfwGetTime() * 4;
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+
+        float greenValue = 0.0f;
+        static float blueValue;
+        if (timeValue > 15) {
+            greenValue = 1.0;
+        }
+        if (timeValue < 15) {
+            blueValue = (cos(timeValue) / 2.0f) + 0.5f;
+            main_cam->back_col = glm::vec4(blueValue, 0.0f, 0.0f, 1.0f);
+        }
+        if (timeValue > 17) {
+            blueValue += 0.05;
+            main_cam->back_col = glm::vec4(0.0f, blueValue, blueValue, 1.0f);
+        }
+
+       
         glm::vec4 newColor = { 0.0f , greenValue, greenValue, 1.0f };
-        
+
         glUseProgram(shader->GetId());
         shader->SetUniform("newColor", newColor);
 

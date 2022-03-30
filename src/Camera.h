@@ -24,6 +24,7 @@ struct Camera {
 	glm::mat4 view;
 	float yaw;
 	float pitch;
+	glm::vec4 back_col;
 
 private:
 	friend struct GpContext;
@@ -42,5 +43,5 @@ private:
 	// Physics:
 
 	// Other:
-	glm::vec4 back_col;
+	
 };
