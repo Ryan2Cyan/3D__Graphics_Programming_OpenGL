@@ -77,7 +77,6 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 		const float cam_speed = 4.5f * delta_time;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			std::cout << "press W" << std::endl;
 			main_cam->pos += cam_speed * main_cam->dir;
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {

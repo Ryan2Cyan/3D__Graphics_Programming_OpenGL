@@ -96,10 +96,6 @@ void Shader::SetUniform(const std::string& u_name, GLuint value) {
 	glUniform1i(loc, value);
 }
 
-//void Shader::AddSampler(const std::shared_ptr<Sampler> arg) {
-//	samplers.push_back(arg);
-//}
-
 GLuint Shader::GetId() {
 
 	if (dirty) {

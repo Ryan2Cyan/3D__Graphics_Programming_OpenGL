@@ -46,12 +46,12 @@ int main()
 
 	// Object 1:
     std::vector<glm::vec3> position = {
-        { 0.5f, -0.5f, 0.0f }, 
-        { 0.5f, 0.5f, 0.0f },
-        { -0.5f, -0.5f, 0.0f },
-        { 0.5f, 0.5f, 0.0f },
-        { -0.5f, 0.5f, 0.0f },
-        { -0.5f, -0.5f, 0.0f }
+        { 1.0f, -1.0f, 0.0f }, 
+        { 1.0f, 1.0f, 0.0f },
+        { -1.0f, -1.0f, 0.0f },
+        { 1.0f, 1.0f, 0.0f },
+        { -1.0f, 1.0f, 0.0f },
+        { -1.0f, -1.0f, 0.0f }
     };
     std::vector<glm::vec2> tex_coords = {
         { 1.0f, 0.0f },
@@ -82,41 +82,24 @@ int main()
     std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position1);
     shader->AddMeshToRender(curuthers);
 
-    //   // Create render texture:
- //   std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
+       // Create render texture:
+    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
 
 
- //   // Create Shader for off-screen rendering:
- //   std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
+    // Create Shader for off-screen rendering:
+    std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
-
-    //// Vector of all meshes [heirarchy]:
-    //shader->AddMeshToRender(curuthers);
- //   shader->AddMeshToRender(curuthers2);
-
- //   // Create quad for render texture:
- //   std::shared_ptr<VertexArray> quad = context->Create2DImage();
-
- //   // Main loop state:
- //   float camera_speed = 0.05f;
- //   float delta_time = 0;
- //   bool first_mouse = true;
- //   bool mouse_motion = false;
- //   float mouse_x = 0;
- //   float mouse_y = 0;
- //   float mouse_s = 0.001f;
- //   Uint64 last = 0;
 
   
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     { 
-     
+
         // Input:
         context->ProcessInput(window);
 
         // Render:
-        shader->Render(main_cam, true);
+        shader->Render(main_cam, render_texture, shader_off, quad, true);
         std::cout << "cam pos" << "x: " << main_cam->pos.x
             << "   y: " << main_cam->pos.y << "   z: " << main_cam->pos.z << std::endl;
         std::cout << "cam dir" << "x: " << main_cam->dir.x
