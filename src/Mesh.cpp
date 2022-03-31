@@ -16,28 +16,6 @@ Mesh::Mesh(std::shared_ptr<VertexArray> vao_arg, std::shared_ptr<Texture> tex_ar
 	model_mat = glm::translate(model_mat, position);
 }
 
-// Init mesh via wavefront .obj file:
-Mesh::Mesh(std::string filepath, glm::vec3 pos_arg) {
-
-	// Load model from specified filepath:
-	is_wf = true;
-	const char* p = filepath.c_str();
-	if (WfModelLoad(p, &wf_model) != 0) {
-		throw std::exception("Could not load model");
-	}
-
-	position = pos_arg;
-
-	// Create model mat and set initial pos:
-	model_mat = glm::mat4(1.0f);
-	model_mat = glm::translate(model_mat, position);
-}
-
-
-WfModel Mesh::GetWfModel() {
-	return wf_model;
-}
-
 glm::mat4 Mesh::GetModelMat() {
 	return model_mat;
 }

@@ -188,8 +188,8 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		// Bind Texture:
-		if (meshes[i]->is_wf) glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);
-		else glBindTexture(GL_TEXTURE_2D, meshes[i]->tex->GetId());
+		/*if (meshes[i]->is_wf) glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);*/
+		glBindTexture(GL_TEXTURE_2D, meshes[i]->tex->GetId());
 		
 
 		// Instruct OpenGL to use our shader program and our VAO
@@ -199,21 +199,21 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
 
-		//// Parse in matrix data from mesh:
-		//SetUniform("u_Model", model);
-		/*SetUniform("u_View", cam->view);
-		SetUniform("u_Projection", cam->proj);*/
-		//SetUniform("u_ViewPos", cam->pos);
+		// Parse in matrix data from mesh:
+		SetUniform("u_Model", model);
+		SetUniform("u_View", cam->view);
+		SetUniform("u_Projection", cam->proj);
+		SetUniform("u_ViewPos", cam->pos);
 
 		// Bind VAO:
-		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
-		else glBindVertexArray(meshes[i]->vao->GetId());
+		/*if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);*/
+		glBindVertexArray(meshes[i]->vao->GetId());
 		
 
 		// Final render:
 		if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		if (meshes[i]->is_wf) glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
-		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
+		/*if (meshes[i]->is_wf) glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);*/
+		glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
 
 	}
 

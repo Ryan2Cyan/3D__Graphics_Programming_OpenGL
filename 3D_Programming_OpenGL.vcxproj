@@ -96,13 +96,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw_x64\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\assimp\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2019;$(SolutionDir)Dependencies\glew\lib\Release\Win32;$(SolutionDir)Dependencies\SDL2\lib\x86;$(SolutionDir)Dependencies\wavefront\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;wavefront.lib;opengl32.lib;SDL2.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw_x64\lib-vc2019;$(SolutionDir)Dependencies\assimp\lib;$(SolutionDir)Dependencies\glew\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;glfw3.lib;opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,15 +113,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw_x64\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\assimp\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2019;$(SolutionDir)Dependencies\glew\lib\Release\Win32;$(SolutionDir)Dependencies\SDL2\lib\x86;$(SolutionDir)Dependencies\wavefront\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;wavefront.lib;opengl32.lib;SDL2.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw_x64\lib-vc2019;$(SolutionDir)Dependencies\assimp\lib;$(SolutionDir)Dependencies\glew\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;glfw3.lib;opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,13 +130,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw_x64\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\assimp\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2019;$(SolutionDir)Dependencies\glew\lib\Release\Win32;$(SolutionDir)Dependencies\SDL2\lib\x86;$(SolutionDir)Dependencies\wavefront\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;wavefront.lib;opengl32.lib;SDL2.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw_x64\lib-vc2019;$(SolutionDir)Dependencies\assimp\lib;$(SolutionDir)Dependencies\glew\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;glfw3.lib;opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,18 +147,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw_x64\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\assimp\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2019;$(SolutionDir)Dependencies\glew\lib\Release\Win32;$(SolutionDir)Dependencies\SDL2\lib\x86;$(SolutionDir)Dependencies\wavefront\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;wavefront.lib;opengl32.lib;SDL2.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw_x64\lib-vc2019;$(SolutionDir)Dependencies\assimp\lib;$(SolutionDir)Dependencies\glew\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;glfw3.lib;opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssImpMesh.cpp" />
+    <ClCompile Include="src\AssImpModel.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\context.cpp" />
@@ -172,6 +174,8 @@
     <ClCompile Include="src\vertexarray.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AssImpMesh.h" />
+    <ClInclude Include="src\AssImpModel.h" />
     <ClInclude Include="src\Buffer.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\context.h" />

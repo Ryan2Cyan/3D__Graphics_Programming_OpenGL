@@ -16,12 +16,14 @@ struct Mesh;
 struct Camera;
 struct RenderTexture;
 
+
 struct  GpContext
 {
 	// Utility functions:
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords);
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords, 
 		std::vector<glm::vec2> tex_coords);
+
 	void ProcessInput(GLFWwindow* window);
 
 	// Create object functions:
@@ -29,8 +31,6 @@ struct  GpContext
 	std::shared_ptr<VertexArray> CreateVertexArray();
 	std::shared_ptr<Shader> CreateShader(std::string vert_path, std::string frag_path);
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
-	/*std::shared_ptr<Sampler> CreateSampler();*/
-	std::shared_ptr<Mesh> CreateMesh(std::string filepath, glm::vec3 pos_arg);
 	std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<VertexArray> vao_arg, 
 		std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg);
 	std::shared_ptr<Camera> CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,

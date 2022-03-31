@@ -11,6 +11,7 @@ struct VertexArray;
 struct Texture;
 struct Mesh;
 struct Camera;
+struct RenderTexture;
 
 struct Shader {
 

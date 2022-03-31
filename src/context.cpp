@@ -87,17 +87,6 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
-//std::shared_ptr<Sampler> GpContext::CreateSampler() {
-//	std::shared_ptr<Sampler> sampler = std::make_shared<Sampler>();
-//	sampler->context = self.lock();
-//	return sampler;
-//}
-std::shared_ptr<Mesh> GpContext::CreateMesh(std::string filepath, glm::vec3 pos_arg) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath, pos_arg);
-	mesh->context = self.lock();
-	return mesh;
-}
-
 std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao_arg,
 	std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg) {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao_arg, tex_arg, pos_arg);
