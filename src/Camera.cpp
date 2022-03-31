@@ -21,13 +21,12 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 	dir = glm::normalize(pos - tar);
 	right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), dir));
 	up = glm::cross(dir, right);
-	view = glm::lookAt(pos, tar, up);
+	yaw = -90.0f;
+	pitch = 0.0f;
 
 
 	// Set physics values:
 	vel = { 0.0f, 0.0f, 0.0f };
-	float yaw = -90.0f;
-	float pitch = 0.0f;
 
 	// Set other values:
 	back_col = { 0.2f, 0.3f, 0.3f, 1.0f };
@@ -39,6 +38,12 @@ void Camera::MoveCam(SDL_Event &event, float deltaT, float cam_speed) {
 }
 
 void Camera::Refresh() {
+
+	// Calc dir:
+	dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	dir.y = sin(glm::radians(pitch));
+	dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	dir = glm::normalize(dir);
 
 	// Update view:
 	view = glm::lookAt(pos, pos + dir, up);

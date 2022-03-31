@@ -22,8 +22,10 @@ struct  GpContext
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords);
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords, 
 		std::vector<glm::vec2> tex_coords);
+
+	// Input functions:
 	void ProcessInput(GLFWwindow* window);
-	void ProcessInput(GLFWwindow* window, std::shared_ptr<Camera> &cam);
+	void SetMainCamera(std::shared_ptr<Camera> arg);
 
 	// Create object functions:
 	std::shared_ptr<Buffer> CreateBuffer(); 
@@ -39,6 +41,6 @@ struct  GpContext
 	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);
 
 	std::weak_ptr<GpContext> self;
-
 private:
+	std::shared_ptr<Camera> main_cam;
 };

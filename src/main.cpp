@@ -62,8 +62,8 @@ int main()
         { 0.0f, 0.0f }
     };
     std::shared_ptr<VertexArray> quad = context->Create2D(position, tex_coords);
-    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath2);
-    glm::vec3 position0 = { 0.0f, 0.0f, 10.0f };
+    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
+    glm::vec3 position0 = { 0.0f, 0.0f, -4.0f };
     std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
     shader->AddMeshToRender(quad_mesh);
 
@@ -73,8 +73,9 @@ int main()
         glm::vec2((float)window_size.x, (float)window_size.y),
         glm::vec3(0.0f, 0.0f, 0.0f),  // position
         glm::vec3(0.0f, 0.0f, 1.0f),  // target
-        70.0f                          //fov
+        70.0f                         //fov
     );
+    context->SetMainCamera(main_cam);
 
     //Load in meshes:
     glm::vec3 position1 = { 0.0f, 0.0f, 0.0f };
@@ -112,7 +113,7 @@ int main()
     { 
      
         // Input:
-        context->ProcessInput(window, main_cam);
+        context->ProcessInput(window);
 
         // Render:
         shader->Render(main_cam, true);

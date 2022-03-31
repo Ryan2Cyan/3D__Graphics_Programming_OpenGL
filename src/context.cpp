@@ -1,6 +1,9 @@
 #include "Gp.h"
 #include <iostream>
 
+static float last_x = 0.0f;
+static float last_y = 0.0f;
+static bool firstMouse = true;
 
 // Create 2D asset (without texture):
 std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coords) {
@@ -52,42 +55,96 @@ std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coor
 	return vertex_array;
 }
 
+
+
 // Process user input during the input loop:
 void GpContext::ProcessInput(GLFWwindow* window) {
 
+	// Calc delta time:
+	float delta_time = 0.0f;
+	static float last_frame = 0.0f;
+	float current_frame = glfwGetTime();
+	delta_time = current_frame - last_frame;
+	last_frame = current_frame;
+
+	// Hide cursor when using mouse in window:
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (main_cam) {
+		// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
+		const float cam_speed = 4.5f * delta_time;
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			std::cout << "press W" << std::endl;
+			main_cam->pos += cam_speed * main_cam->dir;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			main_cam->pos -= cam_speed * main_cam->dir;
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			main_cam->pos -= glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			main_cam->pos += glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			main_cam->pos += cam_speed * main_cam->up;
+		}
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+			main_cam->pos -= cam_speed * main_cam->up;
+		}
+
+		// Rotate camera based on mouse movement:
+		int win_width;
+		int win_height;
+		glfwGetWindowSize(window, &win_width, &win_height);
+		main_cam->dimensions.x = win_width;
+		main_cam->dimensions.y = win_height;
+
+		double mouse_x;
+		double mouse_y;
+		glfwGetCursorPos(window, &mouse_x, &mouse_y);
+
+		if (last_x == 0.0f && last_y == 0.0f) {
+			last_x = (float)win_width / 2.0f;
+			last_y = (float)win_height / 2.0f;
+		}
+
+		// Check if the mouse first entered the window - if true, set position:
+		if (firstMouse) {
+			last_x = mouse_x;
+			last_y = mouse_y;
+			firstMouse = false;
+		}
+
+		// Calculate the offset (value we will move the camera direction):
+		float x_offset = mouse_x - last_x;
+		float y_offset = last_y - mouse_y;
+		last_x = mouse_x;
+		last_y = mouse_y;
+
+		// Adjust by movement sensitivity:
+		float sensitivity = 0.5f;
+		x_offset *= sensitivity;
+		y_offset *= sensitivity;
+
+		// Adjust yaw and pitch:
+		main_cam->yaw += x_offset;
+		main_cam->pitch += y_offset;
+
+		// Clamp pitch (to prevent a full 360 loop):
+		if (main_cam->pitch > 89.0f) main_cam->pitch = 89.0f;
+		if (main_cam->pitch < -89.0f) main_cam->pitch = -89.0f;
+
+		main_cam->Refresh();
+	}
 }
 
-// Process user input during the input loop:
-void GpContext::ProcessInput(GLFWwindow* window, std::shared_ptr<Camera> &cam) {
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
-	const float cam_speed = 0.05f;
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		std::cout << "press W" << std::endl;
-		cam->pos += cam_speed * cam->dir;
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		cam->pos -= cam_speed * cam->dir;
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cam->pos -= glm::normalize(glm::cross(cam->dir, cam->up)) * cam_speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cam->pos += glm::normalize(glm::cross(cam->dir, cam->up)) * cam_speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		cam->pos += cam_speed * cam->up;
-	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		cam->pos -= cam_speed * cam->up;
-	}
-	cam->Refresh();
+// Allows the user to set a main camera that will be used for movement:
+void GpContext::SetMainCamera(std::shared_ptr<Camera> arg) {
+	main_cam = arg;
 }
 
 // Object functions:
