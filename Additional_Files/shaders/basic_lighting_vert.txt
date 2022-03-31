@@ -1,3 +1,4 @@
+#version 330
 uniform mat4 u_Projection;
 uniform mat4 u_Model;
 uniform mat4 u_View;

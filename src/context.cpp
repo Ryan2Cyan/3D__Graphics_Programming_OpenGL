@@ -54,8 +54,40 @@ std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coor
 
 // Process user input during the input loop:
 void GpContext::ProcessInput(GLFWwindow* window) {
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+}
+
+// Process user input during the input loop:
+void GpContext::ProcessInput(GLFWwindow* window, std::shared_ptr<Camera> &cam) {
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
+	const float cam_speed = 0.05f;
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		std::cout << "press W" << std::endl;
+		cam->pos += cam_speed * cam->dir;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		cam->pos -= cam_speed * cam->dir;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		cam->pos -= glm::normalize(glm::cross(cam->dir, cam->up)) * cam_speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		cam->pos += glm::normalize(glm::cross(cam->dir, cam->up)) * cam_speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		cam->pos += cam_speed * cam->up;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		cam->pos -= cam_speed * cam->up;
+	}
+	cam->Refresh();
 }
 
 // Object functions:
@@ -87,11 +119,6 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
-//std::shared_ptr<Sampler> GpContext::CreateSampler() {
-//	std::shared_ptr<Sampler> sampler = std::make_shared<Sampler>();
-//	sampler->context = self.lock();
-//	return sampler;
-//}
 std::shared_ptr<Mesh> GpContext::CreateMesh(std::string filepath, glm::vec3 pos_arg) {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath, pos_arg);
 	mesh->context = self.lock();

@@ -23,6 +23,7 @@ struct  GpContext
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords, 
 		std::vector<glm::vec2> tex_coords);
 	void ProcessInput(GLFWwindow* window);
+	void ProcessInput(GLFWwindow* window, std::shared_ptr<Camera> &cam);
 
 	// Create object functions:
 	std::shared_ptr<Buffer> CreateBuffer(); 

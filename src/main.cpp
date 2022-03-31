@@ -42,7 +42,7 @@ int main()
 
 
     // Create Shader for on-screen rendering:
-    std::shared_ptr<Shader> shader = context->CreateShader(basic_v_filepath, basic_f_filepath);
+    std::shared_ptr<Shader> shader = context->CreateShader(v_basic_lighting, f_basic_lighting);
 
 	// Object 1:
     std::vector<glm::vec3> position = {
@@ -67,7 +67,21 @@ int main()
     std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
     shader->AddMeshToRender(quad_mesh);
 
- //   // Create render texture:
+    // Create camera:
+    std::shared_ptr<Camera> main_cam = context->CreateCamera(
+        false,
+        glm::vec2((float)window_size.x, (float)window_size.y),
+        glm::vec3(0.0f, 0.0f, 0.0f),  // position
+        glm::vec3(0.0f, 0.0f, 1.0f),  // target
+        70.0f                          //fov
+    );
+
+    //Load in meshes:
+    glm::vec3 position1 = { 0.0f, 0.0f, 0.0f };
+    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position1);
+    shader->AddMeshToRender(curuthers);
+
+    //   // Create render texture:
  //   std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
 
 
@@ -75,29 +89,14 @@ int main()
  //   std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
 
 
- //   // Load in meshes:
- //   glm::vec3 position2 = { 0.0f, 0.0f, 0.0f };
- //   std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
-
-
- //   // Vector of all meshes [heirarchy]:
- //   shader->AddMeshToRender(curuthers);
+    //// Vector of all meshes [heirarchy]:
+    //shader->AddMeshToRender(curuthers);
  //   shader->AddMeshToRender(curuthers2);
 
  //   // Create quad for render texture:
  //   std::shared_ptr<VertexArray> quad = context->Create2DImage();
 
-    // Create camera:
-    std::shared_ptr<Camera> main_cam = context->CreateCamera(
-        false,
-        glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(0.0f, 0.0f, 0.0f),  // position
-        glm::vec3(0.0f, 0.0f, 0.0f),  // target
-        70.0f                          //fov
-    );
-
  //   // Main loop state:
- //   bool backface_cull = false;
  //   float camera_speed = 0.05f;
  //   float delta_time = 0;
  //   bool first_mouse = true;
@@ -111,35 +110,16 @@ int main()
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     { 
-        // Input loop:
-        context->ProcessInput(window);
-
-        // Uniforms:
-        float timeValue = glfwGetTime() * 4;
-
-        float greenValue = 0.0f;
-        static float blueValue;
-        if (timeValue > 15) {
-            greenValue = 1.0;
-        }
-        if (timeValue < 15) {
-            blueValue = (cos(timeValue) / 2.0f) + 0.5f;
-            main_cam->back_col = glm::vec4(blueValue, 0.0f, 0.0f, 1.0f);
-        }
-        if (timeValue > 17) {
-            blueValue += 0.05;
-            main_cam->back_col = glm::vec4(0.0f, blueValue, blueValue, 1.0f);
-        }
-
-       
-        glm::vec4 newColor = { 0.0f , greenValue, greenValue, 1.0f };
-
-        glUseProgram(shader->GetId());
-        shader->SetUniform("newColor", newColor);
+     
+        // Input:
+        context->ProcessInput(window, main_cam);
 
         // Render:
         shader->Render(main_cam, true);
-
+        std::cout << "cam pos" << "x: " << main_cam->pos.x
+            << "   y: " << main_cam->pos.y << "   z: " << main_cam->pos.z << std::endl;
+        std::cout << "cam dir" << "x: " << main_cam->dir.x
+            << "   y: " << main_cam->dir.y << "   z: " << main_cam->dir.z << std::endl;
         glfwSwapBuffers(window);
         glfwPollEvents();
 

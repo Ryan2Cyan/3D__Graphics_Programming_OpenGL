@@ -199,11 +199,11 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		glm::mat4 model = meshes[i]->GetModelMat();
 		glm::vec3 pos = meshes[i]->GetPos();
 
-		//// Parse in matrix data from mesh:
-		//SetUniform("u_Model", model);
-		/*SetUniform("u_View", cam->view);
-		SetUniform("u_Projection", cam->proj);*/
-		//SetUniform("u_ViewPos", cam->pos);
+		// Parse in matrix data from mesh:
+		SetUniform("u_Model", model);
+		SetUniform("u_View", cam->view);
+		SetUniform("u_Projection", cam->proj);
+		SetUniform("u_ViewPos", cam->pos);
 
 		// Bind VAO:
 		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
