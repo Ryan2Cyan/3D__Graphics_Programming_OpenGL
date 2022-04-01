@@ -100,12 +100,13 @@ int main()
 
         // Render:
         shader->Render(main_cam, render_texture, shader_off, quad, true);
-        std::cout << "cam pos" << "x: " << main_cam->pos.x
+        /*std::cout << "cam pos" << "x: " << main_cam->pos.x
             << "   y: " << main_cam->pos.y << "   z: " << main_cam->pos.z << std::endl;
         std::cout << "cam dir" << "x: " << main_cam->dir.x
-            << "   y: " << main_cam->dir.y << "   z: " << main_cam->dir.z << std::endl;
+            << "   y: " << main_cam->dir.y << "   z: " << main_cam->dir.z << std::endl;*/
         glfwSwapBuffers(window);
         glfwPollEvents();
+
 
     }
 

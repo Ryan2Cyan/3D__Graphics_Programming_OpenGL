@@ -30,6 +30,7 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 
 	// Set other values:
 	back_col = { 0.2f, 0.3f, 0.3f, 1.0f };
+	movement_speed = 4.5f;
 }
 
 void Camera::MoveCam(SDL_Event &event, float deltaT, float cam_speed) {

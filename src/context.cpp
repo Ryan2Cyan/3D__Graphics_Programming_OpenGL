@@ -74,7 +74,7 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 
 	if (main_cam) {
 		// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
-		const float cam_speed = 4.5f * delta_time;
+		float cam_speed = main_cam->movement_speed * delta_time;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			main_cam->pos += cam_speed * main_cam->dir;
@@ -94,6 +94,18 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 			main_cam->pos -= cam_speed * main_cam->up;
 		}
+
+		// Adjust movement speed [Shift = move faster]:
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			main_cam->movement_speed = 10.0f;
+			std::cout << "Cam speed: " << main_cam->movement_speed << std::endl;
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+			main_cam->movement_speed = 4.5f;
+			std::cout << "Cam speed: " << main_cam->movement_speed << std::endl;
+		}
+
+		/*std::cout << "Cam speed: " << cam_speed << std::endl;*/
 
 		// Rotate camera based on mouse movement:
 		int win_width;

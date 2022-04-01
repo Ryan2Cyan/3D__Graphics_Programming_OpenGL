@@ -46,5 +46,6 @@ private:
 	glm::vec3 vel;
 
 	// Other:
+	float movement_speed;
 	glm::vec4 back_col;
 };
