@@ -72,3 +72,8 @@ GLuint RenderTexture::GetId() {
 
 	return fbo_id;
 }
+
+GLuint RenderTexture::GetTexId() {
+	GetId();
+	return id;
+}

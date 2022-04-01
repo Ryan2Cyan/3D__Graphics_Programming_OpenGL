@@ -28,7 +28,7 @@ struct Shader {
 	void Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target, 
 		std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad, 
 		bool backface_cull);
-
+	void Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination, std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> quad, GLuint tex2 = 0);
 
 private:
 	friend struct GpContext;

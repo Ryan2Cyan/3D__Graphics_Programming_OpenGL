@@ -199,7 +199,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		SetUniform("u_Model", model);
 		SetUniform("u_View", cam->view);
 		SetUniform("u_Projection", cam->proj);
-		SetUniform("u_ViewPos", cam->pos);
+		/*SetUniform("u_ViewPos", cam->pos);*/
 
 		// Bind VAO:
 		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
@@ -239,16 +239,45 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 
 	// Set up rendering for default framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//glDisable(GL_DEPTH_TEST);
+	//glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w,
+	//	cam->back_col.z * cam->back_col.w, cam->back_col.w);
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	//// Render the framebuffer to the screen:
+	//glUseProgram(framebuffer_shader->GetId());
+	//glBindVertexArray(quad->GetId());
+	//glBindTexture(GL_TEXTURE_2D, target->id);
+	//if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDrawArrays(GL_TRIANGLES, 0, quad->GetVertices());
+
+}
+
+void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination, 
+	std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> quad, GLuint tex2) {
+
+	if (destination) {
+		// Set up rendering for default framebuffer:
+		glBindFramebuffer(GL_FRAMEBUFFER, destination->GetId());
+	}
+
+	if (tex2) {
+		glActiveTexture(GL_TEXTURE0 + 1);
+		shader->SetUniform("u_Texture1", 1);
+		glBindTexture(GL_TEXTURE_2D, tex2);
+		glActiveTexture(GL_TEXTURE0);
+	}
+
 	glDisable(GL_DEPTH_TEST);
-	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w,
-		cam->back_col.z * cam->back_col.w, cam->back_col.w);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Render the framebuffer to the screen:
-	glUseProgram(framebuffer_shader->GetId());
+	glUseProgram(shader->GetId());
 	glBindVertexArray(quad->GetId());
-	glBindTexture(GL_TEXTURE_2D, target->id);
+	glBindTexture(GL_TEXTURE_2D, source->GetTexId());
 	if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawArrays(GL_TRIANGLES, 0, quad->GetVertices());
-
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

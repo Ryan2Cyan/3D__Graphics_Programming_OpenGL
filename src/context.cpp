@@ -200,6 +200,13 @@ std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao_arg
 	return mesh;
 }
 
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao_arg,
+	std::shared_ptr<RenderTexture> rend_tex_arg, glm::vec3 pos_arg) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao_arg, rend_tex_arg, pos_arg);
+	mesh->context = self.lock();
+	return mesh;
+}
+
 std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 	float fov_arg) {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(ortho, win_size, position, target, fov_arg);

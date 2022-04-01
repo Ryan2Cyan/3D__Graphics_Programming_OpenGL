@@ -12,14 +12,15 @@
 #include <fstream>
 
 // Shaders filepaths:
-const GLchar* vertex_shader_filepath = "Additional_Files/shaders/vertex_shader.txt";
-const GLchar* basic_v_filepath = "Additional_Files/shaders/basic_vert.txt";
-const GLchar* basic_f_filepath = "Additional_Files/shaders/basic_frag2.txt";
-const GLchar* fragment_shader_filepath = "Additional_Files/shaders/fragment_shader.txt";
-const GLchar* f_basic_lighting = "Additional_Files/shaders/basic_lighting_frag.txt";
-const GLchar* v_basic_lighting = "Additional_Files/shaders/basic_lighting_vert.txt";
-const GLchar* f_off_screen = "Additional_Files/shaders/off_screen_frag.txt";
-const GLchar* v_off_screen = "Additional_Files/shaders/off_screen_vert.txt";
+const GLchar* light_v = "Additional_Files/shaders/light_vert.txt";
+const GLchar* light_f = "Additional_Files/shaders/light_frag.txt";
+const GLchar* postproc_v = "Additional_Files/shaders/postprocess_vert.txt";
+const GLchar* threshold_f = "Additional_Files/shaders/threshold_frag.txt";
+const GLchar* blur_f = "Additional_Files/shaders/blur_frag.txt";
+const GLchar* gui_f = "Additional_Files/shaders/gui_frag.txt";
+const GLchar* gui_v = "Additional_Files/shaders/gui_vert.txt";
+const GLchar* null_f = "Additional_Files/shaders/null_frag.txt";
+const GLchar* merge_f = "Additional_Files/shaders/merge_frag.txt";
 
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/wall.jpg";
@@ -42,7 +43,10 @@ int main()
 
 
     // Create Shader for on-screen rendering:
-    std::shared_ptr<Shader> shader = context->CreateShader(v_basic_lighting, f_basic_lighting);
+    std::shared_ptr<Shader> shader = context->CreateShader(light_v, light_f);
+	std::shared_ptr<Shader> theshold_shader = context->CreateShader(postproc_v, threshold_f);
+	std::shared_ptr<Shader> blur_shader = context->CreateShader(postproc_v, blur_f);
+	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
 
 	// Object 1:
     std::vector<glm::vec3> position = {
@@ -84,13 +88,14 @@ int main()
 
        // Create render texture:
     std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
+	std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
+	std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
+	std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
+	std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
 
 
-    // Create Shader for off-screen rendering:
-    std::shared_ptr<Shader> shader_off = context->CreateShader(v_off_screen, f_off_screen);
+	std::shared_ptr<Mesh> threshold_mesh = context->CreateMesh(quad, threshold_render_texture, glm::vec3(0.0f, 0.0f, 0.0f));
 
-
-  
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     { 
@@ -99,11 +104,26 @@ int main()
         context->ProcessInput(window);
 
         // Render:
-        shader->Render(main_cam, render_texture, shader_off, quad, true);
-        /*std::cout << "cam pos" << "x: " << main_cam->pos.x
-            << "   y: " << main_cam->pos.y << "   z: " << main_cam->pos.z << std::endl;
-        std::cout << "cam dir" << "x: " << main_cam->dir.x
-            << "   y: " << main_cam->dir.y << "   z: " << main_cam->dir.z << std::endl;*/
+        shader->Render(main_cam, render_texture, theshold_shader, quad, true);
+		theshold_shader->Swap(render_texture, threshold_render_texture, theshold_shader, quad);
+		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, theshold_shader, quad);
+		theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader, quad);
+		bool first_swap = true;
+		for (size_t i = 0; i < 20; i++)
+		{
+			
+			theshold_shader->Swap(blur_render_texture1, blur_render_texture0, blur_shader, quad);
+		
+			theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader, quad);
+	
+			
+		}
+
+		theshold_shader->Swap(blur_render_texture0, merge_render_texture, merge_shader, quad);
+		theshold_shader->Swap(merge_render_texture, nullptr, merge_shader, quad, render_texture->GetTexId());
+	/*	theshold_shader->Swap(merge_render_texture, nullptr, merge_shader, quad);*/
+	
+
         glfwSwapBuffers(window);
         glfwPollEvents();
 

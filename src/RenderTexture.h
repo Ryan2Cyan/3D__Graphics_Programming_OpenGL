@@ -11,6 +11,7 @@ struct RenderTexture {
 	~RenderTexture();
 	void SetSize(glm::ivec2 arg);
 	GLuint GetId();
+	GLuint GetTexId();
 private:
 	friend struct GpContext;
 	friend struct Shader;
