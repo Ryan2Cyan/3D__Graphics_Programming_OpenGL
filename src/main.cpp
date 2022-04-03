@@ -99,12 +99,11 @@ int main()
 		theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
 		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
         blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
-		for (size_t i = 0; i < 10; i++)
+		for (size_t i = 0; i < 20; i++)
 		{
             blur_shader->Swap(blur_render_texture1, blur_render_texture0, NULL);
             blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
 		}
-
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
 	

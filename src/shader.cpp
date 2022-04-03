@@ -240,7 +240,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 
 
 void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
-	GLuint tex2) {
+	GLuint tex_2) {
 
 	// If destination is value, we will render into that framebuffer,
 	// If destination is nullptr, we render to the screen:
@@ -249,10 +249,10 @@ void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderT
 	}
 
 	// Use if the shader takes in two textures:
-	if (tex2) {
+	if (tex_2) {
 		glActiveTexture(GL_TEXTURE0 + 1);
 		SetUniform("u_Texture1", 1);
-		glBindTexture(GL_TEXTURE_2D, tex2);
+		glBindTexture(GL_TEXTURE_2D, tex_2);
 		glActiveTexture(GL_TEXTURE0);
 	}
 

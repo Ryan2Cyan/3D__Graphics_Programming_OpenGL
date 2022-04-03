@@ -18,7 +18,7 @@ Texture::~Texture() {
 }
 
 // Sends the loaded texture to the GPU and returns the texture ID:
-GLuint Texture::GetId() {
+const GLuint Texture::GetId() {
 
 	if (dirty) {
 

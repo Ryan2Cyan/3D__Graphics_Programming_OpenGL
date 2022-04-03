@@ -28,7 +28,7 @@ struct Shader {
 	void Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
 		bool backface_cull);
 	void Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
-		GLuint tex2);
+		GLuint tex_2);
 
 
 private:

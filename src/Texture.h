@@ -9,7 +9,7 @@ struct GpContext;
 struct Texture {
 	Texture(std::string tex_path);
 	~Texture();
-	GLuint GetId();
+	const GLuint GetId();
 
 
 private:
