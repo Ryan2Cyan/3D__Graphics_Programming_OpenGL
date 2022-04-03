@@ -30,6 +30,7 @@ struct Shader {
 	void Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
 		GLuint tex2);
 
+
 private:
 	friend struct GpContext;
 

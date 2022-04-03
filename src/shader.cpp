@@ -233,10 +233,11 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 	// Render into the custom framebuffer:
 	Render(cam, backface_cull);
 
-	// Set up rendering for default framebuffer:
+	// Reset state:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
+
 
 void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
 	GLuint tex2) {
