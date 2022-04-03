@@ -22,13 +22,13 @@ struct Shader {
 	void SetUniform(const std::string& u_name, glm::vec4 value);
 	void SetUniform(const std::string& u_name, GLuint value);
 	/*void AddSampler(const std::shared_ptr<Sampler> arg);*/
-	GLuint GetId();
+	const GLuint GetId();
 
 	void Render(std::shared_ptr<Camera> cam, bool backface_cull);
-	void Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target, 
-		std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad, 
+	void Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
 		bool backface_cull);
-	void Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination, std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> quad, GLuint tex2 = 0);
+	void Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
+		GLuint tex2);
 
 private:
 	friend struct GpContext;
@@ -39,5 +39,4 @@ private:
 	bool dirty;
 	std::string vert_src;
 	std::string frag_src;
-	bool polygon_mode;
 };

@@ -40,7 +40,7 @@ struct  GpContext
 		std::shared_ptr<RenderTexture> rend_tex_arg, glm::vec3 pos_arg);
 	std::shared_ptr<Camera> CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 		float fov_arg);
-	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);
+	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size_arg);
 
 
 	std::weak_ptr<GpContext> self;

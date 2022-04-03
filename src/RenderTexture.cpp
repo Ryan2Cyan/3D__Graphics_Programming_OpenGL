@@ -1,7 +1,9 @@
 #include "RenderTexture.h"
+#include "VertexArray.h"
 
-RenderTexture::RenderTexture(glm::ivec2 size_arg) {
+RenderTexture::RenderTexture(glm::ivec2 size_arg, std::shared_ptr<VertexArray> quad) {
 
+	this->quad = quad;
 	size = size_arg;
 	fbo_id = 0;
 	rbo_id = 0;
@@ -76,4 +78,8 @@ GLuint RenderTexture::GetId() {
 GLuint RenderTexture::GetTexId() {
 	GetId();
 	return id;
+}
+
+const std::shared_ptr<VertexArray> RenderTexture::GetVAO() {
+	return quad;
 }

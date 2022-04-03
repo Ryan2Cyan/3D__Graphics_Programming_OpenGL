@@ -213,8 +213,19 @@ std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, 
 	return camera;
 }
 
-std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
-	std::shared_ptr<RenderTexture> render_texture = std::make_shared<RenderTexture>(size);
+std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size_arg) {
+
+	// Create a quad that will contain scene information:
+	std::vector<glm::vec3> position = {
+		{ 1.0f, -1.0f, 0.0f },
+		{ 1.0f, 1.0f, 0.0f },
+		{ -1.0f, -1.0f, 0.0f },
+		{ 1.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, 0.0f },
+		{ -1.0f, -1.0f, 0.0f }
+	};
+	std::shared_ptr<VertexArray> quad_vao = Create2D(position);
+	std::shared_ptr<RenderTexture> render_texture = std::make_shared<RenderTexture>(size_arg, quad_vao);
 	render_texture->context = self.lock();
 	return render_texture;
 }
