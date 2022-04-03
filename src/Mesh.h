@@ -23,6 +23,7 @@ struct Mesh {
 	glm::vec3 GetPos();
 	GLuint GetTexId();
 	void SetPos(glm::vec3 arg);
+	void SetDiffuse(glm::vec3 arg);
 
 private:
 	friend struct GpContext;
@@ -35,6 +36,7 @@ private:
 	std::shared_ptr<VertexArray> vao;
 	WfModel wf_model;
 	glm::vec3 position;
+	glm::vec3 diff_light;
 	glm::mat4 model_mat;
 	bool is_wf;
 };

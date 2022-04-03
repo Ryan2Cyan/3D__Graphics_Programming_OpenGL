@@ -74,7 +74,7 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 
 	if (main_cam) {
 		// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
-		float cam_speed = main_cam->movement_speed * delta_time;
+		static float cam_speed = 4.5f * delta_time;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			main_cam->pos += cam_speed * main_cam->dir;
@@ -97,12 +97,10 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 
 		// Adjust movement speed [Shift = move faster]:
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			main_cam->movement_speed = 10.0f;
-			std::cout << "Cam speed: " << main_cam->movement_speed << std::endl;
+			cam_speed = 10.0f * delta_time;
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
-			main_cam->movement_speed = 4.5f;
-			std::cout << "Cam speed: " << main_cam->movement_speed << std::endl;
+			cam_speed = 4.5f * delta_time;
 		}
 
 		/*std::cout << "Cam speed: " << cam_speed << std::endl;*/
@@ -111,8 +109,8 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 		int win_width;
 		int win_height;
 		glfwGetWindowSize(window, &win_width, &win_height);
-		main_cam->dimensions.x = win_width;
-		main_cam->dimensions.y = win_height;
+		main_cam->size.x = win_width;
+		main_cam->size.y = win_height;
 
 		double mouse_x;
 		double mouse_y;
@@ -187,8 +185,8 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
-std::shared_ptr<Mesh> GpContext::CreateMesh(std::string filepath, glm::vec3 pos_arg) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(filepath, pos_arg);
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath, glm::vec3 pos_arg) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath, pos_arg);
 	mesh->context = self.lock();
 	return mesh;
 }

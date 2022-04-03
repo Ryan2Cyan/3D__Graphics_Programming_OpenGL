@@ -11,6 +11,7 @@ Mesh::Mesh(std::shared_ptr<VertexArray> vao_arg, std::shared_ptr<Texture> tex_ar
 	vao = vao_arg;
 	tex = tex_arg;
 	position = pos_arg;
+	diff_light = glm::vec3(1.0, 1.0, 1.0);
 
 	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
@@ -24,6 +25,7 @@ Mesh::Mesh(std::shared_ptr<VertexArray> vao_arg, std::shared_ptr<RenderTexture> 
 	vao = vao_arg;
 	rend_tex = rend_tex_arg;
 	position = pos_arg;
+	diff_light = glm::vec3(1.0, 1.0, 1.0);
 
 	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
@@ -41,6 +43,7 @@ Mesh::Mesh(std::string filepath, glm::vec3 pos_arg) {
 	}
 
 	position = pos_arg;
+	diff_light = glm::vec3(1.0, 1.0, 1.0);
 
 	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
@@ -70,6 +73,10 @@ GLuint Mesh::GetTexId() {
 
 void Mesh::SetPos(glm::vec3 arg) {
 	position = arg;
+}
+
+void Mesh::SetDiffuse(glm::vec3 arg) {
+	diff_light = arg;
 }
 
 
