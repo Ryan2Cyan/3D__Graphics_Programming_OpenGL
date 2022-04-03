@@ -34,7 +34,6 @@ Shader::Shader(std::string vert_path, std::string frag_path) {
 	my_file.close();
 	
 	id = 0;
-	polygon_mode = false;
 	dirty = true;
 }
 
@@ -96,7 +95,7 @@ void Shader::SetUniform(const std::string& u_name, GLuint value) {
 	glUniform1i(loc, value);
 }
 
-GLuint Shader::GetId() {
+const GLuint Shader::GetId() {
 
 	if (dirty) {
 		// Create a new vertex shader:
@@ -209,7 +208,6 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		
 
 		// Final render:
-		if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		if (meshes[i]->is_wf) glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
 		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
 
@@ -227,14 +225,10 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
 // Render the scene using custom framebuffer and shader (for post-processing):
 void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
-	std::shared_ptr<Shader> framebuffer_shader, std::shared_ptr<VertexArray> quad, bool backface_cull) {
+	std::shared_ptr<Shader> framebuffer_shader, bool backface_cull) {
 
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w, 
-		cam->back_col.z * cam->back_col.w, cam->back_col.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Render into the custom framebuffer:
 	Render(cam, backface_cull);
@@ -245,13 +239,15 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 }
 
 void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination, 
-	std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> quad, GLuint tex2) {
+	std::shared_ptr<Shader> shader, GLuint tex2) {
 
+	// If destination is value, we will render into that framebuffer,
+	// If destination is nullptr, we render to the screen:
 	if (destination) {
-		// Set up rendering for default framebuffer:
 		glBindFramebuffer(GL_FRAMEBUFFER, destination->GetId());
 	}
 
+	// Use if the shader takes in two textures:
 	if (tex2) {
 		glActiveTexture(GL_TEXTURE0 + 1);
 		shader->SetUniform("u_Texture1", 1);
@@ -262,12 +258,19 @@ void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderT
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	// Render the framebuffer to the screen:
 	glUseProgram(shader->GetId());
-	glBindVertexArray(quad->GetId());
+
+	// If destination is valid, render into it's quad,
+	// Else we render the source's quad to the screen:
+	if (destination) {
+		glBindVertexArray(destination->GetVAO()->GetId());
+	}
+	else {
+		glBindVertexArray(source->GetVAO()->GetId());
+	}
+
+	// Draw to destination:
 	glBindTexture(GL_TEXTURE_2D, source->GetTexId());
-	if (polygon_mode) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawArrays(GL_TRIANGLES, 0, quad->GetVertices());
+	glDrawArrays(GL_TRIANGLES, 0, source->GetVAO()->GetVertices());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

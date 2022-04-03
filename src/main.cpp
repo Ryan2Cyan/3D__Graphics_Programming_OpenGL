@@ -75,29 +75,6 @@ int main()
     shader->AddMeshToRender(curuthers4);
 
 
-
-    // Create a quad to contain a render texture:
-    std::vector<glm::vec3> position = {
-        { 1.0f, -1.0f, 0.0f },
-        { 1.0f, 1.0f, 0.0f },
-        { -1.0f, -1.0f, 0.0f },
-        { 1.0f, 1.0f, 0.0f },
-        { -1.0f, 1.0f, 0.0f },
-        { -1.0f, -1.0f, 0.0f }
-    };
-    std::vector<glm::vec2> tex_coords = {
-        { 1.0f, 0.0f },
-        { 1.0f, 1.0f },
-        { 0.0f, 0.0f },
-        { 1.0f, 1.0f },
-        { 0.0f, 1.0f },
-        { 0.0f, 0.0f }
-    };
-    std::shared_ptr<VertexArray> quad = context->Create2D(position, tex_coords);
-    std::shared_ptr<Texture> texture = context->CreateTexture(image_filepath);
-    glm::vec3 position0 = { 0.0f, 0.0f, -4.0f };
-    std::shared_ptr<Mesh> quad_mesh = context->CreateMesh(quad, texture, position0);
-
     // Create render textures:
     std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
 	std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
@@ -105,7 +82,6 @@ int main()
 	std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
 	std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
 
-	std::shared_ptr<Mesh> threshold_mesh = context->CreateMesh(quad, threshold_render_texture, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -119,24 +95,22 @@ int main()
         context->ProcessInput(window);
 
         // Render:
-        shader->Render(main_cam, render_texture, theshold_shader, quad, true);
-		theshold_shader->Swap(render_texture, threshold_render_texture, theshold_shader, quad);
-		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, theshold_shader, quad);
-		theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader, quad);
+        shader->Render(main_cam, render_texture, theshold_shader, true);
+		theshold_shader->Swap(render_texture, threshold_render_texture, theshold_shader);
+		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, theshold_shader);
+		theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader);
 		for (size_t i = 0; i < 10; i++)
 		{
-			theshold_shader->Swap(blur_render_texture1, blur_render_texture0, blur_shader, quad);
-			theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader, quad);
+			theshold_shader->Swap(blur_render_texture1, blur_render_texture0, blur_shader);
+			theshold_shader->Swap(blur_render_texture0, blur_render_texture1, blur_shader);
 		}
 
-		theshold_shader->Swap(blur_render_texture0, merge_render_texture, merge_shader, quad);
-		theshold_shader->Swap(merge_render_texture, nullptr, merge_shader, quad, render_texture->GetTexId());
+		theshold_shader->Swap(blur_render_texture0, merge_render_texture, merge_shader);
+		theshold_shader->Swap(merge_render_texture, nullptr, merge_shader, render_texture->GetTexId());
 	
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-
     }
 
     // Clean up:
