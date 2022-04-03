@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include <iostream>
+
 
 Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 	float fov_arg) {

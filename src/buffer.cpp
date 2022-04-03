@@ -1,5 +1,4 @@
 #include "Buffer.h"
-#include <iostream>
 
 
 Buffer::Buffer() {

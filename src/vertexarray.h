@@ -2,7 +2,6 @@
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
-#include <string>
 
 struct Buffer;
 struct GpContext;

@@ -6,11 +6,6 @@
 #include <ext.hpp>
 
 struct GpContext;
-struct Sampler;
-struct VertexArray;
-struct Texture;
-struct Mesh;
-struct Camera;
 
 struct Shader {
 

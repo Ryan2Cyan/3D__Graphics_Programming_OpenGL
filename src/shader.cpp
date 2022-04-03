@@ -1,8 +1,6 @@
 #include "gp.h"
 #include <fstream>
 #include <iostream>
-#include <GL/glew.h>
-
 
 
 // Fetch the source codes for the vertex and fragment shaders:

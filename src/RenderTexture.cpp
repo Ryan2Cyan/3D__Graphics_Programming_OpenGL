@@ -1,5 +1,5 @@
 #include "RenderTexture.h"
-#include "VertexArray.h"
+
 
 RenderTexture::RenderTexture(glm::ivec2 size_arg, std::shared_ptr<VertexArray> quad) {
 

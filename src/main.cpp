@@ -1,14 +1,6 @@
 #define SDL_MAIN_HANDLED 
 
 #include "Gp.h"
-#include <SDL.h>
-#include <glfw/glfw3.h>
-#include <GL/glew.h>
-#include <memory>
-#include <ext.hpp>
-#include <iostream>
-#include <vector>
-#include <fstream>
 
 // Shaders filepaths:
 const GLchar* light_v = "Additional_Files/shaders/light_vert.txt";
@@ -46,6 +38,13 @@ int main()
 	std::shared_ptr<Shader> blur_shader = context->CreateShader(postproc_v, blur_f);
 	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
 
+    // Create render textures:
+    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
+
 
     // Create camera:
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
@@ -74,13 +73,6 @@ int main()
     curuthers4->SetDiffuse(glm::vec3(0.1f, 0.1f, 0.5f));
     shader->AddMeshToRender(curuthers4);
 
-
-    // Create render textures:
-    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
-	std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
-	std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
-	std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
-	std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
 
 
     // Render loop (called each frame):

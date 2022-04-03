@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include <GL/glew.h>
-#include <ext.hpp>
 #include <string>
 
 struct GpContext;

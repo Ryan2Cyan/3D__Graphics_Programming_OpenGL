@@ -1,10 +1,8 @@
 #pragma once
 #include <memory>
 #include <string>
-#include <vector>
 #include <ext.hpp>
 #include <wavefront/wavefront.h>
-#include <GL/glew.h>
 
 struct GpContext;
 struct VertexArray;

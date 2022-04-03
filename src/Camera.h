@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <ext.hpp>
-#include <SDL.h>
+
 
 struct GpContext;
 struct Shader;

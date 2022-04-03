@@ -1,5 +1,4 @@
 #include "Gp.h"
-#include <iostream>
 
 static float last_x = 0.0f;
 static float last_y = 0.0f;

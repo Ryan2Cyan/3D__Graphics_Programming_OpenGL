@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include "VertexArray.h"
 #include "Texture.h"
 #include "RenderTexture.h"
 
