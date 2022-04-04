@@ -20,6 +20,10 @@ const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj"
 const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
 const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
 const GLchar* model_filepath4 = "Additional_Files/models/cube/cube.obj";
+const GLchar* model_tree = "Additional_Files/models/tree/tree.obj";
+const GLchar* model_ground = "Additional_Files/models/tree/ground.obj";
+const GLchar* model_skeleton = "Additional_Files/models/tree/skeleton.obj";
+const GLchar* model_bird = "Additional_Files/models/tree/bird.obj";
 
 
 int main()
@@ -63,8 +67,14 @@ int main()
     shader->AddMeshToRender(curuthers);
 
     glm::vec3 position1 = { 5.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> cube = context->CreateMesh(model_filepath4, position1);
-    shader->AddMeshToRender(cube);
+    std::shared_ptr<Mesh> tree = context->CreateMesh(model_tree, position1);
+    shader->AddMeshToRender(tree);
+    std::shared_ptr<Mesh> ground = context->CreateMesh(model_ground, position1);
+    shader->AddMeshToRender(ground);
+    std::shared_ptr<Mesh> skeleton = context->CreateMesh(model_skeleton, position1);
+    shader->AddMeshToRender(skeleton);
+    std::shared_ptr<Mesh> bird = context->CreateMesh(model_bird, position1);
+    shader->AddMeshToRender(bird);
 
 
 

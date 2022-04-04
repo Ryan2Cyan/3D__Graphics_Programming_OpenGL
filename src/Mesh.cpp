@@ -11,7 +11,6 @@ Mesh::Mesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Texture> tex, glm::
 	this->tex = tex;
 	position = pos;
 	diff_light = glm::vec3(1.0, 1.0, 1.0);
-	color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
@@ -30,7 +29,6 @@ Mesh::Mesh(std::string filepath, glm::vec3 pos) {
 
 	position = pos;
 	diff_light = glm::vec3(1.0, 1.0, 1.0);
-	color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	// Create model mat and set initial pos:
 	model_mat = glm::mat4(1.0f);
