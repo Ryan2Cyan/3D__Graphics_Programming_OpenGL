@@ -19,6 +19,7 @@ const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
 const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
 const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
+const GLchar* model_filepath4 = "Additional_Files/models/cube/cube.obj";
 
 
 int main()
@@ -57,32 +58,20 @@ int main()
     context->SetMainCamera(main_cam);
 
     //Load in meshes:
-    glm::vec3 position1 = { 0.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position1);
+    glm::vec3 position0 = { 0.0f, 0.0f, 0.0f };
+    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position0);
     shader->AddMeshToRender(curuthers);
-    glm::vec3 position2 = { 5.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers2 = context->CreateMesh(model_filepath, position2);
-    curuthers2->SetDiffuse(glm::vec3(0.5f, 0.1f, 0.1f));
-    shader->AddMeshToRender(curuthers2);
-    glm::vec3 position3 = { 10.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers3 = context->CreateMesh(model_filepath, position3);
-    curuthers3->SetDiffuse(glm::vec3(0.1f, 0.5f, 0.1f));
-    shader->AddMeshToRender(curuthers3);
-    glm::vec3 position4 = { 15.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers4 = context->CreateMesh(model_filepath, position4);
-    curuthers4->SetDiffuse(glm::vec3(0.1f, 0.1f, 0.5f));
-    shader->AddMeshToRender(curuthers4);
+
+    glm::vec3 position1 = { 5.0f, 0.0f, 0.0f };
+    std::shared_ptr<Mesh> cube = context->CreateMesh(model_filepath4, position1);
+    shader->AddMeshToRender(cube);
 
 
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     { 
-        float timeValue = glfwGetTime();
-        float greenValue = ((sin(timeValue) / 0.1f) + 0.5f) * 10;
-
-        curuthers4->SetDiffuse(glm::vec3(greenValue, 0.1, 0.5f));
-        
+   
         // Input:
         context->ProcessInput(window);
 

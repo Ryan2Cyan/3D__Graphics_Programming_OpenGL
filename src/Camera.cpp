@@ -2,7 +2,7 @@
 
 
 Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
-	float fov_arg) {
+	float fov) {
 
 	// Create projection mat:
 	size = win_size;
@@ -11,8 +11,8 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 		proj = glm::ortho(0.0f, size.x / 100.0f, 0.0f, size.y / 100.0f, 0.0f, 100.0f);
 	}
 	else {
-		fov = fov_arg;
-		proj = glm::perspective(glm::radians(fov), size.x / size.y, 0.1f, 100.0f);
+		this->fov = fov;
+		proj = glm::perspective(glm::radians(this->fov), size.x / size.y, 0.1f, 100.0f);
 	}
 
 	pos = position;

@@ -197,6 +197,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		SetUniform("u_View", cam->view);
 		SetUniform("u_Projection", cam->proj);
 		SetUniform("u_diffColor", meshes[i]->diff_light);
+		glm::vec3 color = meshes[i]->color;
 
 		SetUniform("u_lightPos", glm::vec3(1.0, 0.0f, 0.0f));
 

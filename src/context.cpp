@@ -102,7 +102,6 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 			cam_speed = 4.5f * delta_time;
 		}
 
-		/*std::cout << "Cam speed: " << cam_speed << std::endl;*/
 
 		// Rotate camera based on mouse movement:
 		int win_width;
@@ -184,28 +183,28 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
-std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath, glm::vec3 pos_arg) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath, pos_arg);
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath, glm::vec3 pos) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath, pos);
 	mesh->context = self.lock();
 	return mesh;
 }
 
-std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao_arg,
-	std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao_arg, tex_arg, pos_arg);
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao,
+	std::shared_ptr<Texture> tex, glm::vec3 pos) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao, tex, pos);
 	mesh->context = self.lock();
 	return mesh;
 }
 
 std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
-	float fov_arg) {
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(ortho, win_size, position, target, fov_arg);
+	float fov) {
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(ortho, win_size, position, target, fov);
 
 	camera->context = self.lock();
 	return camera;
 }
 
-std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size_arg) {
+std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
 
 	// Create a quad that will contain scene information:
 	std::vector<glm::vec3> position = {
@@ -217,7 +216,7 @@ std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size_ar
 		{ -1.0f, -1.0f, 0.0f }
 	};
 	std::shared_ptr<VertexArray> quad_vao = Create2D(position);
-	std::shared_ptr<RenderTexture> render_texture = std::make_shared<RenderTexture>(size_arg, quad_vao);
+	std::shared_ptr<RenderTexture> render_texture = std::make_shared<RenderTexture>(size, quad_vao);
 	render_texture->context = self.lock();
 	return render_texture;
 }

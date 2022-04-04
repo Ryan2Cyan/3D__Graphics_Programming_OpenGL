@@ -10,7 +10,7 @@ struct Shader;
 struct Camera {
 
 	Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
-		float fov_arg);
+		float fov);
 	void Refresh();
 	void SetView(glm::mat4 arg);
 	const glm::mat4 GetView();

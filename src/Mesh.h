@@ -13,8 +13,8 @@ struct RenderTexture;
 
 struct Mesh {
 
-	Mesh(std::shared_ptr<VertexArray> vao_arg, std::shared_ptr<Texture> tex_arg, glm::vec3 pos_arg);
-	Mesh(std::string filepath, glm::vec3 pos_arg);
+	Mesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Texture> tex, glm::vec3 pos);
+	Mesh(std::string filepath, glm::vec3 pos);
 	const WfModel GetWfModel();
 	const glm::mat4 GetModelMat();
 	const glm::vec3 GetPos();
