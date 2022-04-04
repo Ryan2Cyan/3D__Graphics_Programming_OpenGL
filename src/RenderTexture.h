@@ -11,8 +11,8 @@ struct RenderTexture {
 	RenderTexture(glm::ivec2 size_arg, std::shared_ptr<VertexArray> quad);
 	~RenderTexture();
 	void SetSize(glm::ivec2 arg);
-	GLuint GetId();
-	GLuint GetTexId();
+	const GLuint GetId();
+	const GLuint GetTexId();
 	const std::shared_ptr<VertexArray> GetVAO();
 private:
 	friend struct GpContext;

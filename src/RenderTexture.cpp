@@ -1,10 +1,10 @@
 #include "RenderTexture.h"
 
 
-RenderTexture::RenderTexture(glm::ivec2 size_arg, std::shared_ptr<VertexArray> quad) {
+RenderTexture::RenderTexture(glm::ivec2 size, std::shared_ptr<VertexArray> quad) {
 
 	this->quad = quad;
-	size = size_arg;
+	this->size = size;
 	fbo_id = 0;
 	rbo_id = 0;
 	id = 0;
@@ -28,7 +28,7 @@ void RenderTexture::SetSize(glm::ivec2 arg) {
 	dirty = true;
 }
 
-GLuint RenderTexture::GetId() {
+const GLuint RenderTexture::GetId() {
 
 	if (dirty) {
 
@@ -75,7 +75,7 @@ GLuint RenderTexture::GetId() {
 	return fbo_id;
 }
 
-GLuint RenderTexture::GetTexId() {
+const GLuint RenderTexture::GetTexId() {
 	GetId();
 	return id;
 }
