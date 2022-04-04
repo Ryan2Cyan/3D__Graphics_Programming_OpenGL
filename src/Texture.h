@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include <GL/glew.h>
 #include <string>
 
@@ -17,6 +18,22 @@ private:
 
 	std::shared_ptr<GpContext> context;
 	std::string filepath;
+	GLuint id;
+	bool dirty;
+};
+
+struct CubeMap {
+	CubeMap(std::vector<std::string> tex_faces);
+	~CubeMap();
+	const GLuint GetId();
+
+
+private:
+	friend struct GpContext;
+
+
+	std::shared_ptr<GpContext> context;
+	std::vector<std::string> tex_faces;
 	GLuint id;
 	bool dirty;
 };

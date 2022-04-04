@@ -1,11 +1,14 @@
 #pragma once
 #include <memory>
 #include <ext.hpp>
+#include <vector>
+#include <string>
 
 
 struct GpContext;
 struct Shader;
-
+struct CubeMap;
+struct VertexArray;
 
 struct Camera {
 
@@ -13,14 +16,21 @@ struct Camera {
 		float fov);
 	void Refresh();
 	void SetView(glm::mat4 arg);
+	void SetCubeMap(std::shared_ptr<CubeMap> arg);
+	void SetCubeMapObj(std::shared_ptr<VertexArray> arg);
 	const glm::mat4 GetView();
+	const glm::mat4 GetProj();
 
-	
+	std::shared_ptr<CubeMap> cubemap;
+	std::shared_ptr<VertexArray> cubemap_obj;
+	std::shared_ptr<Shader> cubemap_shader;
+
 private:
 	friend struct GpContext;
 	friend struct Shader;
 
 	std::shared_ptr<GpContext> context;
+	
 
 	// Values:
 	glm::vec3 pos;

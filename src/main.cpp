@@ -12,6 +12,8 @@ const GLchar* gui_f = "Additional_Files/shaders/gui_frag.txt";
 const GLchar* gui_v = "Additional_Files/shaders/gui_vert.txt";
 const GLchar* null_f = "Additional_Files/shaders/null_frag.txt";
 const GLchar* merge_f = "Additional_Files/shaders/merge_frag.txt";
+const GLchar* cubemap_v = "Additional_Files/shaders/cubemap_vert.txt";
+const GLchar* cubemap_f = "Additional_Files/shaders/cubemap_frag.txt";
 
 // Resource filepaths:
 const GLchar* image_filepath = "Additional_Files/images/wall.jpg";
@@ -39,6 +41,7 @@ int main()
 
     // Create Shader for on-screen rendering:
     std::shared_ptr<Shader> shader = context->CreateShader(light_v, light_f);
+    std::shared_ptr<Shader> cubemap_shader = context->CreateShader(cubemap_v, cubemap_f);
 	std::shared_ptr<Shader> theshold_shader = context->CreateShader(postproc_v, threshold_f);
 	std::shared_ptr<Shader> blur_shader = context->CreateShader(postproc_v, blur_f);
 	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
@@ -49,6 +52,7 @@ int main()
     std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> skybox_render_texture = context->CreateRenderTexture(window_size);
 
 
     // Create camera:
@@ -76,7 +80,70 @@ int main()
     std::shared_ptr<Mesh> bird = context->CreateMesh(model_bird, position1);
     shader->AddMeshToRender(bird);
 
+    // Cubemap demo:
+    std::vector<std::string> faces = {
+        image_filepath,
+        image_filepath,
+        image_filepath,
+        image_filepath,
+        image_filepath,
+        image_filepath
+    };
+    std::shared_ptr<CubeMap> cubemap = context->CreateCubemap(faces);
+    main_cam->SetCubeMap(cubemap);
+    main_cam->cubemap_shader = cubemap_shader;
 
+    std::vector<glm::vec3> cubemap_pos = {
+        // positions          
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+        glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f,  1.0f, -1.0f),
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+        glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+        glm::vec3(-1.0f,  1.0f,  1.0f),
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+        glm::vec3(-1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f, -1.0f,  1.0f),
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+        glm::vec3(1.0f,  1.0f, -1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(-1.0f,  1.0f,  1.0f),
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+
+        glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+        glm::vec3(1.0f, -1.0f,  1.0f)
+
+    };
+
+    std::shared_ptr<VertexArray> cubemap_obj = context->Create2D(cubemap_pos);
+    main_cam->SetCubeMapObj(cubemap_obj);
+
+    skybox_render_texture->SetQuad(cubemap_obj);
+    skybox_render_texture->SetTex(cubemap->GetId());
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -86,18 +153,21 @@ int main()
         context->ProcessInput(window);
 
         // Render:
-        shader->Render(main_cam, render_texture, true);
+
+        shader->Render(main_cam, render_texture, true, false);
 		theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
 		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
         blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
-		for (size_t i = 0; i < 20; i++)
+		for (size_t i = 0; i < 10; i++)
 		{
             blur_shader->Swap(blur_render_texture1, blur_render_texture0, NULL);
             blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
 		}
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
-	
+        
+       
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -183,6 +183,12 @@ std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	return texture;
 }
 
+std::shared_ptr<CubeMap> GpContext::CreateCubemap(std::vector<std::string> tex_faces) {
+	std::shared_ptr<CubeMap> cubemap = std::make_shared<CubeMap>(tex_faces);
+	cubemap->context = self.lock();
+	return cubemap;
+}
+
 std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath, glm::vec3 pos) {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath, pos);
 	mesh->context = self.lock();

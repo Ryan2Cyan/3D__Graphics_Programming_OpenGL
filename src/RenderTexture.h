@@ -11,6 +11,8 @@ struct RenderTexture {
 	RenderTexture(glm::ivec2 size_arg, std::shared_ptr<VertexArray> quad);
 	~RenderTexture();
 	void SetSize(glm::ivec2 arg);
+	void SetTex(GLuint arg);
+	void SetQuad(std::shared_ptr<VertexArray> arg);
 	const GLuint GetId();
 	const GLuint GetTexId();
 	const std::shared_ptr<VertexArray> GetVAO();

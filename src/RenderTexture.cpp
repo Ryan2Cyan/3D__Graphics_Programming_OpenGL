@@ -28,6 +28,14 @@ void RenderTexture::SetSize(glm::ivec2 arg) {
 	dirty = true;
 }
 
+void RenderTexture::SetTex(GLuint arg) {
+	id = arg;
+}
+
+void RenderTexture::SetQuad(std::shared_ptr<VertexArray> arg) {
+	quad = arg;
+}
+
 const GLuint RenderTexture::GetId() {
 
 	if (dirty) {

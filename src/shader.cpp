@@ -211,25 +211,40 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
 	}
 
-	// Reset the state:
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindVertexArray(0);
 	glUseProgram(0);
+	// Reset the state:
+	glBindVertexArray(0);
 	glDisable(GL_BLEND);
 	if (backface_cull) glDisable(GL_CULL_FACE);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_DEPTH_TEST);
 }
 
 
 // Render the scene using custom framebuffer and shader (for post-processing):
 void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
-	bool backface_cull) {
+	bool backface_cull, bool skybox) {
+
 
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
 
 	// Render into the custom framebuffer:
 	Render(cam, backface_cull);
+
+	if (cam->cubemap && skybox) {
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glUseProgram(cam->cubemap_shader->GetId());
+		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
+		cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
+		cam->cubemap_shader->SetUniform("u_View", view);
+		glBindVertexArray(cam->cubemap_obj->GetId());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cam->cubemap->GetId());
+		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
+		glDepthFunc(GL_LESS);
+		glDisable(GL_DEPTH_TEST);
+	}
 
 	// Reset state:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -273,3 +288,4 @@ void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderT
 	glDrawArrays(GL_TRIANGLES, 0, source->GetVAO()->GetVertices());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
