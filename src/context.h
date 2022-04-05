@@ -23,6 +23,7 @@ struct  GpContext
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords);
 	std::shared_ptr<VertexArray> Create2D(std::vector<glm::vec3> pos_coords, 
 		std::vector<glm::vec2> tex_coords);
+	std::shared_ptr<VertexArray> CreateUnitCube();
 
 	// Input functions:
 	void ProcessInput(GLFWwindow* window);

@@ -60,7 +60,6 @@ int main()
     std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
-    std::shared_ptr<RenderTexture> skybox_render_texture = context->CreateRenderTexture(window_size);
 
 
     // Create camera:
@@ -71,26 +70,32 @@ int main()
         glm::vec3(0.0f, 0.0f, 1.0f),  // target
         70.0f                         //fov
     );
-    context->SetMainCamera(main_cam);
+    context->SetMainCamera(main_cam); // "Main Camera" can be controlled by the user
 
     //Load in meshes:
-    glm::vec3 position0 = { 0.0f, 0.0f, 0.0f };
+    glm::vec3 position0 = { 2.0f, 1.0f, 0.0f };
     std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position0);
+    curuthers->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    curuthers->SetModelMat(glm::scale(curuthers->GetModelMat(), glm::vec3(0.5f, 0.5f, 0.5f)));
     shader->AddMeshToRender(curuthers);
+   
 
     glm::vec3 position1 = { 5.0f, 0.0f, 0.0f };
     std::shared_ptr<Mesh> tree = context->CreateMesh(model_tree, position1);
+    tree->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     shader->AddMeshToRender(tree);
     std::shared_ptr<Mesh> ground = context->CreateMesh(model_ground, position1);
+    ground->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     shader->AddMeshToRender(ground);
     std::shared_ptr<Mesh> skeleton = context->CreateMesh(model_skeleton, position1);
+    skeleton->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     shader->AddMeshToRender(skeleton);
     std::shared_ptr<Mesh> bird = context->CreateMesh(model_bird, position1);
+    bird->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     shader->AddMeshToRender(bird);
 
     // Cubemap demo:
     std::vector<std::string> faces = {
-        
         skybox4,
         skybox0,
         skybox2,
@@ -98,61 +103,9 @@ int main()
         skybox1,
         skybox5,
     };
-    std::shared_ptr<CubeMap> cubemap = context->CreateCubemap(faces);
-    main_cam->SetCubeMap(cubemap);
+    main_cam->SetCubeMap(context->CreateCubemap(faces));
     main_cam->cubemap_shader = cubemap_shader;
-
-    std::vector<glm::vec3> cubemap_pos = {
-        // positions          
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-        glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f,  1.0f, -1.0f),
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-        glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-        glm::vec3(-1.0f,  1.0f,  1.0f),
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-
-        glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-        glm::vec3(-1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f, -1.0f,  1.0f),
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-        glm::vec3(1.0f,  1.0f, -1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(1.0f,  1.0f,  1.0f),
-        glm::vec3(-1.0f,  1.0f,  1.0f),
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-
-        glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f),
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-        glm::vec3(1.0f, -1.0f,  1.0f)
-
-    };
-
-    std::shared_ptr<VertexArray> cubemap_obj = context->Create2D(cubemap_pos);
-    main_cam->SetCubeMapObj(cubemap_obj);
-
-    skybox_render_texture->SetQuad(cubemap_obj);
-    skybox_render_texture->SetTex(cubemap->GetId());
+    main_cam->SetCubeMapObj(context->CreateUnitCube());
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -163,7 +116,7 @@ int main()
 
         // Render:
      
-        shader->Render(main_cam, render_texture, true, true);
+        shader->Render(main_cam, render_texture, true);
 		theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
 		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
         blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
@@ -174,8 +127,6 @@ int main()
 		}
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
-        
-       
         
 
         glfwSwapBuffers(window);

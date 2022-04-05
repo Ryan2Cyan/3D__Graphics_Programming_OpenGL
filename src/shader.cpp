@@ -165,7 +165,7 @@ const GLuint Shader::GetId() {
 }
 
 // Render the scene using default framebuffer:
-void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox) {
+void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
@@ -198,7 +198,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox
 		SetUniform("u_Projection", cam->proj);
 		SetUniform("u_diffColor", meshes[i]->diff_light);
 
-		SetUniform("u_lightPos", glm::vec3(5.0, 0.0f, 0.0f));
+		SetUniform("u_lightPos", glm::vec3(10.0, 0.0f, 0.0f));
 
 		// Bind VAO:
 		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
@@ -210,10 +210,10 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox
 		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
 
 	}
-	glUseProgram(0);
 
-	if (cam->cubemap && skybox) {
-	
+
+	if (cam->cubemap && cam->cubemap_obj && cam->cubemap_shader) {
+
 		glDepthFunc(GL_LEQUAL);
 		glUseProgram(cam->cubemap_shader->GetId());
 		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
@@ -223,14 +223,13 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox
 		glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, cam->cubemap->GetId());
 		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
 		glDepthFunc(GL_LESS);
-
 	}
-	if (backface_cull) glDisable(GL_CULL_FACE);
 
 	// Reset the state:
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_DEPTH_TEST);
+	if (backface_cull) glDisable(GL_CULL_FACE);
 	/*glDisable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);*/
 }
@@ -238,14 +237,14 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox
 
 // Render the scene using custom framebuffer and shader (for post-processing):
 void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
-	bool backface_cull, bool skybox) {
+	bool backface_cull) {
 
 
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
 
 	// Render into the custom framebuffer:
-	Render(cam, backface_cull, skybox);
+	Render(cam, backface_cull);
 
 	// Reset state:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -290,28 +289,6 @@ void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderT
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Shader::RenderSkybox(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> skybox_rt,
-	std::shared_ptr<Camera> cam) {
-	//// If destination is value, we will render into that framebuffer,
-	//// If destination is nullptr, we render to the screen:
-	if (skybox_rt) {
-		glBindFramebuffer(GL_FRAMEBUFFER, skybox_rt->GetId());
-	}
-
-	//// If destination is valid, render into it's quad,
-	//// Else we render the source's quad to the screen:
-	//if (skybox_rt) {
-	//	/*glBindVertexArray(skybox_rt->GetVAO()->GetId());*/
-	//}
-	//else {
-	//	glBindVertexArray(source->GetVAO()->GetId());
-	//}
-
-	// Draw to destination:
-	/*glBindTexture(GL_TEXTURE_2D, source->GetTexId());*/
-	/*glDrawArrays(GL_TRIANGLES, 0, source->GetVAO()->GetVertices());*/
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
 
 
 

@@ -7,7 +7,9 @@ void main()
 {
   vec4 texA = texture2D(u_Texture, v_TexCoord);
   vec4 texB = texture2D(u_Texture1, v_TexCoord);
-  texA = texA *= 0.2;
+
+  // Specify intensity of the postprocessing:
+  texA = texA *= 0.7;
 
   vec4 rtn = vec4(
     min(texA.x + texB.x, 1.0),

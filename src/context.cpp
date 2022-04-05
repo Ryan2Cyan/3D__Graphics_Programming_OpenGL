@@ -54,6 +54,76 @@ std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coor
 	return vertex_array;
 }
 
+// Create Unit Cube:
+std::shared_ptr<VertexArray> GpContext::CreateUnitCube() {
+
+	// Initialise buffers:
+	std::shared_ptr<Buffer> pos_buffer = CreateBuffer();
+
+	// Create position coordinates:
+	std::vector<glm::vec3> cubemap_pos = {
+		// positions          
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f)
+
+	};
+
+	// Add pos coords to the buffer:
+	
+	for (size_t i = 0; i < cubemap_pos.size(); i++)
+	{
+		pos_buffer->Add(cubemap_pos[i]);
+	}
+	
+	// Initialise vertex array:
+	std::shared_ptr<VertexArray> vertex_array = CreateVertexArray();
+
+	// Add buffers to the vertex array:
+	vertex_array->AddBuffer(pos_buffer);
+
+	return vertex_array;
+}
+
+
 
 
 // Process user input during the input loop:

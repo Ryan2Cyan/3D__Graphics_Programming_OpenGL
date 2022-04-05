@@ -61,4 +61,7 @@ void Mesh::SetDiffuse(glm::vec3 arg) {
 	diff_light = arg;
 }
 
+void Mesh::SetModelMat(glm::mat4 arg) {
+	model_mat = arg;
+}
 

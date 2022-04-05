@@ -21,6 +21,7 @@ struct Mesh {
 	const GLuint GetTexId();
 	void SetPos(glm::vec3 arg);
 	void SetDiffuse(glm::vec3 arg);
+	void SetModelMat(glm::mat4 arg);
 
 private:
 	friend struct GpContext;

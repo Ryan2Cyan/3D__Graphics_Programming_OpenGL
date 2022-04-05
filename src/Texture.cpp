@@ -51,7 +51,7 @@ const GLuint Texture::GetId() {
 }
 
 
-// CubeMap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// CubeMap~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CubeMap::CubeMap(std::vector<std::string> tex_faces){
 
 	// Save the filepath:
