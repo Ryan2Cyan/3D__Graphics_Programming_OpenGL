@@ -18,9 +18,9 @@ void main()
   //rtn.y = 1.0;
   //rtn.z = 1.0;
 
-  rtn.x = min(rtn.x * 2.0, 1.0);
-  rtn.y = min(rtn.y * 2.0, 1.0);
-  rtn.z = min(rtn.z * 2.0, 1.0);
+  rtn.x = min(rtn.x * 1.1, 1.0);
+  rtn.y = min(rtn.y * 1.1, 1.0);
+  rtn.z = min(rtn.z * 1.1, 1.0);
 
   gl_FragColor = rtn;
 }

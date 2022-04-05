@@ -165,13 +165,13 @@ const GLuint Shader::GetId() {
 }
 
 // Render the scene using default framebuffer:
-void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
+void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull, bool skybox) {
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
 	if (backface_cull) glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);*/
+	/*glEnable(GL_ALPHA_TEST);*/
 	glViewport(0, 0, (int)cam->size.x, (int)cam->size.y);
 	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w, 
 		cam->back_col.z * cam->back_col.w, cam->back_col.w);
@@ -210,14 +210,29 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
 
 	}
-
 	glUseProgram(0);
+
+	if (cam->cubemap && skybox) {
+	
+		glDepthFunc(GL_LEQUAL);
+		glUseProgram(cam->cubemap_shader->GetId());
+		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
+		cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
+		cam->cubemap_shader->SetUniform("u_View", view);
+		glBindVertexArray(cam->cubemap_obj->GetId());
+		glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, cam->cubemap->GetId());
+		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
+		glDepthFunc(GL_LESS);
+
+	}
+	if (backface_cull) glDisable(GL_CULL_FACE);
+
 	// Reset the state:
 	glBindVertexArray(0);
-	glDisable(GL_BLEND);
-	if (backface_cull) glDisable(GL_CULL_FACE);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_DEPTH_TEST);
+	/*glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);*/
 }
 
 
@@ -230,21 +245,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
 
 	// Render into the custom framebuffer:
-	Render(cam, backface_cull);
-
-	if (cam->cubemap && skybox) {
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glUseProgram(cam->cubemap_shader->GetId());
-		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
-		cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
-		cam->cubemap_shader->SetUniform("u_View", view);
-		glBindVertexArray(cam->cubemap_obj->GetId());
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cam->cubemap->GetId());
-		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
-		glDepthFunc(GL_LESS);
-		glDisable(GL_DEPTH_TEST);
-	}
+	Render(cam, backface_cull, skybox);
 
 	// Reset state:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -288,4 +289,29 @@ void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderT
 	glDrawArrays(GL_TRIANGLES, 0, source->GetVAO()->GetVertices());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void Shader::RenderSkybox(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> skybox_rt,
+	std::shared_ptr<Camera> cam) {
+	//// If destination is value, we will render into that framebuffer,
+	//// If destination is nullptr, we render to the screen:
+	if (skybox_rt) {
+		glBindFramebuffer(GL_FRAMEBUFFER, skybox_rt->GetId());
+	}
+
+	//// If destination is valid, render into it's quad,
+	//// Else we render the source's quad to the screen:
+	//if (skybox_rt) {
+	//	/*glBindVertexArray(skybox_rt->GetVAO()->GetId());*/
+	//}
+	//else {
+	//	glBindVertexArray(source->GetVAO()->GetId());
+	//}
+
+	// Draw to destination:
+	/*glBindTexture(GL_TEXTURE_2D, source->GetTexId());*/
+	/*glDrawArrays(GL_TRIANGLES, 0, source->GetVAO()->GetVertices());*/
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
 

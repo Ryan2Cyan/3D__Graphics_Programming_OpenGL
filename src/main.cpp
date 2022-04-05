@@ -15,9 +15,17 @@ const GLchar* merge_f = "Additional_Files/shaders/merge_frag.txt";
 const GLchar* cubemap_v = "Additional_Files/shaders/cubemap_vert.txt";
 const GLchar* cubemap_f = "Additional_Files/shaders/cubemap_frag.txt";
 
-// Resource filepaths:
-const GLchar* image_filepath = "Additional_Files/images/wall.jpg";
+// Texture filepaths:
+const GLchar* image_filepath = "Additional_Files/images/skybox_1.png";
 const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
+const GLchar* skybox0 = "Additional_Files/images/skybox_1/skybox_1_tile_1.png";
+const GLchar* skybox1 = "Additional_Files/images/skybox_1/skybox_1_tile_2.png";
+const GLchar* skybox2 = "Additional_Files/images/skybox_1/skybox_1_tile_3.png";
+const GLchar* skybox3 = "Additional_Files/images/skybox_1/skybox_1_tile_4.png";
+const GLchar* skybox4 = "Additional_Files/images/skybox_1/skybox_1_tile_5.png";
+const GLchar* skybox5 = "Additional_Files/images/skybox_1/skybox_1_tile_6.png";
+
+// Model
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
 const GLchar* model_filepath2 = "Additional_Files/models/gun/mxng.obj";
 const GLchar* model_filepath3 = "Additional_Files/models/graveyard/graveyard.obj";
@@ -82,12 +90,13 @@ int main()
 
     // Cubemap demo:
     std::vector<std::string> faces = {
-        image_filepath,
-        image_filepath,
-        image_filepath,
-        image_filepath,
-        image_filepath,
-        image_filepath
+        
+        skybox4,
+        skybox0,
+        skybox2,
+        skybox3,
+        skybox1,
+        skybox5,
     };
     std::shared_ptr<CubeMap> cubemap = context->CreateCubemap(faces);
     main_cam->SetCubeMap(cubemap);
@@ -153,8 +162,8 @@ int main()
         context->ProcessInput(window);
 
         // Render:
-
-        shader->Render(main_cam, render_texture, true, false);
+     
+        shader->Render(main_cam, render_texture, true, true);
 		theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
 		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
         blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);

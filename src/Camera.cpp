@@ -23,7 +23,7 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 	yaw = -90.0f;
 	pitch = 0.0f;
 	vel = { 0.0f, 0.0f, 0.0f };
-	back_col = { 0.1f, 0.1f, 0.1f, 1.0f };
+	back_col = { 0.5f, 0.5f, 0.5f, 1.0f };
 }
 
 void Camera::Refresh() {
