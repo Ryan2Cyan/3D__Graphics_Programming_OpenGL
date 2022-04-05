@@ -43,11 +43,15 @@ void Camera::SetView(glm::mat4 arg) {
 }
 
 void Camera::SetCubeMap(std::shared_ptr<CubeMap> arg) {
-	this->cubemap = arg;
+	cubemap = arg;
 }
 
 void Camera::SetCubeMapObj(std::shared_ptr<VertexArray> arg) {
 	cubemap_obj = arg;
+}
+
+void Camera::SetCubeMapShader(std::shared_ptr<Shader> arg) {
+	cubemap_shader = arg;
 }
 
 const glm::mat4 Camera::GetView() {

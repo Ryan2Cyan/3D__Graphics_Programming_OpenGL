@@ -18,12 +18,9 @@ struct Camera {
 	void SetView(glm::mat4 arg);
 	void SetCubeMap(std::shared_ptr<CubeMap> arg);
 	void SetCubeMapObj(std::shared_ptr<VertexArray> arg);
+	void SetCubeMapShader(std::shared_ptr<Shader> arg);
 	const glm::mat4 GetView();
 	const glm::mat4 GetProj();
-
-	std::shared_ptr<CubeMap> cubemap;
-	std::shared_ptr<VertexArray> cubemap_obj;
-	std::shared_ptr<Shader> cubemap_shader;
 
 private:
 	friend struct GpContext;
@@ -53,4 +50,7 @@ private:
 
 	// Other:
 	glm::vec4 back_col;
+	std::shared_ptr<CubeMap> cubemap;
+	std::shared_ptr<VertexArray> cubemap_obj;
+	std::shared_ptr<Shader> cubemap_shader;
 };

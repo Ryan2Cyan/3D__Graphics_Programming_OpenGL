@@ -36,7 +36,6 @@ private:
 	friend struct GpContext;
 
 	std::shared_ptr<GpContext> context;
-	std::shared_ptr<VertexArray> cubemap_obj;
 	std::vector<std::string> tex_faces;
 	GLuint id;
 	bool dirty;

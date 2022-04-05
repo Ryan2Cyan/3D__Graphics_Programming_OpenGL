@@ -104,7 +104,7 @@ int main()
         skybox5,
     };
     main_cam->SetCubeMap(context->CreateCubemap(faces));
-    main_cam->cubemap_shader = cubemap_shader;
+    main_cam->SetCubeMapShader(cubemap_shader);
     main_cam->SetCubeMapObj(context->CreateUnitCube());
 
     // Render loop (called each frame):
