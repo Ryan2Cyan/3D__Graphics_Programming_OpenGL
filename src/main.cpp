@@ -11,19 +11,21 @@ const GLchar* blur_f = "Additional_Files/shaders/blur_frag.txt";
 const GLchar* gui_f = "Additional_Files/shaders/gui_frag.txt";
 const GLchar* gui_v = "Additional_Files/shaders/gui_vert.txt";
 const GLchar* null_f = "Additional_Files/shaders/null_frag.txt";
-const GLchar* merge_f = "Additional_Files/shaders/merge_frag.txt";
+const GLchar* add_merge_f = "Additional_Files/shaders/add_merge_frag.txt";
+const GLchar* blend_merge_v = "Additional_Files/shaders/blend_merge_vert.txt";
+const GLchar* blend_merge_f = "Additional_Files/shaders/blend_merge_frag.txt";
 const GLchar* cubemap_v = "Additional_Files/shaders/cubemap_vert.txt";
 const GLchar* cubemap_f = "Additional_Files/shaders/cubemap_frag.txt";
 
 // Texture filepaths:
 const GLchar* image_filepath = "Additional_Files/images/skybox_1.png";
 const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
-const GLchar* skybox0 = "Additional_Files/images/skybox_1/skybox_1_tile_1.png";
-const GLchar* skybox1 = "Additional_Files/images/skybox_1/skybox_1_tile_2.png";
-const GLchar* skybox2 = "Additional_Files/images/skybox_1/skybox_1_tile_3.png";
-const GLchar* skybox3 = "Additional_Files/images/skybox_1/skybox_1_tile_4.png";
-const GLchar* skybox4 = "Additional_Files/images/skybox_1/skybox_1_tile_5.png";
-const GLchar* skybox5 = "Additional_Files/images/skybox_1/skybox_1_tile_6.png";
+const GLchar* back = "Additional_Files/images/skybox/back.jpg";
+const GLchar* bottom = "Additional_Files/images/skybox/bottom.jpg";
+const GLchar* front = "Additional_Files/images/skybox/front.jpg";
+const GLchar* left = "Additional_Files/images/skybox/left.jpg";
+const GLchar* right = "Additional_Files/images/skybox/right.jpg";
+const GLchar* top = "Additional_Files/images/skybox/top.jpg";
 
 // Model
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
@@ -52,15 +54,19 @@ int main()
     std::shared_ptr<Shader> cubemap_shader = context->CreateShader(cubemap_v, cubemap_f);
 	std::shared_ptr<Shader> theshold_shader = context->CreateShader(postproc_v, threshold_f);
 	std::shared_ptr<Shader> blur_shader = context->CreateShader(postproc_v, blur_f);
-	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
+	std::shared_ptr<Shader> add_merge_shader = context->CreateShader(postproc_v, add_merge_f);
+    std::shared_ptr<Shader> blend_merge_shader = context->CreateShader(postproc_v, blend_merge_f);
 
     // Create render textures:
-    std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
-    std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
-    std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
-    std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
-    std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
-
+    std::shared_ptr<RenderTexture> scene_rt = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> skybox_rt = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> threshold_rt = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> blur_rt0 = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> blur_rt1 = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> merge_rt = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> final_scene_rt = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> final_scene_rt1 = context->CreateRenderTexture(window_size);
+    std::shared_ptr<RenderTexture> final_scene_rt2 = context->CreateRenderTexture(window_size);
 
     // Create camera:
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
@@ -96,12 +102,12 @@ int main()
 
     // Cubemap demo:
     std::vector<std::string> faces = {
-        skybox4,
-        skybox0,
-        skybox2,
-        skybox3,
-        skybox1,
-        skybox5,
+        right,
+        left,
+        top,
+        bottom,
+        front,
+        back
     };
     main_cam->SetCubeMap(context->CreateCubemap(faces));
     main_cam->SetCubeMapShader(cubemap_shader);
@@ -115,19 +121,22 @@ int main()
         context->ProcessInput(window);
 
         // Render:
-     
-        shader->Render(main_cam, render_texture, true);
-		theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
-		theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
-        blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
+        shader->Render(main_cam, scene_rt, true);
+        cubemap_shader->RenderSkybox(main_cam, skybox_rt);
+		theshold_shader->Swap(scene_rt, threshold_rt, NULL);
+		theshold_shader->Swap(threshold_rt, blur_rt0, NULL);
+        blur_shader->Swap(blur_rt0, blur_rt1, NULL);
 		for (size_t i = 0; i < 10; i++)
 		{
-            blur_shader->Swap(blur_render_texture1, blur_render_texture0, NULL);
-            blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
+            blur_shader->Swap(blur_rt1, blur_rt0, NULL);
+            blur_shader->Swap(blur_rt0, blur_rt1, NULL);
 		}
-        merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
-        merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
-        
+
+        add_merge_shader->Swap(blur_rt0, merge_rt, NULL);
+        add_merge_shader->Swap(merge_rt, final_scene_rt, scene_rt->GetTexId()); // Scene is rendered without skybox fine here
+
+        add_merge_shader->Swap(final_scene_rt, final_scene_rt1, skybox_rt->GetTexId());
+        add_merge_shader->Swap(final_scene_rt1, nullptr, NULL);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -174,7 +174,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 	/*glEnable(GL_ALPHA_TEST);*/
 	glViewport(0, 0, (int)cam->size.x, (int)cam->size.y);
 	glClearColor(cam->back_col.x * cam->back_col.w, cam->back_col.y * cam->back_col.w, 
-		cam->back_col.z * cam->back_col.w, cam->back_col.w);
+		cam->back_col.z * cam->back_col.w, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	 // Render each mesh:
@@ -212,26 +212,24 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 	}
 
 
-	if (cam->cubemap && cam->cubemap_obj && cam->cubemap_shader) {
+	//if (cam->cubemap && cam->cubemap_obj && cam->cubemap_shader) {
 
-		glDepthFunc(GL_LEQUAL);
-		glUseProgram(cam->cubemap_shader->GetId());
-		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
-		cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
-		cam->cubemap_shader->SetUniform("u_View", view);
-		glBindVertexArray(cam->cubemap_obj->GetId());
-		glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, cam->cubemap->GetId());
-		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
-		glDepthFunc(GL_LESS);
-	}
+	//	glDepthFunc(GL_LEQUAL);
+	//	glUseProgram(cam->cubemap_shader->GetId());
+	//	glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
+	//	cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
+	//	cam->cubemap_shader->SetUniform("u_View", view);
+	//	glBindVertexArray(cam->cubemap_obj->GetId());
+	//	glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, cam->cubemap->GetId());
+	//	glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
+	//	glDepthFunc(GL_LESS);
+	//}
 
 	// Reset the state:
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_DEPTH_TEST);
 	if (backface_cull) glDisable(GL_CULL_FACE);
-	/*glDisable(GL_BLEND);
-	glDisable(GL_ALPHA_TEST);*/
 }
 
 
@@ -250,6 +248,34 @@ void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> 
 
 }
 
+// Render the scene using default framebuffer:
+void Shader::RenderSkybox(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target) {
+
+	// Set up rendering for custom framebuffer:
+	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
+
+	// Render set up:
+	if (cam->cubemap && cam->cubemap_obj && cam->cubemap_shader) {
+
+		glDepthFunc(GL_LEQUAL);
+		glUseProgram(cam->cubemap_shader->GetId());
+		glm::mat4 view = glm::mat4(glm::mat3(cam->GetView()));
+		cam->cubemap_shader->SetUniform("u_Projection", cam->GetProj());
+		cam->cubemap_shader->SetUniform("u_View", view);
+		glBindVertexArray(cam->cubemap_obj->GetId());
+		glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, cam->cubemap->GetId());
+		glDrawArrays(GL_TRIANGLES, 0, cam->cubemap_obj->GetVertices());
+		glDepthFunc(GL_LESS);
+	}
+
+	// Reset the state:
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_DEPTH_TEST);
+
+	// Reset state:
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
 void Shader::Swap(std::shared_ptr<RenderTexture> source, std::shared_ptr<RenderTexture> destination,
 	GLuint tex_2) {
