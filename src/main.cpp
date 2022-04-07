@@ -19,9 +19,15 @@ const GLchar* cubemap_f = "Additional_Files/shaders/cubemap_frag.txt";
 // Texture filepaths:
 const GLchar* image_filepath = "Additional_Files/images/skybox_1.png";
 const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
+<<<<<<< HEAD
 const GLchar* front = "Additional_Files/images/skybox/back.jpg";
 const GLchar* bottom = "Additional_Files/images/skybox/bottom.jpg";
 const GLchar* back = "Additional_Files/images/skybox/front.jpg";
+=======
+const GLchar* back = "Additional_Files/images/skybox/back.jpg";
+const GLchar* bottom = "Additional_Files/images/skybox/bottom.jpg";
+const GLchar* front = "Additional_Files/images/skybox/front.jpg";
+>>>>>>> 39164488075a198374c1f2325c41217fc9a433cc
 const GLchar* left = "Additional_Files/images/skybox/left.jpg";
 const GLchar* right = "Additional_Files/images/skybox/right.jpg";
 const GLchar* top = "Additional_Files/images/skybox/top.jpg";
@@ -107,11 +113,16 @@ int main()
         left,
         top,
         bottom,
+<<<<<<< HEAD
         back,
         front
+=======
+        front,
+        back
+>>>>>>> 39164488075a198374c1f2325c41217fc9a433cc
     };
     main_cam->SetCubeMap(context->CreateCubemap(faces));
-    main_cam->cubemap_shader = cubemap_shader;
+    main_cam->SetCubeMapShader(cubemap_shader);
     main_cam->SetCubeMapObj(context->CreateUnitCube());
 
     // Render loop (called each frame):

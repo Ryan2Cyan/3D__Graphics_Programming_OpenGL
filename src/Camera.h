@@ -19,16 +19,20 @@ struct Camera {
 	void SetSize(glm::vec2 arg);
 	void SetCubeMap(std::shared_ptr<CubeMap> arg);
 	void SetCubeMapObj(std::shared_ptr<VertexArray> arg);
+	void SetCubeMapShader(std::shared_ptr<Shader> arg);
 	const glm::mat4 GetView();
 	const glm::mat4 GetProj();
 	const glm::vec2 GetSize();
 
+<<<<<<< HEAD
 	std::shared_ptr<CubeMap> cubemap;
 	std::shared_ptr<VertexArray> cubemap_obj;
 	std::shared_ptr<Shader> cubemap_shader;
 
 	glm::vec2 size;
 
+=======
+>>>>>>> 39164488075a198374c1f2325c41217fc9a433cc
 private:
 	friend struct GpContext;
 	friend struct Shader;
@@ -58,4 +62,7 @@ private:
 
 	// Other:
 	glm::vec4 back_col;
+	std::shared_ptr<CubeMap> cubemap;
+	std::shared_ptr<VertexArray> cubemap_obj;
+	std::shared_ptr<Shader> cubemap_shader;
 };
