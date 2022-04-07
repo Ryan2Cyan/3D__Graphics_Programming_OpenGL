@@ -19,6 +19,7 @@ const GLchar* cubemap_f = "Additional_Files/shaders/cubemap_frag.txt";
 // Texture filepaths:
 const GLchar* image_filepath = "Additional_Files/images/skybox_1.png";
 const GLchar* image_filepath2 = "Additional_Files/images/image_test_flip.png";
+
 const GLchar* front = "Additional_Files/images/skybox/back.jpg";
 const GLchar* bottom = "Additional_Files/images/skybox/bottom.jpg";
 const GLchar* back = "Additional_Files/images/skybox/front.jpg";
