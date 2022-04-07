@@ -132,7 +132,7 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 	// Calc delta time:
 	float delta_time = 0.0f;
 	static float last_frame = 0.0f;
-	float current_frame = glfwGetTime();
+	float current_frame = (float)glfwGetTime();
 	delta_time = current_frame - last_frame;
 	last_frame = current_frame;
 
@@ -177,8 +177,8 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 		int win_width;
 		int win_height;
 		glfwGetWindowSize(window, &win_width, &win_height);
-		main_cam->size.x = win_width;
-		main_cam->size.y = win_height;
+		main_cam->size.x = (float)win_width;
+		main_cam->size.y = (float)win_height;
 
 		double mouse_x;
 		double mouse_y;
@@ -191,16 +191,16 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 
 		// Check if the mouse first entered the window - if true, set position:
 		if (firstMouse) {
-			last_x = mouse_x;
-			last_y = mouse_y;
+			last_x = (float)mouse_x;
+			last_y = (float)mouse_y;
 			firstMouse = false;
 		}
 
 		// Calculate the offset (value we will move the camera direction):
-		float x_offset = mouse_x - last_x;
-		float y_offset = last_y - mouse_y;
-		last_x = mouse_x;
-		last_y = mouse_y;
+		float x_offset = (float)mouse_x - last_x;
+		float y_offset = last_y - (float)mouse_y;
+		last_x = (float)mouse_x;
+		last_y = (float)mouse_y;
 
 		// Adjust by movement sensitivity:
 		float sensitivity = 0.5f;
@@ -297,5 +297,10 @@ std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
 	return render_texture;
 }
 
+std::shared_ptr<GameObject> GpContext::CreateGameObject() {
+	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+	gameObject->context = self.lock();
+	return gameObject;
+}
 
 

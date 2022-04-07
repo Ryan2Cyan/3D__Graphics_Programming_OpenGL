@@ -91,3 +91,7 @@ const GLuint RenderTexture::GetTexId() {
 const std::shared_ptr<VertexArray> RenderTexture::GetVAO() {
 	return quad;
 }
+
+const glm::ivec2 RenderTexture::GetSize() {
+	return size;
+}

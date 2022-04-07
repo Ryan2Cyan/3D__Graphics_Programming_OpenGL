@@ -16,6 +16,7 @@ struct RenderTexture {
 	const GLuint GetId();
 	const GLuint GetTexId();
 	const std::shared_ptr<VertexArray> GetVAO();
+	const glm::ivec2 GetSize();
 private:
 	friend struct GpContext;
 	friend struct Shader;
