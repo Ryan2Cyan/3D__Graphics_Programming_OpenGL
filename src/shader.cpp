@@ -239,7 +239,6 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 void Shader::Render(std::shared_ptr<Camera> cam, std::shared_ptr<RenderTexture> target,
 	bool backface_cull) {
 
-
 	// Set up rendering for custom framebuffer:
 	glBindFramebuffer(GL_FRAMEBUFFER, target->GetId());
 
