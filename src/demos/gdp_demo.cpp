@@ -1,6 +1,4 @@
-#define SDL_MAIN_HANDLED 
-
-#include "Gp.h"
+#include <graphics/Gp.h>
 #include <iostream>
 
 // Shaders filepaths:

@@ -96,7 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\wavefront\include;$(SolutionDir)Dependencies\SDL2\include;$(SolutionDir)Dependencies\glm\glm;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,33 +159,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Buffer.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Components.cpp" />
-    <ClCompile Include="src\context.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\gp.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\RenderTexture.cpp" />
-    <ClCompile Include="src\Sampler.cpp" />
-    <ClCompile Include="src\shader.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\vertexarray.cpp" />
+    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp" />
+    <ClCompile Include="src\graphics\buffer.cpp" />
+    <ClCompile Include="src\graphics\Camera.cpp" />
+    <ClCompile Include="src\graphics\context.cpp" />
+    <ClCompile Include="src\graphics\GameObject.cpp" />
+    <ClCompile Include="src\graphics\gp.cpp" />
+    <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\graphics\RenderTexture.cpp" />
+    <ClCompile Include="src\graphics\Sampler.cpp" />
+    <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\Texture.cpp" />
+    <ClCompile Include="src\graphics\vertexarray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Buffer.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Components.h" />
-    <ClInclude Include="src\context.h" />
-    <ClInclude Include="src\GameObject.h" />
-    <ClInclude Include="src\gp.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\RenderTexture.h" />
-    <ClInclude Include="src\Sampler.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\vertexarray.h" />
+    <ClInclude Include="src\graphics\buffer.h" />
+    <ClInclude Include="src\graphics\Camera.h" />
+    <ClInclude Include="src\graphics\context.h" />
+    <ClInclude Include="src\graphics\GameObject.h" />
+    <ClInclude Include="src\graphics\gp.h" />
+    <ClInclude Include="src\graphics\Mesh.h" />
+    <ClInclude Include="src\graphics\RenderTexture.h" />
+    <ClInclude Include="src\graphics\Sampler.h" />
+    <ClInclude Include="src\graphics\Shader.h" />
+    <ClInclude Include="src\graphics\Texture.h" />
+    <ClInclude Include="src\graphics\vertexarray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

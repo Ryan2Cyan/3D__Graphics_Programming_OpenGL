@@ -9,7 +9,6 @@
 #include "Camera.h"
 #include "RenderTexture.h"
 #include "GameObject.h"
-#include "Components.h"
 
 namespace Gp {
 
