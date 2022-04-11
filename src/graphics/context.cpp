@@ -1,9 +1,5 @@
 #include "Gp.h"
 
-static float last_x = 0.0f;
-static float last_y = 0.0f;
-static bool firstMouse = true;
-
 // Create 2D asset (without texture):
 std::shared_ptr<VertexArray> GpContext::Create2D(std::vector<glm::vec3> pos_coords) {
 
@@ -123,9 +119,8 @@ std::shared_ptr<VertexArray> GpContext::CreateUnitCube() {
 	return vertex_array;
 }
 
-
-// Process user input during the input loop:
-void GpContext::ProcessInput(GLFWwindow* window) {
+// Calculates and returns the deltaTime:
+float GpContext::CalcDeltaTime() {
 
 	// Calc delta time:
 	float delta_time = 0.0f;
@@ -133,33 +128,43 @@ void GpContext::ProcessInput(GLFWwindow* window) {
 	float current_frame = (float)glfwGetTime();
 	delta_time = current_frame - last_frame;
 	last_frame = current_frame;
+	return delta_time;
+}
+
+// Process user input during the input loop:
+void GpContext::ProcessInput(GLFWwindow* window, float delta_time) {
+
 
 	// Hide cursor when using mouse in window:
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	static float last_x = 0.0f;
+	static float last_y = 0.0f;
+	static bool firstMouse = true;
+
 	if (main_cam) {
 		// Camera movement [W = Forward, S = Back, A = Right, D = Left, Q = Up, E = Down]:
 		static float cam_speed = 4.5f * delta_time;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			main_cam->pos += cam_speed * main_cam->dir;
+			main_cam->transform.position += cam_speed * main_cam->dir;
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			main_cam->pos -= cam_speed * main_cam->dir;
+			main_cam->transform.position -= cam_speed * main_cam->dir;
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			main_cam->pos -= glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
+			main_cam->transform.position -= glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			main_cam->pos += glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
+			main_cam->transform.position += glm::normalize(glm::cross(main_cam->dir, main_cam->up)) * cam_speed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			main_cam->pos += cam_speed * main_cam->up;
+			main_cam->transform.position += cam_speed * main_cam->up;
 		}
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-			main_cam->pos -= cam_speed * main_cam->up;
+			main_cam->transform.position -= cam_speed * main_cam->up;
 		}
 
 		// Adjust movement speed [Shift = move faster]:
@@ -223,7 +228,7 @@ void GpContext::SetMainCamera(std::shared_ptr<Camera> arg) {
 }
 
 // Object functions:
-// Creates a vertex buffer object and returns its ID:
+// Creates VBO:
 std::shared_ptr<Buffer> GpContext::CreateBuffer() {
 
 	std::shared_ptr<Buffer> buffer = std::make_shared<Buffer>();
@@ -231,6 +236,7 @@ std::shared_ptr<Buffer> GpContext::CreateBuffer() {
 	return buffer;
 }
 
+// Create VAO:
 std::shared_ptr<VertexArray> GpContext::CreateVertexArray() {
 
 	std::shared_ptr<VertexArray> vertex_array = std::make_shared<VertexArray>();
@@ -238,6 +244,7 @@ std::shared_ptr<VertexArray> GpContext::CreateVertexArray() {
 	return vertex_array;
 }
 
+// Create shader program:
 std::shared_ptr<Shader> GpContext::CreateShader(std::string vert_path, std::string frag_path) {
 
 	std::shared_ptr<Shader> shader = std::make_shared<Shader>(vert_path, frag_path);
@@ -245,31 +252,34 @@ std::shared_ptr<Shader> GpContext::CreateShader(std::string vert_path, std::stri
 	return shader;
 }
 
+// Create OpenGL texture:
 std::shared_ptr<Texture> GpContext::CreateTexture(std::string tex_path) {
 	std::shared_ptr<Texture> texture = std::make_shared<Texture>(tex_path);
 	texture->context = self.lock();
 	return texture;
 }
 
+// Create cubemap:
 std::shared_ptr<CubeMap> GpContext::CreateCubemap(std::vector<std::string> tex_faces) {
 	std::shared_ptr<CubeMap> cubemap = std::make_shared<CubeMap>(tex_faces);
 	cubemap->context = self.lock();
 	return cubemap;
 }
 
-std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath, glm::vec3 pos) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath, pos);
+// Create Mesh:
+std::shared_ptr<Mesh> GpContext::CreateMesh(std::string wf_filepath) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(wf_filepath);
 	mesh->context = self.lock();
 	return mesh;
 }
-
 std::shared_ptr<Mesh> GpContext::CreateMesh(std::shared_ptr<VertexArray> vao,
-	std::shared_ptr<Texture> tex, glm::vec3 pos) {
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao, tex, pos);
+	std::shared_ptr<Texture> tex) {
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vao, tex);
 	mesh->context = self.lock();
 	return mesh;
 }
 
+// Create Camera:
 std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 	float fov) {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(ortho, win_size, position, target, fov);
@@ -278,6 +288,7 @@ std::shared_ptr<Camera> GpContext::CreateCamera(bool ortho, glm::vec2 win_size, 
 	return camera;
 }
 
+// Create Render Texture:
 std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
 
 	// Create a quad that will contain scene information:
@@ -295,8 +306,19 @@ std::shared_ptr<RenderTexture> GpContext::CreateRenderTexture(glm::ivec2 size) {
 	return render_texture;
 }
 
+// Create GameObject:
 std::shared_ptr<GameObject> GpContext::CreateGameObject() {
 	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>();
+	gameObject->context = self.lock();
+	return gameObject;
+}
+std::shared_ptr<GameObject> GpContext::CreateGameObject(std::shared_ptr<Mesh> mesh) {
+	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>(mesh);
+	gameObject->context = self.lock();
+	return gameObject;
+}
+std::shared_ptr<GameObject> GpContext::CreateGameObject(std::vector<std::shared_ptr<Mesh>> meshes) {
+	std::shared_ptr<GameObject> gameObject = std::make_shared<GameObject>(meshes);
 	gameObject->context = self.lock();
 	return gameObject;
 }

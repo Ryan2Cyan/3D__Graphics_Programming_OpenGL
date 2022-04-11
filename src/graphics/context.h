@@ -27,7 +27,8 @@ struct  GpContext
 	std::shared_ptr<VertexArray> CreateUnitCube();
 
 	// Input functions:
-	void ProcessInput(GLFWwindow* window);
+	float CalcDeltaTime();
+	void ProcessInput(GLFWwindow* window, float delta_time);
 	void SetMainCamera(std::shared_ptr<Camera> arg);
 
 	// Create object functions:
@@ -36,13 +37,15 @@ struct  GpContext
 	std::shared_ptr<Shader> CreateShader(std::string vert_path, std::string frag_path);
 	std::shared_ptr<Texture> CreateTexture(std::string tex_path);
 	std::shared_ptr<CubeMap> CreateCubemap(std::vector<std::string> tex_faces);
-	std::shared_ptr<Mesh> CreateMesh(std::string wf_filepath, glm::vec3 pos);
+	std::shared_ptr<Mesh> CreateMesh(std::string wf_filepath);
 	std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<VertexArray> vao, 
-		std::shared_ptr<Texture> tex, glm::vec3 pos);
+		std::shared_ptr<Texture> tex);
 	std::shared_ptr<Camera> CreateCamera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 target,
 		float fov);
 	std::shared_ptr<RenderTexture> CreateRenderTexture(glm::ivec2 size);
 	std::shared_ptr<GameObject> CreateGameObject();
+	std::shared_ptr<GameObject> CreateGameObject(std::shared_ptr<Mesh> mesh);
+	std::shared_ptr<GameObject> CreateGameObject(std::vector<std::shared_ptr<Mesh>> meshes);
 
 	std::weak_ptr<GpContext> self;
 private:

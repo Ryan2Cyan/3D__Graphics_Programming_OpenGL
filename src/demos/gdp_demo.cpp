@@ -64,27 +64,30 @@ int main()
     );
     context->SetMainCamera(main_cam); // "Main Camera" can be controlled by the user
 
-    //Load in meshes:
-    glm::vec3 position0 = { 2.0f, 1.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position0);
-    curuthers->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
-    curuthers->SetModelMat(glm::scale(curuthers->GetModelMat(), glm::vec3(0.5f, 0.5f, 0.5f)));
-    shader->AddMeshToRender(curuthers);
+    // Create curuthers gameobject:
+    std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(model_filepath);
+    curuthers_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    std::shared_ptr<GameObject> curuthers = context->CreateGameObject(curuthers_m);
+    curuthers->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
+    curuthers->Scale(glm::vec3(0.4f, 0.4f, 0.4f));
+    shader->AddGameObjectToRender(curuthers);
    
-
-    glm::vec3 position1 = { 5.0f, 0.0f, 0.0f };
-    std::shared_ptr<Mesh> tree = context->CreateMesh(model_tree, position1);
-    tree->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
-    shader->AddMeshToRender(tree);
-    std::shared_ptr<Mesh> ground = context->CreateMesh(model_ground, position1);
-    ground->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
-    shader->AddMeshToRender(ground);
-    std::shared_ptr<Mesh> skeleton = context->CreateMesh(model_skeleton, position1);
-    skeleton->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
-    shader->AddMeshToRender(skeleton);
-    std::shared_ptr<Mesh> bird = context->CreateMesh(model_bird, position1);
-    bird->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
-    shader->AddMeshToRender(bird);
+    // Create graveyard tree gameobject:
+    std::shared_ptr<Mesh> tree_m = context->CreateMesh(model_tree);
+    tree_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    std::shared_ptr<Mesh> ground_m = context->CreateMesh(model_ground);
+    ground_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    std::shared_ptr<Mesh> skeleton_m = context->CreateMesh(model_skeleton);
+    skeleton_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    std::shared_ptr<Mesh> bird_m = context->CreateMesh(model_bird);
+    bird_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    std::shared_ptr<GameObject> graveyard_tree = context->CreateGameObject();
+    graveyard_tree->AddMesh(tree_m);
+    graveyard_tree->AddMesh(ground_m);
+    graveyard_tree->AddMesh(skeleton_m);
+    graveyard_tree->AddMesh(bird_m);
+    graveyard_tree->SetPos(glm::vec3(5.0f, 0.0f, 0.0f));
+    shader->AddGameObjectToRender(graveyard_tree);
 
     // Create render textures:
     std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
@@ -113,9 +116,15 @@ int main()
     main_cam->SetCubeMapShader(cubemap_shader);
     main_cam->SetCubeMapObj(context->CreateUnitCube());
 
+
+
+
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     {
+        // Calc delta time:
+        float delta_time = context->CalcDeltaTime();
+
         // Resize render textures to be size of window:
         if (render_texture->GetSize().x != (int)main_cam->GetSize().x ||
             render_texture->GetSize().y != (int)main_cam->GetSize().y){
@@ -124,9 +133,8 @@ int main()
             }
         }
             
-        
         // Input:
-        context->ProcessInput(window);
+        context->ProcessInput(window, delta_time);
 
         // Render:
         shader->Render(main_cam, render_texture, true);

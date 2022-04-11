@@ -48,7 +48,10 @@
     <ClCompile Include="src\graphics\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp">
+    <ClCompile Include="src\physics\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demos\gdp_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,5 +89,13 @@
     <ClInclude Include="src\graphics\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\physics\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SDL2.dll" />
+    <None Include="glew32.dll" />
+    <None Include="glfw3.dll" />
   </ItemGroup>
 </Project>

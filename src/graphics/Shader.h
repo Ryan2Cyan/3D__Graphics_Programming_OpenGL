@@ -11,7 +11,7 @@ struct Shader {
 
 	Shader(std::string vert_path, std::string frag_path);
 	~Shader();
-	void AddMeshToRender(std::shared_ptr<Mesh> arg);
+	void AddGameObjectToRender(std::shared_ptr<GameObject> arg);
 	void SetUniform(const std::string& u_name, glm::mat4 value);
 	void SetUniform(const std::string& u_name, glm::vec3 value);
 	void SetUniform(const std::string& u_name, glm::vec4 value);
@@ -31,7 +31,7 @@ private:
 	friend struct GpContext;
 
 	std::shared_ptr<GpContext> context;
-	std::vector<std::shared_ptr<Mesh>> meshes;
+	std::vector<std::shared_ptr<GameObject>> gameobjects;
 	GLuint id;
 	bool dirty;
 	std::string vert_src;

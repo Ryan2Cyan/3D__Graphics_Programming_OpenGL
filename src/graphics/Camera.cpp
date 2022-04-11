@@ -18,8 +18,8 @@ Camera::Camera(bool ortho, glm::vec2 win_size, glm::vec3 position, glm::vec3 tar
 	}
 	cubemap = nullptr;
 	cubemap_shader = nullptr;
-	pos = position;
-	dir = glm::normalize(pos - target);
+	transform.position = position;
+	dir = glm::normalize(transform.position - target);
 	right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), dir));
 	up = glm::cross(dir, right);
 	yaw = -90.0f;
@@ -46,7 +46,7 @@ void Camera::Refresh() {
 	dir = glm::normalize(dir);
 
 	// Update view:
-	view = glm::lookAt(pos, pos + dir, up);
+	view = glm::lookAt(transform.position, transform.position + dir, up);
 }
 
 void Camera::SetView(glm::mat4 arg) {

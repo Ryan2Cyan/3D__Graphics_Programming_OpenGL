@@ -13,15 +13,12 @@ struct RenderTexture;
 
 struct Mesh {
 
-	Mesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Texture> tex, glm::vec3 pos);
-	Mesh(std::string filepath, glm::vec3 pos);
+	Mesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Texture> tex);
+	Mesh(std::string filepath);
 	const WfModel GetWfModel();
-	const glm::mat4 GetModelMat();
-	const glm::vec3 GetPos();
 	const GLuint GetTexId();
-	void SetPos(glm::vec3 arg);
 	void SetDiffuse(glm::vec3 arg);
-	void SetModelMat(glm::mat4 arg);
+
 
 private:
 	friend struct GpContext;
@@ -33,8 +30,6 @@ private:
 	std::shared_ptr<Texture> tex;
 	std::shared_ptr<VertexArray> vao;
 	WfModel wf_model;
-	glm::vec3 position;
 	glm::vec3 diff_light;
-	glm::mat4 model_mat;
 	bool is_wf;
 };

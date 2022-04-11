@@ -1,4 +1,5 @@
 #pragma once
+#include <physics/Transform.h>
 #include <memory>
 #include <ext.hpp>
 #include <vector>
@@ -30,7 +31,7 @@ private:
 	std::shared_ptr<GpContext> context;
 
 	// Values:
-	glm::vec3 pos;
+	Transform transform;
 	glm::vec3 dir;
 	glm::vec3 up;
 	glm::vec3 right;

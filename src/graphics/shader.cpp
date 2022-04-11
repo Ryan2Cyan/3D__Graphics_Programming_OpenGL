@@ -41,8 +41,8 @@ Shader::~Shader() {
 }
 
 // Adds mesh to shader vector - all meshes within this vector will be rendered in loop:
-void Shader::AddMeshToRender(std::shared_ptr<Mesh> arg) {
-	meshes.push_back(arg);
+void Shader::AddGameObjectToRender(std::shared_ptr<GameObject> arg) {
+	gameobjects.push_back(arg);
 }
 
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
@@ -178,37 +178,45 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	 // Render each mesh:
-	for (size_t i = 0; i < meshes.size(); i++)
+	for (size_t i = 0; i < gameobjects.size(); i++)
 	{
-		// Bind Texture:
-		if (meshes[i]->is_wf) glBindTexture(GL_TEXTURE_2D, meshes[i]->GetWfModel().textureId);
-		else glBindTexture(GL_TEXTURE_2D, meshes[i]->tex->GetId());
-		
+		// Set the current gameobject we are rendering:
+		std::shared_ptr<GameObject> c_gameobject = gameobjects[i];
 
-		// Instruct OpenGL to use our shader program and our VAO
-		glUseProgram(GetId());
+		for (size_t j = 0; j < gameobjects[i]->meshes.size(); j++)
+		{
+			// Set the current Mesh (within the GameObject) we are rendering:
+			std::shared_ptr<Mesh> c_mesh = c_gameobject->meshes[j];
 
-		// Prepare the model matrix data:
-		glm::mat4 model = meshes[i]->GetModelMat();
-		glm::vec3 pos = meshes[i]->GetPos();
+			// Bind Texture:
+			if (c_mesh->is_wf) glBindTexture(GL_TEXTURE_2D, c_mesh->GetWfModel().textureId);
+			else glBindTexture(GL_TEXTURE_2D, c_mesh->tex->GetId());
+			
 
-		// Parse in matrix data from mesh:
-		SetUniform("u_Model", model);
-		SetUniform("u_View", cam->view);
-		SetUniform("u_Projection", cam->proj);
-		SetUniform("u_diffColor", meshes[i]->diff_light);
+			// Instruct OpenGL to use our shader program and our VAO
+			glUseProgram(GetId());
 
-		SetUniform("u_lightPos", glm::vec3(10.0, 0.0f, 0.0f));
+			// Prepare the model matrix data:
+			glm::mat4 model = c_gameobject->GetModelMat();
+			glm::vec3 pos = c_gameobject->GetPos();
 
-		// Bind VAO:
-		if (meshes[i]->is_wf) glBindVertexArray(meshes[i]->GetWfModel().vaoId);
-		else glBindVertexArray(meshes[i]->vao->GetId());
-		
+			// Parse in matrix data from mesh:
+			SetUniform("u_Model", model);
+			SetUniform("u_View", cam->view);
+			SetUniform("u_Projection", cam->proj);
+			SetUniform("u_diffColor", c_mesh->diff_light);
 
-		// Final render:
-		if (meshes[i]->is_wf) glDrawArrays(GL_TRIANGLES, 0, meshes[i]->GetWfModel().vertexCount);
-		else glDrawArrays(GL_TRIANGLES, 0, meshes[i]->vao->GetVertices());
+			SetUniform("u_lightPos", glm::vec3(10.0, 0.0f, 0.0f));
 
+			// Bind VAO:
+			if (c_mesh->is_wf) glBindVertexArray(c_mesh->GetWfModel().vaoId);
+			else glBindVertexArray(c_mesh->vao->GetId());
+			
+
+			// Final render:
+			if (c_mesh->is_wf) glDrawArrays(GL_TRIANGLES, 0, c_mesh->GetWfModel().vertexCount);
+			else glDrawArrays(GL_TRIANGLES, 0, c_mesh->vao->GetVertices());
+		}
 	}
 
 
