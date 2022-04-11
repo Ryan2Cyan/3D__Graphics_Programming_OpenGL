@@ -124,8 +124,6 @@ std::shared_ptr<VertexArray> GpContext::CreateUnitCube() {
 }
 
 
-
-
 // Process user input during the input loop:
 void GpContext::ProcessInput(GLFWwindow* window) {
 

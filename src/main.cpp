@@ -110,7 +110,6 @@ int main()
         bottom,
         back,
         front
-
     };
     main_cam->SetCubeMap(context->CreateCubemap(faces));
     main_cam->SetCubeMapShader(cubemap_shader);
