@@ -19,7 +19,7 @@ struct GameObject {
 	void Scale(glm::vec3 arg);
 	void Rotate(float angle, glm::vec3 axis);
 	const glm::mat4 GetModelMat();
-	const glm::vec3 GetPos();
+	const std::shared_ptr<Transform> GetTransform();
 	const std::shared_ptr<Rigidbody> GetRigidbody();
 	void SetPos(glm::vec3 arg);
 	void SetModelMat(glm::mat4 arg);
@@ -31,6 +31,6 @@ private:
 	std::shared_ptr<GpContext> context;
 	std::vector<std::shared_ptr<Mesh>> meshes;
 	std::shared_ptr<Rigidbody> rigidBody;
-	Transform transform;
+	std::shared_ptr<Transform> transform;
 
 };

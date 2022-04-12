@@ -198,7 +198,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
 			// Prepare the model matrix data:
 			glm::mat4 model = c_gameobject->GetModelMat();
-			glm::vec3 pos = c_gameobject->GetPos();
+			glm::vec3 pos = c_gameobject->GetTransform()->position;
 
 			// Parse in matrix data from mesh:
 			SetUniform("u_Model", model);

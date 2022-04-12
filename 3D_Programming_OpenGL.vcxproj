@@ -173,6 +173,7 @@
     <ClCompile Include="src\graphics\vertexarray.cpp" />
     <ClCompile Include="src\physics\Ph.cpp" />
     <ClCompile Include="src\physics\PhContext.cpp" />
+    <ClCompile Include="src\physics\PhysicsWorld.cpp" />
     <ClCompile Include="src\physics\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +190,7 @@
     <ClInclude Include="src\graphics\vertexarray.h" />
     <ClInclude Include="src\physics\Ph.h" />
     <ClInclude Include="src\physics\PhContext.h" />
+    <ClInclude Include="src\physics\PhysicsWorld.h" />
     <ClInclude Include="src\physics\Rigidbody.h" />
     <ClInclude Include="src\physics\Transform.h" />
   </ItemGroup>
