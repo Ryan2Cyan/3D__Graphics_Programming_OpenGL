@@ -1,5 +1,5 @@
 #pragma once
-#include "Context.h"
+#include "GpContext.h"
 #include "Buffer.h"
 #include "VertexArray.h"
 #include "Shader.h"

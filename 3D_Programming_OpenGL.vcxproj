@@ -159,32 +159,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\demos\gdp_demo.cpp" />
+    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp" />
     <ClCompile Include="src\graphics\buffer.cpp" />
     <ClCompile Include="src\graphics\Camera.cpp" />
-    <ClCompile Include="src\graphics\context.cpp" />
     <ClCompile Include="src\graphics\GameObject.cpp" />
     <ClCompile Include="src\graphics\gp.cpp" />
+    <ClCompile Include="src\graphics\GpContext.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\graphics\RenderTexture.cpp" />
     <ClCompile Include="src\graphics\Sampler.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\graphics\vertexarray.cpp" />
+    <ClCompile Include="src\physics\Ph.cpp" />
+    <ClCompile Include="src\physics\PhContext.cpp" />
     <ClCompile Include="src\physics\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\buffer.h" />
     <ClInclude Include="src\graphics\Camera.h" />
-    <ClInclude Include="src\graphics\context.h" />
     <ClInclude Include="src\graphics\GameObject.h" />
     <ClInclude Include="src\graphics\gp.h" />
+    <ClInclude Include="src\graphics\GpContext.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\RenderTexture.h" />
     <ClInclude Include="src\graphics\Sampler.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Texture.h" />
     <ClInclude Include="src\graphics\vertexarray.h" />
+    <ClInclude Include="src\physics\Ph.h" />
+    <ClInclude Include="src\physics\PhContext.h" />
+    <ClInclude Include="src\physics\Rigidbody.h" />
     <ClInclude Include="src\physics\Transform.h" />
   </ItemGroup>
   <ItemGroup>

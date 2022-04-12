@@ -16,6 +16,16 @@ void GameObject::AddMesh(std::shared_ptr<Mesh> mesh) {
 	meshes.push_back(mesh);
 }
 
+// Add component functions:
+void GameObject::AddRigidbody() {
+	rigidBody = std::make_shared<Rigidbody>();
+}
+
+void GameObject::AddRigidbody(float mass) {
+	rigidBody = std::make_shared<Rigidbody>();
+	rigidBody->mass = mass;
+}
+
 void GameObject::Translate(glm::vec3 arg) {
 	transform.model = glm::translate(transform.model, arg);
 }
@@ -34,6 +44,10 @@ const glm::mat4 GameObject::GetModelMat() {
 
 const glm::vec3 GameObject::GetPos() {
 	return transform.position;
+}
+
+const std::shared_ptr<Rigidbody> GameObject::GetRigidbody() {
+	return rigidBody;
 }
 
 void GameObject::SetPos(glm::vec3 arg) {

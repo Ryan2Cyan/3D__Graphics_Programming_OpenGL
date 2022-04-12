@@ -1,4 +1,5 @@
 #include <graphics/Gp.h>
+#include <physics/Ph.h>
 #include <iostream>
 
 // Shaders filepaths:
@@ -19,6 +20,7 @@ int main()
 
     // Create context:
     std::shared_ptr<GpContext> context = Gp::CreateContext();
+    std::shared_ptr<PhContext> phy_context = Ph::CreateContext();
 
     // Create Shader for on-screen rendering:
     std::shared_ptr<Shader> shader = context->CreateShader(light_v, light_f);
@@ -37,9 +39,9 @@ int main()
     std::shared_ptr<GameObject> gameobject0 = context->CreateGameObject();
 
     //Load in meshes:
-    glm::vec3 position0 = { 2.0f, 1.0f, 0.0f };
-    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath, position0);
+    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath);
     gameobject0->AddMesh(curuthers);
+    gameobject0->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
     shader->AddGameObjectToRender(gameobject0);
 
     float angle = 0.1f;
@@ -47,12 +49,11 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
       
-        angle += 0.1f;
-        //gameobject0->Translate(glm::vec3(0.0f, 0.0f, -2.5f));
-        gameobject0->Rotate(angle, glm::vec3(0.0f, 1.0f, 0.0f));
+        // Calc delta time:
+        float delta_time = context->CalcDeltaTime();
 
         // Input:
-        context->ProcessInput(window);
+        context->ProcessInput(window, delta_time);
 
         // Render:
         shader->Render(main_cam, true);
