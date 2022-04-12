@@ -6,6 +6,7 @@ GameObject::GameObject() {
 
 GameObject::GameObject(std::shared_ptr<Mesh> mesh) {
 	meshes.push_back(mesh);
+	transform = std::make_shared<Transform>();
 }
 
 GameObject::GameObject(std::vector<std::shared_ptr<Mesh>> meshes) {

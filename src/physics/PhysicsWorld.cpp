@@ -5,6 +5,7 @@
 
 PhysicsWorld::PhysicsWorld() {
 	gravity = glm::vec3(0.0f, -9.81f, 0.0f);
+	start = false;
 }
 
 void PhysicsWorld::AddGameObject(std::shared_ptr<GameObject> gameobject) {
@@ -19,19 +20,28 @@ void PhysicsWorld::RemoveGameObject(std::shared_ptr<GameObject> gameobject) {
 // Calculates dynamic physics for all gameobjects in PhysicsWorld::gameobjects (F = ma):
 void PhysicsWorld::Step(float delta_time) {
 
-	// Loop through all gameobjects and secure their rigidbodies and transform components:
-	for (std::shared_ptr<GameObject> gameobject : gameobjects) {
-		std::shared_ptr<Rigidbody> rigidbody = gameobject->GetRigidbody();
-		std::shared_ptr<Transform> transform = gameobject->GetTransform();
+	if (start) {
 
-		// Apply force:
-		rigidbody->force += rigidbody->mass * gravity;
+		// Loop through all gameobjects and secure their rigidbodies and transform components:
+		for (std::shared_ptr<GameObject> gameobject : gameobjects) {
+			std::shared_ptr<Rigidbody> rigidbody = gameobject->GetRigidbody();
+			std::shared_ptr<Transform> transform = gameobject->GetTransform();
 
-		// Update object's velocity, then position:
-		rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
-		transform->position += rigidbody->velocity * delta_time;
+			if (transform->position.y <= -7.0f) {
+				transform->position.y = -7.0f;
+			}
+			else {
+				// Apply force:
+				rigidbody->force += rigidbody->mass * gravity;
 
-		// Reset net force each frame:
-		rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
+				// Update object's velocity, then position:
+				rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
+				transform->position += rigidbody->velocity * delta_time;
+				gameobject->Translate(transform->position);
+			}
+
+			// Reset net force each frame:
+			rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
+		}
 	}
 }

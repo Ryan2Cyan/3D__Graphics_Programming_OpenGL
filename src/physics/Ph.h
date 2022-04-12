@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "PhContext.h"
+#include "PhysicsWorld.h"
 
 namespace Ph {
 

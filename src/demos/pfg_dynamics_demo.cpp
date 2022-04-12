@@ -8,7 +8,7 @@ const GLchar* light_f = "Additional_Files/shaders/light_frag.txt";
 
 // Model
 const GLchar* model_filepath = "Additional_Files/models/curuthers/curuthers.obj";
-
+const GLchar* sphere_mfp = "Additional_Files/models/Sphere/sphere.obj";
 
 int main()
 {
@@ -29,7 +29,7 @@ int main()
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
         false,
         glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(0.0f, 0.0f, 0.0f),  // position
+        glm::vec3(0.0f, 0.0f, 40.0f),  // position
         glm::vec3(0.0f, 0.0f, 1.0f),  // target
         70.0f                         //fov
     );
@@ -39,12 +39,17 @@ int main()
     std::shared_ptr<GameObject> gameobject0 = context->CreateGameObject();
 
     //Load in meshes:
-    std::shared_ptr<Mesh> curuthers = context->CreateMesh(model_filepath);
-    gameobject0->AddMesh(curuthers);
-    gameobject0->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
+    std::shared_ptr<Mesh> sphere = context->CreateMesh(sphere_mfp);
+    gameobject0->AddMesh(sphere);
+    gameobject0->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
     shader->AddGameObjectToRender(gameobject0);
+    gameobject0->AddRigidbody(70.0f);
 
-    float angle = 0.1f;
+    // Create physics world to apply dynamic physics:
+    std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
+    phy_world->AddGameObject(gameobject0);
+
+
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     {
@@ -54,6 +59,13 @@ int main()
 
         // Input:
         context->ProcessInput(window, delta_time);
+
+        // Calculate physics:
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+            phy_world->start = true;
+        }
+        phy_world->Step(delta_time);
+        
 
         // Render:
         shader->Render(main_cam, true);

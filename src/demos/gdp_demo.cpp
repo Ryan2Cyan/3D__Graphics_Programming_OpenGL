@@ -34,6 +34,7 @@ const GLchar* model_tree = "Additional_Files/models/tree/tree.obj";
 const GLchar* model_ground = "Additional_Files/models/tree/ground.obj";
 const GLchar* model_skeleton = "Additional_Files/models/tree/skeleton.obj";
 const GLchar* model_bird = "Additional_Files/models/tree/bird.obj";
+const GLchar* sphere_mfp = "Additional_Files/models/Sphere/sphere.obj";
 
 
 int main()
@@ -65,7 +66,7 @@ int main()
     context->SetMainCamera(main_cam); // "Main Camera" can be controlled by the user
 
     // Create curuthers gameobject:
-    std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(model_filepath);
+    std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(sphere_mfp);
     curuthers_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<GameObject> curuthers = context->CreateGameObject(curuthers_m);
     curuthers->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
