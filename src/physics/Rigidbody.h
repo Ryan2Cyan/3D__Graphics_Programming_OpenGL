@@ -4,6 +4,8 @@
 
 struct Rigidbody
 {
+	void AddForce(glm::vec3 arg);
+
 	glm::vec3 velocity;
 	glm::vec3 force;
 	float mass;

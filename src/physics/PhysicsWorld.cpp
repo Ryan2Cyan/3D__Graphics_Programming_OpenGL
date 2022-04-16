@@ -27,8 +27,8 @@ void PhysicsWorld::Step(float delta_time) {
 			std::shared_ptr<Rigidbody> rigidbody = gameobject->GetRigidbody();
 			std::shared_ptr<Transform> transform = gameobject->GetTransform();
 
-			if (transform->position.y <= -7.0f) {
-				transform->position.y = -7.0f;
+			if (transform->position.y <= -17.0f) {
+				transform->position.y = -17.0f;
 			}
 			else {
 				// Apply force:
@@ -41,7 +41,11 @@ void PhysicsWorld::Step(float delta_time) {
 			}
 
 			// Reset net force each frame:
+		
 			rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
+			/*std::cout << "Force: [x] " << rigidbody->force.x <<
+				"   [y] " << rigidbody->force.y <<
+				"   [z] " << rigidbody->force.z << std::endl;*/
 		}
 	}
 }
