@@ -34,7 +34,7 @@ const GLchar* model_tree = "Additional_Files/models/tree/tree.obj";
 const GLchar* model_ground = "Additional_Files/models/tree/ground.obj";
 const GLchar* model_skeleton = "Additional_Files/models/tree/skeleton.obj";
 const GLchar* model_bird = "Additional_Files/models/tree/bird.obj";
-const GLchar* sphere_mfp = "Additional_Files/models/Sphere/sphere.obj";
+const GLchar* sphere_mfp = "Additional_Files/models/Sphere/orange/sphere.obj";
 
 
 int main()
