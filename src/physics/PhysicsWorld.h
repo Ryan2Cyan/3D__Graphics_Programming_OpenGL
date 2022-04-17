@@ -12,6 +12,7 @@ struct PhysicsWorld {
 	void RemoveGameObject(std::shared_ptr<GameObject> gameobject);
 	void Step(float delta_time);
 
+
 	bool start;
 private:
 	friend struct PhContext;

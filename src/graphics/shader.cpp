@@ -41,9 +41,14 @@ Shader::~Shader() {
 }
 
 // Adds mesh to shader vector - all meshes within this vector will be rendered in loop:
-void Shader::AddGameObjectToRender(std::shared_ptr<GameObject> arg) {
+void Shader::AddGameObject(std::shared_ptr<GameObject> arg) {
 	gameobjects.push_back(arg);
 }
+
+void Shader::RemoveGameObject(std::shared_ptr<GameObject> arg) {
+	gameobjects.erase(std::remove(gameobjects.begin(), gameobjects.end(), arg), gameobjects.end());
+}
+
 
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
 
@@ -206,7 +211,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 			SetUniform("u_Projection", cam->proj);
 			SetUniform("u_diffColor", c_mesh->diff_light);
 
-			SetUniform("u_lightPos", glm::vec3(-10.0, -20.0f, 0.0f));
+			SetUniform("u_lightPos", glm::vec3(0.0, 0.0f, 0.0f));
 
 			// Bind VAO:
 			if (c_mesh->is_wf) glBindVertexArray(c_mesh->GetWfModel().vaoId);

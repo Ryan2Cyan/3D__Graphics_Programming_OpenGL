@@ -17,6 +17,10 @@ void GameObject::AddMesh(std::shared_ptr<Mesh> mesh) {
 	meshes.push_back(mesh);
 }
 
+void GameObject::RemoveMesh(std::shared_ptr<Mesh> mesh) {
+	meshes.erase(std::remove(meshes.begin(), meshes.end(), mesh), meshes.end());
+}
+
 // Add component functions:
 void GameObject::AddRigidbody() {
 	rigidBody = std::make_shared<Rigidbody>();

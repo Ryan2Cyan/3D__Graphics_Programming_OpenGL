@@ -13,6 +13,7 @@ struct GameObject {
 	GameObject(std::shared_ptr<Mesh> mesh);
 	GameObject(std::vector<std::shared_ptr<Mesh>> meshes);
 	void AddMesh(std::shared_ptr<Mesh> mesh);
+	void RemoveMesh(std::shared_ptr<Mesh> mesh);
 	void AddRigidbody();
 	void AddRigidbody(float mass);
 	void Translate(glm::vec3 arg);
