@@ -16,10 +16,10 @@ GameObject::GameObject(std::vector<std::shared_ptr<Mesh>> meshes) {
 void GameObject::AddMesh(std::shared_ptr<Mesh> mesh) {
 	meshes.push_back(mesh);
 }
-
-void GameObject::RemoveMesh(std::shared_ptr<Mesh> mesh) {
-	meshes.erase(std::remove(meshes.begin(), meshes.end(), mesh), meshes.end());
-}
+//
+//void GameObject::RemoveMesh(std::shared_ptr<Mesh> mesh) {
+//	meshes.erase(std::remove(meshes.begin(), meshes.end(), mesh), meshes.end());
+//}
 
 // Add component functions:
 void GameObject::AddRigidbody() {
@@ -27,8 +27,30 @@ void GameObject::AddRigidbody() {
 }
 
 void GameObject::AddRigidbody(float mass) {
+
 	rigidBody = std::make_shared<Rigidbody>();
 	rigidBody->mass = mass;
+}
+
+void GameObject::AddSphereCollider(float elasticity, float radius) {
+
+	std::shared_ptr<SphereCollider> temp = std::make_shared<SphereCollider>();
+	temp->radius = radius;
+	temp->center = transform->position;
+	temp->elasticity = elasticity;
+	temp->type = sphere;
+	collider = temp;
+}
+
+void GameObject::AddPlaneCollider(float elasticity, glm::vec3 normal, float distance) {
+
+	std::shared_ptr<PlaneCollider> temp = std::make_shared<PlaneCollider>();
+	temp->normal = normal;
+	temp->distance = distance;
+	temp->elasticity = elasticity;
+	temp->center = transform->position;
+	temp->type = plane;
+	collider = temp;
 }
 
 void GameObject::Translate(glm::vec3 arg) {
@@ -54,6 +76,10 @@ const std::shared_ptr<Transform> GameObject::GetTransform() {
 
 const std::shared_ptr<Rigidbody> GameObject::GetRigidbody() {
 	return rigidBody;
+}
+
+const std::shared_ptr<Collider> GameObject::GetCollider() {
+	return collider;
 }
 
 void GameObject::SetPos(glm::vec3 arg) {

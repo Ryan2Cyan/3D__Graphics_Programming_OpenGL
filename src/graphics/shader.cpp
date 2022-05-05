@@ -45,9 +45,9 @@ void Shader::AddGameObject(std::shared_ptr<GameObject> arg) {
 	gameobjects.push_back(arg);
 }
 
-void Shader::RemoveGameObject(std::shared_ptr<GameObject> arg) {
-	gameobjects.erase(std::remove(gameobjects.begin(), gameobjects.end(), arg), gameobjects.end());
-}
+//void Shader::RemoveGameObject(std::shared_ptr<GameObject> arg) {
+//	gameobjects.erase(std::remove(gameobjects.begin(), gameobjects.end(), arg), gameobjects.end());
+//}
 
 
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {

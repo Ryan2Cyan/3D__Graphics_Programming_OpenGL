@@ -66,12 +66,12 @@ int main()
     context->SetMainCamera(main_cam); // "Main Camera" can be controlled by the user
 
     // Create curuthers gameobject:
-    std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(sphere_mfp);
+    std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(model_filepath);
     curuthers_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<GameObject> curuthers = context->CreateGameObject(curuthers_m);
     curuthers->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
     curuthers->Scale(glm::vec3(0.4f, 0.4f, 0.4f));
-    shader->AddGameObjectToRender(curuthers);
+    shader->AddGameObject(curuthers);
    
     // Create graveyard tree gameobject:
     std::shared_ptr<Mesh> tree_m = context->CreateMesh(model_tree);
@@ -88,7 +88,7 @@ int main()
     graveyard_tree->AddMesh(skeleton_m);
     graveyard_tree->AddMesh(bird_m);
     graveyard_tree->SetPos(glm::vec3(5.0f, 0.0f, 0.0f));
-    shader->AddGameObjectToRender(graveyard_tree);
+    shader->AddGameObject(graveyard_tree);
 
     // Create render textures:
     std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);

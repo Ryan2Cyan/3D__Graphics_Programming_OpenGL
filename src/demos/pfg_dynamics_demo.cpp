@@ -90,7 +90,6 @@ int main()
             {
             case 0:
                 new_gameobject->AddMesh(sphere0);
-                std::cout << "Sphere Color:  Orange" << std::endl;
                 break;
             case 1:
                 new_gameobject->AddMesh(sphere1);

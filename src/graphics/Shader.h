@@ -12,7 +12,7 @@ struct Shader {
 	Shader(std::string vert_path, std::string frag_path);
 	~Shader();
 	void AddGameObject(std::shared_ptr<GameObject> arg);
-	void RemoveGameObject(std::shared_ptr<GameObject> arg);
+	/*void RemoveGameObject(std::shared_ptr<GameObject> arg);*/
 	void SetUniform(const std::string& u_name, glm::mat4 value);
 	void SetUniform(const std::string& u_name, glm::vec3 value);
 	void SetUniform(const std::string& u_name, glm::vec4 value);
