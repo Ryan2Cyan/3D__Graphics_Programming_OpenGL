@@ -14,6 +14,10 @@ struct Collider {
 	float elasticity;
 	colliderType type;
 	glm::vec3 center;
+
+	virtual ~Collider() {
+		// Virtual destructor to create v-table
+	}
 };
 
 struct PlaneCollider : Collider {

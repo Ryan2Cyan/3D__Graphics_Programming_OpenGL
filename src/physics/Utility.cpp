@@ -1,44 +1,49 @@
 #include "Utility.h"
 
-float DistanceToPlane(const glm::vec3& n, const glm::vec3& p, const glm::vec3& q) {
+namespace PFG
+{
 
-	float d = glm::dot((p - q), n);
-	return d;
-}
-
-
-bool MovingSphereToPlaneCollision(const glm::vec3& n, const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& q, float r, glm::vec3& ci) {
-
-	float t;
-
-	float d0 = DistanceToPlane(n, c0, q);
-	float d1 = DistanceToPlane(n, c1, q);
-
-	if (glm::abs(d0) <= r)
-	{
-		ci = c0;
-		t = 0.0f;
-		return true;
+	float DistanceToPlane(const glm::vec3& norm, const glm::vec3& pos0, const glm::vec3& pos1) {
+		return glm::dot((pos0 - pos1), norm);
 	}
-	if (d0 > r && d1 < r)
-	{
-		t = (d0 - r) / (d0 - d1);
-		ci = (1 - t) * c0 + t * c1;
-		return true;
+
+
+	bool MovingSphereToPlaneCollision(const glm::vec3& norm, const glm::vec3& sphere_center0,
+		const glm::vec3& sphere_center1, const glm::vec3& plane_center, float radius, glm::vec3& collision_point) {
+
+		float t;
+
+		float d0 = DistanceToPlane(norm, sphere_center0, plane_center);
+		float d1 = DistanceToPlane(norm, sphere_center0, plane_center);
+
+		if (glm::abs(d0) <= radius)
+		{
+			collision_point = sphere_center0;
+			t = 0.0f;
+			return true;
+		}
+		if (d0 > radius && d1 < radius)
+		{
+			t = (d0 - radius) / (d0 - d1);
+			collision_point = (1 - t) * sphere_center0 + t * sphere_center1;
+			return true;
+		}
+		return false;
 	}
-	return false;
-}
 
-bool SphereToSphereCollision(const glm::vec3& c0, const glm::vec3 c1, float r1, float r2, glm::vec3& cp) {
+	bool SphereToSphereCollision(const glm::vec3& sphere_center0, const glm::vec3 sphere_center1, float radius0,
+		float radius1, glm::vec3& collision_point) {
 
-	float d = glm::length(c0 - c1);
-	glm::vec3 n;
+		float distance = glm::length(sphere_center0 - sphere_center1);
+		glm::vec3 norm;
 
-	if (d <= (r1 + r2))
-	{
-		n = glm::normalize(c0 - c1);
-		cp = r1 * n;
-		return true;
+		if (distance <= (radius0 + radius1))
+		{
+			norm = glm::normalize(sphere_center0 - sphere_center1);
+			collision_point = radius0 * norm;
+			return true;
+		}
+		return false;
 	}
-	return false;
+
 }

@@ -4,8 +4,23 @@
 namespace PFG
 {
 
-	float DistanceToPlane(const glm::vec3& n, const glm::vec3& p, const glm::vec3& q);
-	bool MovingSphereToPlaneCollision(const glm::vec3& n, const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& q, float r, glm::vec3& ci);
-	bool SphereToSphereCollision(const glm::vec3& c0, const glm::vec3 c1, float r1, float r2, glm::vec3& cp);
+	float DistanceToPlane(
+		const glm::vec3& norm, 
+		const glm::vec3& pos0, 
+		const glm::vec3& pos1);
+
+	bool MovingSphereToPlaneCollision(const glm::vec3& norm,
+		const glm::vec3& sphere_center0,
+		const glm::vec3& sphere_center1, 
+		const glm::vec3& plane_center, 
+		float radius, 
+		glm::vec3& collision_point);
+
+	bool SphereToSphereCollision(
+		const glm::vec3& sphere_center0, 
+		const glm::vec3 sphere_center1, 
+		float radius0,
+		float radius1, 
+		glm::vec3& collision_point);
 
 }
