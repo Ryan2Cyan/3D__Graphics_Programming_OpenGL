@@ -172,6 +172,7 @@ const GLuint Shader::GetId() {
 // Render the scene using default framebuffer:
 void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 
+
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
 	if (backface_cull) glEnable(GL_CULL_FACE);

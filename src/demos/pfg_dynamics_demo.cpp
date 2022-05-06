@@ -60,14 +60,17 @@ int main()
     // Create white cube gameobject:
     std::shared_ptr<GameObject> cube = context->CreateGameObject();
     cube->AddMesh(cube0);
+	cube->name = "cube";
     cube->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
     cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
+	cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 20.0f);
     shader->AddGameObject(cube);
    
     
 
     // Create physics world to apply dynamic physics:
     std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
+	phy_world->AddGameObject(cube);
 
 
     // Render loop (called each frame):
@@ -86,6 +89,7 @@ int main()
             phy_world->start = true;
             // Create GameObjects:
             std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
+			new_gameobject->name = "new-sphere";
             switch (sphere_color)
             {
             case 0:
@@ -120,6 +124,7 @@ int main()
             shader->AddGameObject(new_gameobject);
             new_gameobject->AddRigidbody(70.0f);
             new_gameobject->GetRigidbody()->AddForce(glm::vec3(5000.0f, 30000.0f, 0.0f));
+			new_gameobject->AddSphereCollider(0.5f, 10.0f);
             phy_world->AddGameObject(new_gameobject);
         }
 
@@ -129,12 +134,6 @@ int main()
         shader->Render(main_cam, true);
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-        for (std::shared_ptr<GameObject> gameobject : shader->gameobjects) {
-            if (gameobject->GetTransform()->position.y <= -20.0f) {
-                phy_world->RemoveGameObject(gameobject);
-            }
-        }
     }
 
     // Clean up:

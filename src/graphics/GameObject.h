@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <string>
 #include <ext.hpp>
 #include <physics/Transform.h>
 #include <physics/Rigidbody.h>
@@ -28,6 +29,8 @@ struct GameObject {
 	const std::shared_ptr<Collider> GetCollider();
 	void SetPos(glm::vec3 arg);
 	void SetModelMat(glm::mat4 arg);
+
+	std::string name;
 
 private:
 	friend struct GpContext;
