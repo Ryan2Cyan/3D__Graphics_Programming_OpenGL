@@ -53,7 +53,7 @@ namespace Pfg
 		// Calculate angular momentum:
 		float angular_mo = (0.0f, 0.0f, 0.0f);
 		angular_mo = glm::dot(-(1.0f + elasticity) * (object0_vel - object1_vel), normal);
-		angular_mo /= 1 / object0_mass + 1 / object1_mass;
+		angular_mo /= (1.0f / object0_mass) + (1.0f / object1_mass);
 
 		// Calculate linear momentum:
 		glm::vec3 linear_mo = glm::vec3(0.0f, 0.0f, 0.0f);

@@ -49,23 +49,16 @@ int main()
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
         false,
         glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(-20.0f, 5.0f, 100.0f),  // position
+        glm::vec3(-20.0f, 5.0f, 50.0f),  // position
         glm::vec3(0.0f, 0.0f, 0.0f),  // target
         70.0f                         //fov
     );
     context->SetMainCamera(main_cam); // "Main Camera" can be controlled by the user
 
-    // Creat hud camera:
-    std::shared_ptr<Camera> hud_cam = context->CreateCamera(
-        true,
-        glm::vec2((float)window_size.x, (float)window_size.y),
-        glm::vec3(-20.0f, 5.0f, 100.0f),  // position
-        glm::vec3(0.0f, 0.0f, 0.0f),  // target
-        70.0f                         //fov
-    );
 
     //Load in sphere meshes:
     std::shared_ptr<Mesh> sphere0 = context->CreateMesh(sphere_o);
+    sphere0->SetDiffuse(glm::vec3(1.0f, 1.0f, 1.0f));
     std::shared_ptr<Mesh> sphere1 = context->CreateMesh(sphere_b);
     std::shared_ptr<Mesh> sphere2 = context->CreateMesh(sphere_c);
     std::shared_ptr<Mesh> sphere3 = context->CreateMesh(sphere_l);
@@ -82,10 +75,9 @@ int main()
     cube->AddMesh(cube0);
 	cube->name = "cube";
     cube->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-
     cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
-	cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 20.0f);
-    cube->AddRigidbody(20.0f);
+	cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
+    cube->AddRigidbody(20.0f, false);
     shader->AddGameObject(cube);
 
     // Create render textures:
@@ -164,11 +156,11 @@ int main()
                 break;
             }
             sphere_color = rand() % (7 - 0 + 1);
-            new_gameobject->SetPos(glm::vec3(0.0f, 10.0f, 0.0f));
+            new_gameobject->SetPos(glm::vec3(0.0f, 20.0f, 0.0f));
             shader->AddGameObject(new_gameobject);
             new_gameobject->AddRigidbody(5.0f);
             //new_gameobject->GetRigidbody()->AddForce(glm::vec3(500.0f, 3000.0f, 0.0f));
-			new_gameobject->AddSphereCollider(0.5f, 10.0f);
+			new_gameobject->AddSphereCollider(1.4f, 1.0f);
             phy_world->AddGameObject(new_gameobject);
 
             spawned_sphere = true;

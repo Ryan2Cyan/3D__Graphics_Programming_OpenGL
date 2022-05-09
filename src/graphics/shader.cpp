@@ -212,7 +212,7 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 			SetUniform("u_Projection", cam->proj);
 			SetUniform("u_diffColor", c_mesh->diff_light);
 
-			SetUniform("u_lightPos", glm::vec3(0.0, 0.0f, 0.0f));
+			SetUniform("u_lightPos", glm::vec3(0.0, 10.0f, 0.0f));
 
 			// Bind VAO:
 			if (c_mesh->is_wf) glBindVertexArray(c_mesh->GetWfModel().vaoId);

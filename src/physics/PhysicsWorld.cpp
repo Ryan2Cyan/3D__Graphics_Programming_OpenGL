@@ -6,7 +6,6 @@
 
 
 PhysicsWorld::PhysicsWorld() {
-	gravity = glm::vec3(0.0f, -9.81f, 0.0f);
 	start = false;
 }
 
@@ -22,7 +21,7 @@ void PhysicsWorld::RemoveGameObject(std::shared_ptr<GameObject> gameobject) {
 // Calculates dynamic physics for all gameobjects in PhysicsWorld::gameobjects (F = ma):
 void PhysicsWorld::Step(float delta_time) {
 
-	delta_time = 0.1f;
+	delta_time = 0.05f;
 	if (start) {
 
 		// Loop through all gameobjects and secure their rigidbodies and transform components:
@@ -34,14 +33,15 @@ void PhysicsWorld::Step(float delta_time) {
 				// Negatively translate to return to 0:
 				gameobject->Translate(-transform->position);
 
-				// Apply force:
-				rigidbody->force += rigidbody->mass * gravity;
+				// Apply gravity:
+				if(rigidbody->apply_gravity)
+					rigidbody->force += rigidbody->mass * rigidbody->gravity;
 
 				// Update object's velocity, then position:
 				rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
 				transform->position += rigidbody->velocity * delta_time;
-				if (transform->position.y <= 0.0f)
-					transform->position.y = 0.0f;
+
+				std::cout << "Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
 
 				gameobject->Translate(transform->position);
 
@@ -55,8 +55,10 @@ void PhysicsWorld::Step(float delta_time) {
 
 			// Check if the current object has a collider and rigidbody:
 			std::shared_ptr<Collider> currentCol;
-			if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) 
+			if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) {
 				currentCol = gameobjects[i]->GetCollider();
+				currentCol->center = gameobjects[i]->GetTransform()->position;
+			}
 			else
 				continue;
 
@@ -64,8 +66,10 @@ void PhysicsWorld::Step(float delta_time) {
 				std::shared_ptr<Collider> otherCol;
 
 				// Check if other object has a collider:
-				if (gameobjects[j]->GetCollider() && gameobjects[j]->GetRigidbody()) 
+				if (gameobjects[j]->GetCollider() && gameobjects[j]->GetRigidbody()) {
 					otherCol = gameobjects[j]->GetCollider();
+					otherCol->center = gameobjects[j]->GetTransform()->position;
+				}
 				else
 					continue;
 
@@ -83,6 +87,12 @@ void PhysicsWorld::Step(float delta_time) {
 						if (Pfg::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
 						
 							std::cout << "Sphere to sphere collision" << std::endl;
+							gameobjects[i]->rigidBody->AddForce(Pfg::ImpulseSolver(
+								delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
+								gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
+								glm::normalize(col_0->center - col_1->center)
+							));
+							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					}
 					else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(otherCol)) {
@@ -91,7 +101,12 @@ void PhysicsWorld::Step(float delta_time) {
 							col_1->center, col_0->radius, collision_point)) {
 						
 							std::cout << "Sphere to plane collision" << std::endl;
-
+							gameobjects[i]->rigidBody->AddForce(Pfg::ImpulseSolver(
+								delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
+								gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
+								glm::normalize(col_1->center - col_0->center)
+							));
+							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					}
 				}

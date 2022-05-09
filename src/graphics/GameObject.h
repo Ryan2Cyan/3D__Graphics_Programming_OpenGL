@@ -18,6 +18,8 @@ struct GameObject {
 	/*void RemoveMesh(std::shared_ptr<Mesh> mesh);*/
 	void AddRigidbody();
 	void AddRigidbody(float mass);
+	void AddRigidbody(float mass, bool apply_gravity);
+	void AddRigidbody(float mass, bool apply_gravity, glm::vec3 gravity);
 	void AddSphereCollider(float elasticity, float radius);
 	void AddPlaneCollider(float elasticity, glm::vec3 normal, float distance);
 	void Translate(glm::vec3 arg);

@@ -19,5 +19,4 @@ private:
 
 	std::shared_ptr<PhContext> context;
 	std::vector<std::shared_ptr<GameObject>> gameobjects;
-	glm::vec3 gravity;
 };

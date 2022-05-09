@@ -32,6 +32,21 @@ void GameObject::AddRigidbody(float mass) {
 	rigidBody->mass = mass;
 }
 
+void GameObject::AddRigidbody(float mass, bool apply_gravity) {
+
+	rigidBody = std::make_shared<Rigidbody>();
+	rigidBody->mass = mass;
+	rigidBody->apply_gravity = apply_gravity;
+}
+
+void GameObject::AddRigidbody(float mass, bool apply_gravity, glm::vec3 gravity) {
+
+	rigidBody = std::make_shared<Rigidbody>();
+	rigidBody->mass = mass;
+	rigidBody->apply_gravity = apply_gravity;
+	rigidBody->gravity = gravity;
+}
+
 void GameObject::AddSphereCollider(float elasticity, float radius) {
 
 	std::shared_ptr<SphereCollider> temp = std::make_shared<SphereCollider>();
