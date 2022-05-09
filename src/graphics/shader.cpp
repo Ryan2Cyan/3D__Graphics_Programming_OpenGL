@@ -45,9 +45,9 @@ void Shader::AddGameObject(std::shared_ptr<GameObject> arg) {
 	gameobjects.push_back(arg);
 }
 
-void Shader::RemoveGameObject(std::shared_ptr<GameObject> arg) {
-	gameobjects.erase(std::remove(gameobjects.begin(), gameobjects.end(), arg), gameobjects.end());
-}
+//void Shader::RemoveGameObject(std::shared_ptr<GameObject> arg) {
+//	gameobjects.erase(std::remove(gameobjects.begin(), gameobjects.end(), arg), gameobjects.end());
+//}
 
 
 void Shader::SetUniform(const std::string& u_name, glm::mat4 value) {
@@ -171,6 +171,7 @@ const GLuint Shader::GetId() {
 
 // Render the scene using default framebuffer:
 void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
+
 
 	// Render set up:
 	glEnable(GL_DEPTH_TEST);
