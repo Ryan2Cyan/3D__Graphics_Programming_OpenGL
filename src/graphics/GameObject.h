@@ -35,6 +35,7 @@ struct GameObject {
 private:
 	friend struct GpContext;
 	friend struct Shader;
+	friend struct PhysicsWorld;
 
 	std::shared_ptr<GpContext> context;
 	std::vector<std::shared_ptr<Mesh>> meshes;

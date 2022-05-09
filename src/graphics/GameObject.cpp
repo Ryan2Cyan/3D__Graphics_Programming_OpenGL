@@ -38,7 +38,6 @@ void GameObject::AddSphereCollider(float elasticity, float radius) {
 	temp->radius = radius;
 	temp->center = transform->position;
 	temp->elasticity = elasticity;
-	temp->type = sphere;
 	collider = temp;
 }
 
@@ -49,7 +48,6 @@ void GameObject::AddPlaneCollider(float elasticity, glm::vec3 normal, float dist
 	temp->distance = distance;
 	temp->elasticity = elasticity;
 	temp->center = transform->position;
-	temp->type = plane;
 	collider = temp;
 }
 

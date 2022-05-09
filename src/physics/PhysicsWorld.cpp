@@ -55,7 +55,7 @@ void PhysicsWorld::Step(float delta_time) {
 
 			// Check if the current object has a collider and rigidbody:
 			std::shared_ptr<Collider> currentCol;
-			if (gameobjects[i]->GetCollider()) 
+			if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) 
 				currentCol = gameobjects[i]->GetCollider();
 			else
 				continue;
@@ -64,7 +64,7 @@ void PhysicsWorld::Step(float delta_time) {
 				std::shared_ptr<Collider> otherCol;
 
 				// Check if other object has a collider:
-				if (gameobjects[j]->GetCollider()) 
+				if (gameobjects[j]->GetCollider() && gameobjects[j]->GetRigidbody()) 
 					otherCol = gameobjects[j]->GetCollider();
 				else
 					continue;
@@ -80,14 +80,14 @@ void PhysicsWorld::Step(float delta_time) {
 					if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(otherCol)) {
 					
 						// Sphere to sphere collision:
-						if (PFG::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
+						if (Pfg::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
 						
 							std::cout << "Sphere to sphere collision" << std::endl;
 						}
 					}
 					else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(otherCol)) {
 						// Sphere to plane collision:
-						if (PFG::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + gameobjects[i]->GetRigidbody()->velocity * delta_time, 
+						if (Pfg::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + gameobjects[i]->GetRigidbody()->velocity * delta_time, 
 							col_1->center, col_0->radius, collision_point)) {
 						
 							std::cout << "Sphere to plane collision" << std::endl;
@@ -100,7 +100,7 @@ void PhysicsWorld::Step(float delta_time) {
 
 					if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(otherCol)) {
 						// Plane to sphere collision:
-						if (PFG::MovingSphereToPlaneCollision(col_0->normal, col_1->center, col_1->center + gameobjects[j]->GetRigidbody()->velocity * delta_time,
+						if (Pfg::MovingSphereToPlaneCollision(col_0->normal, col_1->center, col_1->center + gameobjects[j]->GetRigidbody()->velocity * delta_time,
 							col_0->center, col_1->radius, collision_point)){
 							
 							std::cout << "Plane to sphere collision" << std::endl;
@@ -109,7 +109,7 @@ void PhysicsWorld::Step(float delta_time) {
 					}
 					else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(otherCol)) {
 						// Plane to plane collision:
-						if (PFG::DistanceToPlane(col_0->center, col_1->center, collision_point)) {
+						if (Pfg::DistanceToPlane(col_0->center, col_1->center, collision_point)) {
 			
 							std::cout << "Plane to plane collision" << std::endl;
 						}

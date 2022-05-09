@@ -247,7 +247,6 @@
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\graphics\vertexarray.cpp" />
-    <ClCompile Include="src\physics\Collider.cpp" />
     <ClCompile Include="src\physics\CollisionPoints.cpp" />
     <ClCompile Include="src\physics\Ph.cpp" />
     <ClCompile Include="src\physics\PhContext.cpp" />

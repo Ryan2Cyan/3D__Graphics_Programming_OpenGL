@@ -85,6 +85,7 @@ int main()
 
     cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
 	cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 20.0f);
+    cube->AddRigidbody(20.0f);
     shader->AddGameObject(cube);
 
     // Create render textures:
@@ -107,6 +108,7 @@ int main()
     std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
 	phy_world->AddGameObject(cube);
 
+    bool spawned_sphere = false;
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -127,7 +129,7 @@ int main()
         context->ProcessInput(window, delta_time);
 
         // Calculate physics:
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !spawned_sphere) {
             phy_world->start = true;
             // Create GameObjects:
             std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
@@ -162,12 +164,14 @@ int main()
                 break;
             }
             sphere_color = rand() % (7 - 0 + 1);
-            new_gameobject->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+            new_gameobject->SetPos(glm::vec3(0.0f, 10.0f, 0.0f));
             shader->AddGameObject(new_gameobject);
-            new_gameobject->AddRigidbody(70.0f);
-            new_gameobject->GetRigidbody()->AddForce(glm::vec3(5000.0f, 30000.0f, 0.0f));
+            new_gameobject->AddRigidbody(5.0f);
+            //new_gameobject->GetRigidbody()->AddForce(glm::vec3(500.0f, 3000.0f, 0.0f));
 			new_gameobject->AddSphereCollider(0.5f, 10.0f);
             phy_world->AddGameObject(new_gameobject);
+
+            spawned_sphere = true;
         }
         phy_world->Step(delta_time);
 

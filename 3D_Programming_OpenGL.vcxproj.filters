@@ -63,16 +63,13 @@
     <ClCompile Include="src\physics\Rigidbody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\physics\Collider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\physics\CollisionPoints.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp">
+    <ClCompile Include="src\physics\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\physics\Utility.cpp">
+    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
