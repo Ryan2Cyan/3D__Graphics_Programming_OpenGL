@@ -38,57 +38,7 @@ void PhysicsWorld::Step(float delta_time) {
 				if (rigidbody->apply_gravity)
 					rigidbody->force += rigidbody->mass * rigidbody->gravity;
 
-				// Check if the current object has a collider and rigidbody:
-				std::shared_ptr<Collider> currentCol;
-				if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) {
-					currentCol = gameobjects[i]->GetCollider();
-					currentCol->center = gameobjects[i]->GetTransform()->position;
-					gameobjects[i]->rigidBody->has_collided = false;
-				}
-				else
-					continue;
-
-				for (size_t j = 0; j < gameobjects.size(); j++) {
-					std::shared_ptr<Collider> otherCol;
-
-					// Check if other object has a collider:
-					if (gameobjects[j]->GetCollider() && gameobjects[j]->GetRigidbody()) {
-						otherCol = gameobjects[j]->GetCollider();
-						otherCol->center = gameobjects[j]->GetTransform()->position;
-					}
-					else
-						continue;
-
-					// Check if other collider is different to current collider:
-					if (currentCol == otherCol)
-						continue;
-
-					// Check for collision based on type:
-					glm::vec3 collision_point;
-					if (auto col_0 = std::dynamic_pointer_cast<SphereCollider>(currentCol)) {
-
-						if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(otherCol)) {
-							// Sphere-sphere collision
-
-						}
-						else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(otherCol)) {
-							// Sphere to plane collision:
-							if (Pfg::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + gameobjects[i]->GetRigidbody()->velocity * delta_time,
-								col_1->center, col_0->radius, collision_point)) {
-
-								gameobjects[i]->rigidBody->AddForce(-gameobjects[i]->rigidBody->gravity * gameobjects[i]->rigidBody->mass);
-
-								// Apply impulse force:
-								glm::vec3 impulse_force = Pfg::ImpulseSolver(
-									delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
-									gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
-									glm::normalize(col_1->center - col_0->center));
-
-								gameobjects[i]->rigidBody->AddForce(impulse_force);
-							}
-						}
-					}
-				}
+				TestCollisions(delta_time, gameobjects[i]);
 
 				// Update object's velocity, then position:
 				rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
@@ -100,67 +50,65 @@ void PhysicsWorld::Step(float delta_time) {
 			}
 		}
 
-		//// Loop through all gameobjects with colliders and compare with each object with collider:
-		//for (size_t i = 0; i < gameobjects.size(); i++){
+	}
+}
 
-		//	// Check if the current object has a collider and rigidbody:
-		//	std::shared_ptr<Collider> currentCol;
-		//	if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) {
-		//		currentCol = gameobjects[i]->GetCollider();
-		//		currentCol->center = gameobjects[i]->GetTransform()->position;
-		//		gameobjects[i]->rigidBody->has_collided = false;
-		//	}
-		//	else
-		//		continue;
+// Checks collisions against all physics objects in the scene. Applies appropriate force upon collision:
+void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> current_gameobj) {
 
-		//	for (size_t j = 0; j < gameobjects.size(); j++) {
-		//		std::shared_ptr<Collider> otherCol;
+	// Check if the current object has a collider and rigidbody:
+	std::shared_ptr<Collider> current_col;
+	if (current_gameobj->GetCollider() && current_gameobj->GetRigidbody()) {
+		current_col = current_gameobj->GetCollider();
+		current_col->center = current_gameobj->GetTransform()->position;
+		current_gameobj->rigidBody->has_collided = false;
+	}
+	else
+		exit;
 
-		//		// Check if other object has a collider:
-		//		if (gameobjects[j]->GetCollider() && gameobjects[j]->GetRigidbody()) {
-		//			otherCol = gameobjects[j]->GetCollider();
-		//			otherCol->center = gameobjects[j]->GetTransform()->position;
-		//		}
-		//		else
-		//			continue;
+	// Loop through every other physics gameobject to check for collisions:
+	for (size_t j = 0; j < gameobjects.size(); j++) {
+		std::shared_ptr<GameObject> other_gameobj = gameobjects[j];
 
-		//		// Check if other collider is different to current collider:
-		//		if (currentCol == otherCol)
-		//			continue;
+		// Check if other object has a collider:
+		std::shared_ptr<Collider> other_col;
+		if (other_gameobj->GetCollider() && other_gameobj->GetRigidbody()) {
+			other_col = other_gameobj->GetCollider();
+			other_col->center = other_gameobj->GetTransform()->position;
+		}
+		else
+			continue;
 
-		//		// Check for collision based on type:
-		//		glm::vec3 collision_point;
-		//		if (auto col_0 = std::dynamic_pointer_cast<SphereCollider>(currentCol)) {
+		// Check if other collider is different to current collider:
+		if (current_col == other_col)
+			continue;
 
-		//			if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(otherCol)) {
-		//			
-		//			
-		//			}
-		//			else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(otherCol)) {
-		//				// Sphere to plane collision:
-		//				if (Pfg::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + gameobjects[i]->GetRigidbody()->velocity * delta_time, 
-		//					col_1->center, col_0->radius, collision_point)) {
+		// Check for collision based on type:
+		glm::vec3 collision_point;
+		if (auto col_0 = std::dynamic_pointer_cast<SphereCollider>(current_col)) {
 
-		//					// Apply impulse force:
-		//					gameobjects[i]->rigidBody->AddForce(Pfg::ImpulseSolver(
-		//						delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
-		//						gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
-		//						glm::normalize(col_1->center - col_0->center)
-		//					));
+			// SPHERE-TO-SPHERE COLLISION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(other_col)) {
+				current_gameobj->rigidBody->has_collided = true;
 
-		//					// Reset the velocity:
-		//					/*gameobjects[i]->rigidBody->velocity = glm::vec3(0.0f, 0.0f, 0.0f);*/
+			}
+			// SPHERE-TO-PLANE COLLISION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(other_col)) {
+				if (Pfg::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + current_gameobj->GetRigidbody()->velocity * delta_time,
+					col_1->center, col_0->radius, collision_point)) {
+					current_gameobj->rigidBody->has_collided = true;
 
-		//					// Check object is outside of the collider plane:
-		//					if (Pfg::DistanceToPlane(col_1->normal, col_0->center, col_1->center) <= col_0->radius) {
+					// Add contact force:
+					current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
 
-		//						//gameobjects[i]->Translate(gameobjects[i]->transform->position + (col_1->normal * col_0->radius));
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-
+					// Apply impulse force:
+					glm::vec3 impulse_force = Pfg::ImpulseSolver(
+						delta_time, current_gameobj->collider->elasticity, current_gameobj->rigidBody->mass,
+						other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity, other_gameobj->rigidBody->velocity,
+						glm::normalize(col_1->center - col_0->center));
+					current_gameobj->rigidBody->AddForce(impulse_force);
+				}
+			}
+		}
 	}
 }

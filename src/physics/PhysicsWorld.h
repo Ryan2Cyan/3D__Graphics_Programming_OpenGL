@@ -12,6 +12,7 @@ struct PhysicsWorld {
 	void AddGameObject(std::shared_ptr<GameObject> gameobject);
 	void RemoveGameObject(std::shared_ptr<GameObject> gameobject);
 	void Step(float delta_time);
+	void TestCollisions(float delta_time, std::shared_ptr<GameObject> current_gameobj);
 	bool start;
 
 private:
