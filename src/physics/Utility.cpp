@@ -52,17 +52,19 @@ namespace Pfg
 
 		// Calculate angular momentum:
 		float angular_mo = (0.0f, 0.0f, 0.0f);
-		angular_mo = glm::dot(-(1.0f + elasticity) * (object0_vel - object1_vel), normal);
+		angular_mo = -(1.0f + elasticity) * glm::dot((object0_vel - object1_vel), normal);
 		angular_mo /= (1.0f / object0_mass) + (1.0f / object1_mass);
 
-		// Calculate linear momentum:
-		glm::vec3 linear_mo = glm::vec3(0.0f, 0.0f, 0.0f);
-		linear_mo.x = normal.x * angular_mo;
-		linear_mo.y = normal.y * angular_mo;
-		linear_mo.z = normal.z * angular_mo;
+		return angular_mo * normal / delta_time;
 
-		// Return the impulse force:
-		return linear_mo / delta_time;
+		//// Calculate linear momentum:
+		//glm::vec3 linear_mo = glm::vec3(0.0f, 0.0f, 0.0f);
+		//linear_mo.x = normal.x * angular_mo;
+		//linear_mo.y = normal.y * angular_mo;
+		//linear_mo.z = normal.z * angular_mo;
+
+		//// Return the impulse force:
+		//return linear_mo / delta_time;
 	}
 
 }

@@ -68,6 +68,7 @@ void GameObject::AddPlaneCollider(float elasticity, glm::vec3 normal, float dist
 
 void GameObject::Translate(glm::vec3 arg) {
 	transform->model = glm::translate(transform->model, arg);
+	transform->position += arg;
 }
 
 void GameObject::Scale(glm::vec3 arg) {
