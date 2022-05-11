@@ -58,6 +58,7 @@ void PhysicsWorld::Step(float delta_time) {
 			if (gameobjects[i]->GetCollider() && gameobjects[i]->GetRigidbody()) {
 				currentCol = gameobjects[i]->GetCollider();
 				currentCol->center = gameobjects[i]->GetTransform()->position;
+				gameobjects[i]->rigidBody->has_collided = false;
 			}
 			else
 				continue;
@@ -87,11 +88,6 @@ void PhysicsWorld::Step(float delta_time) {
 						if (Pfg::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
 						
 							std::cout << "Sphere to sphere collision" << std::endl;
-							gameobjects[i]->rigidBody->AddForce(Pfg::ImpulseSolver(
-								delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
-								gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
-								glm::normalize(col_0->center - col_1->center)
-							));
 							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					}
@@ -101,11 +97,6 @@ void PhysicsWorld::Step(float delta_time) {
 							col_1->center, col_0->radius, collision_point)) {
 						
 							std::cout << "Sphere to plane collision" << std::endl;
-							gameobjects[i]->rigidBody->AddForce(Pfg::ImpulseSolver(
-								delta_time, gameobjects[i]->collider->elasticity, gameobjects[i]->rigidBody->mass,
-								gameobjects[j]->rigidBody->mass, gameobjects[i]->rigidBody->velocity, gameobjects[j]->rigidBody->velocity,
-								glm::normalize(col_1->center - col_0->center)
-							));
 							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					}
@@ -119,6 +110,7 @@ void PhysicsWorld::Step(float delta_time) {
 							col_0->center, col_1->radius, collision_point)){
 							
 							std::cout << "Plane to sphere collision" << std::endl;
+							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					
 					}
@@ -127,6 +119,7 @@ void PhysicsWorld::Step(float delta_time) {
 						if (Pfg::DistanceToPlane(col_0->center, col_1->center, collision_point)) {
 			
 							std::cout << "Plane to plane collision" << std::endl;
+							gameobjects[i]->rigidBody->has_collided = true;
 						}
 					}
 				}

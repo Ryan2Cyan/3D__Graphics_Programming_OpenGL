@@ -69,7 +69,7 @@
     <ClCompile Include="src\physics\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\demos\gdp_demo.cpp">
+    <ClCompile Include="src\demos\pfg_dynamics_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

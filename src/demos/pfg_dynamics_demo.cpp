@@ -167,10 +167,12 @@ int main()
         }
         phy_world->Step(delta_time);
 
-        // Render:
-        shader->Render(main_cam, render_texture, true);
-
-        theshold_shader->Swap(render_texture, threshold_render_texture, NULL);
+        // Render original scene:
+        shader->Render(main_cam, render_texture, true); 
+         
+        // Apply theshold for where to apply bloom:
+        theshold_shader->Swap(render_texture, threshold_render_texture, NULL); 
+        // Apply a blur multiple times:
         theshold_shader->Swap(threshold_render_texture, blur_render_texture0, NULL);
         blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
         for (size_t i = 0; i < 10; i++)
@@ -178,9 +180,11 @@ int main()
             blur_shader->Swap(blur_render_texture1, blur_render_texture0, NULL);
             blur_shader->Swap(blur_render_texture0, blur_render_texture1, NULL);
         }
+        // Merge final post-processed render texture with the original scene:
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
 
+        // Swap buffers:
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
