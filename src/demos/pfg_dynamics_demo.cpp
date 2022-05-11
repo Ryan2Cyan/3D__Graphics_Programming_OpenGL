@@ -121,7 +121,7 @@ int main()
         context->ProcessInput(window, delta_time);
 
         // Calculate physics:
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !spawned_sphere) {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
             phy_world->start = true;
             // Create GameObjects:
             std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
@@ -156,11 +156,11 @@ int main()
                 break;
             }
             sphere_color = rand() % (7 - 0 + 1);
-            new_gameobject->SetPos(glm::vec3(0.0f, 20.0f, 0.0f));
+            new_gameobject->SetPos(glm::vec3(0.0f, 50.0f, 0.0f));
             shader->AddGameObject(new_gameobject);
-            new_gameobject->AddRigidbody(5.0f);
+            new_gameobject->AddRigidbody(1.0f);
             new_gameobject->GetRigidbody()->AddForce(glm::vec3(100.0f, 0.0f, 0.0f));
-			new_gameobject->AddSphereCollider(0.6f, 1.0f);
+			new_gameobject->AddSphereCollider(1.0f, 1.0f);
             phy_world->AddGameObject(new_gameobject);
 
             spawned_sphere = true;
