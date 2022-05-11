@@ -14,6 +14,7 @@ varying vec3 v_FragPos;
 void main()
 {
     
+
     // Set ambient & specular light:
     vec3 ambient = vec3(0.2, 0.2, 0.2);
 
@@ -23,7 +24,7 @@ void main()
 
     // Check what faces are pointing away from the light / in shadow:
     float diff = max(dot(N, lightDir), 0.0);
-    if(distance(u_LightPos, v_FragPos) > 200.0) diff = 0.0;
+    if(distance(u_LightPos, v_FragPos) > 2000.0) diff = 0.0;
     vec3 diffuse = u_DiffColor * diff;
 
     // Calculate the specular using the view matrix, and the angle of reflection:
@@ -34,6 +35,7 @@ void main()
 
     // If diffuse is higher than ambient, then apply it:
     vec3 light = max(diffuse, ambient) + specular;
+
     vec4 tex = texture2D(u_Texture, v_TexCoord);
 
     if(tex.a < 0.1)

@@ -81,3 +81,7 @@ const glm::mat4 Camera::GetProj() {
 const glm::vec2 Camera::GetSize() {
 	return size;
 }
+
+const Transform Camera::GetTransform() {
+	return transform;
+}

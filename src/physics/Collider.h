@@ -8,6 +8,7 @@
 struct Collider {
 	float elasticity;
 	glm::vec3 center;
+	glm::vec3 prev_center;
 
 	Collider() = default;
 

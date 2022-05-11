@@ -156,11 +156,11 @@ int main()
                 break;
             }
             sphere_color = rand() % (7 - 0 + 1);
-            new_gameobject->SetPos(glm::vec3(0.0f, 20.0f, 0.0f));
+            new_gameobject->SetPos(glm::vec3(0.0f, 50.0f, 0.0f));
             shader->AddGameObject(new_gameobject);
-            new_gameobject->AddRigidbody(5.0f);
-            //new_gameobject->GetRigidbody()->AddForce(glm::vec3(500.0f, 3000.0f, 0.0f));
-			new_gameobject->AddSphereCollider(1.4f, 1.0f);
+            new_gameobject->AddRigidbody(1.0f);
+            new_gameobject->GetRigidbody()->AddForce(glm::vec3(100.0f, 0.0f, 0.0f));
+			new_gameobject->AddSphereCollider(0.9f, 1.0f);
             phy_world->AddGameObject(new_gameobject);
 
             spawned_sphere = true;
