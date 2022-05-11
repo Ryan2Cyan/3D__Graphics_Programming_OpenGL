@@ -1,4 +1,5 @@
 #include <graphics/Gp.h>
+#include <physics/Ph.h>
 #include <iostream>
 
 // Shaders filepaths:
@@ -47,6 +48,7 @@ int main()
 
     // Create context:
     std::shared_ptr<GpContext> context = Gp::CreateContext();
+    std::shared_ptr<PhContext> phy_context = Ph::CreateContext();
 
     // Create Shader for on-screen rendering:
     std::shared_ptr<Shader> shader = context->CreateShader(light_v, light_f);
@@ -78,6 +80,7 @@ int main()
     tree_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<Mesh> ground_m = context->CreateMesh(model_ground);
     ground_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    curuthers_m->SetSpecular(glm::vec3(0.0, 0.0, 0.0));
     std::shared_ptr<Mesh> skeleton_m = context->CreateMesh(model_skeleton);
     skeleton_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<Mesh> bird_m = context->CreateMesh(model_bird);
@@ -117,7 +120,9 @@ int main()
     main_cam->SetCubeMapShader(cubemap_shader);
     main_cam->SetCubeMapObj(context->CreateUnitCube());
 
-
+    // Create physics world to handle collisions:
+    std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
+    phy_world->AddGameObject(curuthers);
 
 
     // Render loop (called each frame):

@@ -10,6 +10,9 @@ Mesh::Mesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Texture> tex) {
 	this->vao = vao;
 	this->tex = tex;
 	diff_light = glm::vec3(1.0, 1.0, 1.0);
+	specular_color = glm::vec3(1.0, 1.0, 1.0);
+	glow_intensity = 0.0f;
+	specular_intensity = 100.0f;
 }
 
 // Init mesh via wavefront .obj file:
@@ -22,6 +25,9 @@ Mesh::Mesh(std::string filepath) {
 		throw std::exception("Could not load model");
 	}
 	diff_light = glm::vec3(1.0, 1.0, 1.0);
+	specular_color = glm::vec3(1.0, 1.0, 1.0);
+	glow_intensity = 0.0f;
+	specular_intensity = 100.0f;
 }
 
 
@@ -36,6 +42,14 @@ const GLuint Mesh::GetTexId() {
 
 void Mesh::SetDiffuse(glm::vec3 arg) {
 	diff_light = arg;
+}
+
+void Mesh::SetSpecular(glm::vec3 arg) {
+	specular_color = arg;
+}
+
+void Mesh::SetGlow(float arg) {
+	glow_intensity = arg;
 }
 
 

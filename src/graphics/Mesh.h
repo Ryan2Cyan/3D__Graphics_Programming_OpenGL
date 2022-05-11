@@ -18,6 +18,8 @@ struct Mesh {
 	const WfModel GetWfModel();
 	const GLuint GetTexId();
 	void SetDiffuse(glm::vec3 arg);
+	void SetSpecular(glm::vec3 arg);
+	void SetGlow(float arg);
 
 
 private:
@@ -31,5 +33,8 @@ private:
 	std::shared_ptr<VertexArray> vao;
 	WfModel wf_model;
 	glm::vec3 diff_light;
+	glm::vec3 specular_color;
+	float glow_intensity;
+	float specular_intensity;
 	bool is_wf;
 };

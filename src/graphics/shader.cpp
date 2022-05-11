@@ -210,9 +210,12 @@ void Shader::Render(std::shared_ptr<Camera> cam, bool backface_cull) {
 			SetUniform("u_Model", model);
 			SetUniform("u_View", cam->view);
 			SetUniform("u_Projection", cam->proj);
-			SetUniform("u_diffColor", c_mesh->diff_light);
-
-			SetUniform("u_lightPos", glm::vec3(0.0, 10.0f, 0.0f));
+			SetUniform("u_DiffColor", c_mesh->diff_light);
+			SetUniform("u_LightPos", glm::vec3(0.0, 10.0f, 0.0f));
+			SetUniform("u_ViewPos", cam->transform.position);
+			SetUniform("u_SpecularColor", c_mesh->specular_color);
+			SetUniform("u_GlowIntensity", c_mesh->glow_intensity);
+			/*SetUniform("u_SpecularIntensity", c_mesh->specular_intensity);*/
 
 			// Bind VAO:
 			if (c_mesh->is_wf) glBindVertexArray(c_mesh->GetWfModel().vaoId);
