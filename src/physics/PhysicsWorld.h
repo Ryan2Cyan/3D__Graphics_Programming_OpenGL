@@ -12,6 +12,7 @@ struct PhysicsWorld {
 	void AddGameObject(std::shared_ptr<GameObject> gameobject);
 	void RemoveGameObject(std::shared_ptr<GameObject> gameobject);
 	void Step(float delta_time);
+	void TestCollisions(float delta_time, std::shared_ptr<GameObject> current_gameobj);
 	bool start;
 
 private:
@@ -19,6 +20,4 @@ private:
 
 	std::shared_ptr<PhContext> context;
 	std::vector<std::shared_ptr<GameObject>> gameobjects;
-	glm::vec3 gravity;
-	bool collision;
 };

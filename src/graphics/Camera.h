@@ -24,6 +24,8 @@ struct Camera {
 	const glm::mat4 GetView();
 	const glm::mat4 GetProj();
 	const glm::vec2 GetSize();
+	const Transform GetTransform();
+
 private:
 	friend struct GpContext;
 	friend struct Shader;

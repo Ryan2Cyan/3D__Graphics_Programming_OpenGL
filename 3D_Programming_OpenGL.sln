@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3D_Programming_OpenGL", "3D
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CyEngine|x64 = CyEngine|x64
+		CyEngine|x86 = CyEngine|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.CyEngine|x64.ActiveCfg = CyEngine|x64
+		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.CyEngine|x64.Build.0 = CyEngine|x64
+		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.CyEngine|x86.ActiveCfg = Release|Win32
+		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.CyEngine|x86.Build.0 = Release|Win32
 		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.Debug|x64.ActiveCfg = Debug|x64
 		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.Debug|x64.Build.0 = Debug|x64
 		{335592A6-FBE9-477A-9A03-2F0FE4F37A5E}.Debug|x86.ActiveCfg = Debug|Win32

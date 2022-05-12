@@ -46,16 +46,18 @@ int main()
 	cube->AddMesh(cube0);
 	cube->SetPos(glm::vec3(0.0f, -20.0f, 0.0f));
 	cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
+	cube->AddPlaneCollider(0.4f, glm::vec3(0.0f, 1.0f, 0.0f), 100.0f);
 	shader->AddGameObject(cube);
 
 	// Create orange sphere gameobject:
 	std::shared_ptr<GameObject> sphere = context->CreateGameObject();
+	sphere->name = "test-sphere";
 	sphere->AddMesh(sphere0);
-	sphere->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	sphere->SetPos(glm::vec3(0.0f, 20.0f, 0.0f));
 	sphere->Scale(glm::vec3(1.0f, 1.0f, 1.0f));
 	sphere->AddRigidbody(20.0f);
+	sphere->AddSphereCollider(0.5f, 5.0f);
 	shader->AddGameObject(sphere);
-
 
 	// Create physics world to apply dynamic physics:
 	std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
@@ -67,13 +69,11 @@ int main()
 		// Calc delta time:
 		float delta_time = context->CalcDeltaTime();
 
-		/*std::cout << sphere->GetRigidbody()->force.x <<
-			sphere->GetRigidbody()->force.y <<
-			sphere->GetRigidbody()->force.z << std::endl;*/
 		// Input:
 		context->ProcessInput(window, delta_time);
-		if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) // Start simulation if press P.
+		if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) { // Start simulation if press P.
 			phy_world->start = true;
+		}
 		phy_world->Step(delta_time);
 	
 		// Render:

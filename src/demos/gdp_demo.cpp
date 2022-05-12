@@ -1,5 +1,7 @@
 #include <graphics/Gp.h>
+#include <physics/Ph.h>
 #include <iostream>
+#include <random>
 
 // Shaders filepaths:
 const GLchar* light_v = "Additional_Files/shaders/light_vert.txt";
@@ -39,6 +41,7 @@ const GLchar* sphere_mfp = "Additional_Files/models/Sphere/orange/sphere.obj";
 
 int main()
 {
+    srand(time(0));
 
     // Create window and assign OpenGL context:
     glm::ivec2 window_size{ 1000, 1000 };
@@ -47,6 +50,7 @@ int main()
 
     // Create context:
     std::shared_ptr<GpContext> context = Gp::CreateContext();
+    std::shared_ptr<PhContext> phy_context = Ph::CreateContext();
 
     // Create Shader for on-screen rendering:
     std::shared_ptr<Shader> shader = context->CreateShader(light_v, light_f);
@@ -56,6 +60,9 @@ int main()
 	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
 
     // Create camera:
+    std::shared_ptr<GameObject> player = context->CreateGameObject();
+    player->AddRigidbody(0.0f, false);
+    player->AddSphereCollider(0.1, 5.0f);
     std::shared_ptr<Camera> main_cam = context->CreateCamera(
         false,
         glm::vec2((float)window_size.x, (float)window_size.y),
@@ -67,10 +74,21 @@ int main()
 
     // Create curuthers gameobject:
     std::shared_ptr<Mesh> curuthers_m = context->CreateMesh(model_filepath);
-    curuthers_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    curuthers_m->SetDiffuse(glm::vec3(0.0, 0.0, 0.0));
+    // Generate random numbers for curuther's position:
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(-250, 250); // define the range
     std::shared_ptr<GameObject> curuthers = context->CreateGameObject(curuthers_m);
-    curuthers->SetPos(glm::vec3(2.0f, 1.0f, 0.0f));
+    curuthers->SetPos(glm::vec3(
+        distr(gen),
+        distr(gen),
+        distr(gen)));
+
     curuthers->Scale(glm::vec3(0.4f, 0.4f, 0.4f));
+    curuthers->AddRigidbody(0.0f, false);
+    curuthers->AddSphereCollider(0.1f, 5.0f);
+    curuthers->name = "curuthers";
     shader->AddGameObject(curuthers);
    
     // Create graveyard tree gameobject:
@@ -78,6 +96,7 @@ int main()
     tree_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<Mesh> ground_m = context->CreateMesh(model_ground);
     ground_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
+    curuthers_m->SetSpecular(glm::vec3(0.0, 0.0, 0.0));
     std::shared_ptr<Mesh> skeleton_m = context->CreateMesh(model_skeleton);
     skeleton_m->SetDiffuse(glm::vec3(0.5, 0.5, 1.0));
     std::shared_ptr<Mesh> bird_m = context->CreateMesh(model_bird);
@@ -117,8 +136,15 @@ int main()
     main_cam->SetCubeMapShader(cubemap_shader);
     main_cam->SetCubeMapObj(context->CreateUnitCube());
 
+    // Create physics world to handle collisions:
+    std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
+    phy_world->AddGameObject(curuthers);
+    phy_world->AddGameObject(player);
 
-
+    // Game values:
+    bool found = false;
+    bool game_active = true;
+    phy_world->start = true;
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -137,6 +163,30 @@ int main()
         // Input:
         context->ProcessInput(window, delta_time);
 
+        // Game code:
+        player->SetPos(main_cam->GetTransform().position);
+        if (curuthers->GetRigidbody()->has_collided || player->GetRigidbody()->has_collided && !found) {
+            if (game_active) {
+                system("cls");
+                std::cout << "Found Him!" << std::endl;
+                curuthers_m->SetDiffuse(glm::vec3(1.0, 1.0, 1.0));
+                found = true;
+                game_active = false;
+            }
+        }
+
+        if (!found) {
+            // Print positions of player and curuthers:
+            std::cout << 
+                "Curuthers Pos:  [x] " << std::roundf(curuthers->GetTransform()->position.x) << 
+                ",   [y]  " << std::roundf(curuthers->GetTransform()->position.y) <<
+                ",   [z]  " << std::roundf(curuthers->GetTransform()->position.z) << std::endl;
+
+            std::cout << "Camera Pos:     [x] " << std::roundf(main_cam->GetTransform().position.x) <<
+                ",   [y]  " << std::roundf(main_cam->GetTransform().position.y) <<
+                ",   [z]  " << std::roundf(main_cam->GetTransform().position.z) << std::endl;
+        }
+
         // Render:
         shader->Render(main_cam, render_texture, true);
 
@@ -151,6 +201,8 @@ int main()
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
         
+        // Physics (collision):
+        phy_world->Step(delta_time);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
