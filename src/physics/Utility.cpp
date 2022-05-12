@@ -57,14 +57,6 @@ namespace Pfg
 
 		return angular_mo * normal / delta_time;
 
-		//// Calculate linear momentum:
-		//glm::vec3 linear_mo = glm::vec3(0.0f, 0.0f, 0.0f);
-		//linear_mo.x = normal.x * angular_mo;
-		//linear_mo.y = normal.y * angular_mo;
-		//linear_mo.z = normal.z * angular_mo;
-
-		//// Return the impulse force:
-		//return linear_mo / delta_time;
 	}
 
 	// Checks if a sphere has clipped into a plane, and returns how much the sphere needs to move to not clip: 

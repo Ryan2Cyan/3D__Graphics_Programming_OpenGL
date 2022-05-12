@@ -45,7 +45,7 @@ int main()
 	std::shared_ptr<GameObject> cube = context->CreateGameObject();
 	cube->AddMesh(cube0);
 	cube->SetPos(glm::vec3(0.0f, -20.0f, 0.0f));
-	cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
+	cube->Scale(glm::vec3(20.0f, 0.1f, 10.0f));
 	cube->AddPlaneCollider(0.4f, glm::vec3(0.0f, 1.0f, 0.0f), 100.0f);
 	shader->AddGameObject(cube);
 
