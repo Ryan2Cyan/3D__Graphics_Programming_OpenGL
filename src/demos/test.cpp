@@ -11,7 +11,7 @@ int main() {
 	float mass = 2.0f;
 	float oneOverMass1 = 1.0f / mass;
 	float oneOverMass2 = 1.0f / mass;
-	glm::vec3 vA = glm::vec3(0.0f, 20.0f, 0.0f);
+	glm::vec3 vA = glm::vec3(20.0f, 0.0f, 0.0f);
 	glm::vec3 contactNormal = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	glm::vec3 pt1 = -(1.0f + e) * (vA);
