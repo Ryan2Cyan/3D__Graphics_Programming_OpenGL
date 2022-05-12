@@ -100,7 +100,10 @@ int main()
     std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
 	phy_world->AddGameObject(cube);
 
+	// Game variables:
     bool spawned_sphere = false;
+	float spawn_timer = 0.0f;
+	float spawn_delay = 1.0f;
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -121,7 +124,8 @@ int main()
         context->ProcessInput(window, delta_time);
 
         // Calculate physics:
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !spawned_sphere) {
+
             phy_world->start = true;
             // Create GameObjects:
             std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
@@ -160,11 +164,17 @@ int main()
             shader->AddGameObject(new_gameobject);
             new_gameobject->AddRigidbody(1.0f);
             new_gameobject->GetRigidbody()->AddForce(glm::vec3(100.0f, 0.0f, 0.0f));
-			new_gameobject->AddSphereCollider(1.0f, 1.0f);
+			new_gameobject->AddSphereCollider(0.6f, 1.0f);
             phy_world->AddGameObject(new_gameobject);
 
+			spawn_timer = spawn_delay;
             spawned_sphere = true;
         }
+		if (spawned_sphere)
+			spawn_timer -= delta_time;
+		if (spawn_timer <= 0.0f)
+			spawned_sphere = false;
+		
         phy_world->Step(delta_time);
 
         // Render:

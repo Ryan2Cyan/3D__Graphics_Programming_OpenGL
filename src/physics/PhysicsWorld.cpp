@@ -90,6 +90,22 @@ void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> 
 			// SPHERE-TO-SPHERE COLLISION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			if (auto col_1 = std::dynamic_pointer_cast<SphereCollider>(other_col)) {
 				current_gameobj->rigidBody->has_collided = true;
+				if (Pfg::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
+					
+					// Apply contact force:
+					current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
+
+					// Calculate the normal between the two collision points:
+					glm::vec3 normal = glm::normalize(col_1->center - col_0->center);
+
+					// Add impulse force:
+					glm::vec3 impulse_force = Pfg::ImpulseSolver(delta_time, col_0->elasticity, current_gameobj->rigidBody->mass,
+						other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity, other_gameobj->rigidBody->velocity,
+						normal);
+
+					// Apply impulse force:
+					current_gameobj->rigidBody->AddForce(impulse_force);
+				}
 
 			}
 			// SPHERE-TO-PLANE COLLISION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,17 +114,26 @@ void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> 
 					col_1->center, col_0->radius, collision_point)) {
 					current_gameobj->rigidBody->has_collided = true;
 
-					// Add contact force:
+					// Check if sphere is clipping with the plane:
+					current_gameobj->Translate(Pfg::SphereToPlaneClipCheck(col_0->center, col_0->radius, col_1->center, col_1->normal, collision_point));
+				
+
+					// Apply contact force:
 					current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
 
+					// Calculate the normal between the two collision points:
+					glm::vec3 normal = glm::normalize(col_1->center - col_0->center);
+
+					// Calculate impulse force:
+					glm::vec3 impulse_force = Pfg::ImpulseSolver( delta_time, current_gameobj->collider->elasticity, 
+						current_gameobj->rigidBody->mass, other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity,
+						other_gameobj->rigidBody->velocity,normal);
+
 					// Apply impulse force:
-					glm::vec3 impulse_force = Pfg::ImpulseSolver(
-						delta_time, current_gameobj->collider->elasticity, current_gameobj->rigidBody->mass,
-						other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity, other_gameobj->rigidBody->velocity,
-						glm::normalize(col_1->center - col_0->center));
 					current_gameobj->rigidBody->AddForce(impulse_force);
 				}
 			}
 		}
 	}
 }
+

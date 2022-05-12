@@ -36,4 +36,12 @@ namespace Pfg
 		const glm::vec3 object1_vel, 
 		const glm::vec3 normal);
 
+	glm::vec3 SphereToPlaneClipCheck(
+		const glm::vec3 sphere_center0,
+		const float radius,
+		const glm::vec3 plane_center,
+		const glm::vec3 plane_normal,
+		const glm::vec3 collision_point
+	);
+
 }
