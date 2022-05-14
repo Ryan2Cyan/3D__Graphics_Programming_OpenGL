@@ -11,7 +11,7 @@ int main() {
 	float mass = 2.0f;
 	float oneOverMass1 = 1.0f / mass;
 	float oneOverMass2 = 1.0f / mass;
-	glm::vec3 vA = glm::vec3(20.0f, 0.0f, 0.0f);
+	glm::vec3 vA = glm::vec3(0.0f, 20.0f, 0.0f);
 	glm::vec3 contactNormal = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	glm::vec3 pt1 = -(1.0f + e) * (vA);
@@ -153,27 +153,59 @@ int main() {
 		_stopped = true;
 	}
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
-	// Calculating Torque //////////////////////////////////////////////////////////////////////:
-	glm::vec3 torque_pt1 = glm::cross(r1, contactForce);
-	glm::vec3 torque_pt2 = glm::cross(r1, frictionForce);
-	glm::vec3 tempTorque = torque_pt1 + torque_pt2;
+	//// Calculating Torque //////////////////////////////////////////////////////////////////////:
+	//glm::vec3 torque_pt1 = glm::cross(r1, contactForce);
+	//glm::vec3 torque_pt2 = glm::cross(r1, frictionForce);
+	//glm::vec3 tempTorque = torque_pt1 + torque_pt2;
 
-	// Print output:
-	std::cout << "Calculating Torque" << std::endl;
-	std::cout << torque_pt1.x << ", " << torque_pt1.y << ", " << torque_pt1.z << std::endl;
-	std::cout << torque_pt2.x << ", " << torque_pt2.y << ", " << torque_pt2.z << std::endl;
-	std::cout << tempTorque.x << ", " << tempTorque.y << ", " << tempTorque.z << std::endl;
-	std::cout << std::endl;
+	//// Print output:
+	//std::cout << "Calculating Torque" << std::endl;
+	//std::cout << torque_pt1.x << ", " << torque_pt1.y << ", " << torque_pt1.z << std::endl;
+	//std::cout << torque_pt2.x << ", " << torque_pt2.y << ", " << torque_pt2.z << std::endl;
+	//std::cout << tempTorque.x << ", " << tempTorque.y << ", " << tempTorque.z << std::endl;
+	//std::cout << std::endl;
 
-	// Applying Torque //////////////////////////////////////////////////////////////////////:
-	glm::vec3 angular_momentum = glm::vec3(0.0f, 0.0f, 0.0f);
-	tempTorque.x -= angular_momentum.x * 20.0f;
-	tempTorque.z -= angular_momentum.z * 20.0f; // A damper to slow the rotation over time:
+	//// Applying Torque //////////////////////////////////////////////////////////////////////:
+	//glm::vec3 angular_momentum = glm::vec3(0.0f, 0.0f, 0.0f);
+	//tempTorque.x -= angular_momentum.x * 20.0f;
+	//tempTorque.z -= angular_momentum.z * 20.0f; // A damper to slow the rotation over time:
 
-	// Print output:
-	std::cout << "Applying Torque" << std::endl;
-	std::cout << tempTorque.x << ", " << tempTorque.y << ", " << tempTorque.z << std::endl;
-	std::cout << std::endl;
+	//// Print output:
+	//std::cout << "Applying Torque" << std::endl;
+	//std::cout << tempTorque.x << ", " << tempTorque.y << ", " << tempTorque.z << std::endl;
+	//std::cout << std::endl;
+
+	//// First sphere:
+	//float e = 0.9f;
+	//float mass = 156.0f;
+	//float delta_time = 0.05f;
+	//float radius = 28.5;
+	//float obj_0_pre_velocity = 6.0f;
+	//float obj_0_current_velocity = 0.0f;
+
+	//// Second sphere:
+	//float obj_1_pre_velocity = 0.0f;
+	//float obj_1_current_velocity = 0.0f;
+
+	//// Calculate the normal to the colliding surfaces:
+	//float normal_1 = std::sqrt(std::pow(2 * radius, 2) - std::pow(radius, 2)) / (2 * radius);
+	//float normal_2 = radius / (2 * radius);
+
+	//// Calculate relative velocity of object0 at instant of collision:
+	//glm::vec2 normal = glm::vec2(normal_1, normal_2);
+	//glm::vec2 velocities = glm::vec2(obj_0_pre_velocity, obj_1_pre_velocity);
+	//float obj_0_pre_rv = glm::dot(velocities, normal);
+
+	//// Use elasticity equation to find relative velocity of object1 after collision:
+	//float obj_1_cur_rv = (obj_0_pre_rv * (e + 1)) / 2;
+
+	//// Use this calue to find the current relative velocity of object0:
+	//float obj_0_cur_rv = obj_0_pre_rv - obj_1_cur_rv;
+
+	//std::cout << "Normal:                        " << normal_1 << ",  " << normal_2 << std::endl;
+	//std::cout << "Object0 Pre Relative Velocity: " << obj_0_pre_rv << std::endl;
+	//std::cout << "Object1 Cur Relative Velocity: " << obj_1_cur_rv << std::endl;
+	//std::cout << "Object0 Cur Relative Velocity: " << obj_0_cur_rv << std::endl;
 }

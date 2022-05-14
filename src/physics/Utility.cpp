@@ -70,11 +70,10 @@ namespace Pfg
 		float distance = DistanceToPlane(plane_normal, sphere_center0 - radius, plane_center);
 
 		if (distance <= plane_center.y) {
-			std::cout << "Sphere Center: " << sphere_center0.y << std::endl;
 			std::cout << "Sphere Pos: " << sphere_center0.y + radius << std::endl;
-			std::cout << "Plane Pos" << plane_center.y << std::endl;
-			std::cout << "Distance" << DistanceToPlane(plane_normal, sphere_center0 + radius, plane_center) << std::endl;
-			std::cout << "Clipping" << std::endl;
+			std::cout << "Plane Pos: " << plane_center.y << std::endl;
+			std::cout << "Distance: " << DistanceToPlane(plane_normal, sphere_center0 + radius, plane_center) << std::endl;
+			std::cout << "Clipping: " << std::endl;
 			std::cout << "Collision Point: " << collision_point.x << ", " << collision_point.y << ", " << collision_point.z << std::endl;
 			delta_pos.y -= distance;
 		}

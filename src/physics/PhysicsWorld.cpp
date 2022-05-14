@@ -34,19 +34,32 @@ void PhysicsWorld::Step(float delta_time) {
 				// Reset net force each frame:
 				rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
 
+				TestCollisions(delta_time, gameobjects[i]);
+
 				// Apply gravity:
 				if (rigidbody->apply_gravity)
 					rigidbody->force += rigidbody->mass * rigidbody->gravity;
 
-				TestCollisions(delta_time, gameobjects[i]);
-
 				// Update object's velocity, then position:
 				rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
 				glm::vec3 delta_pos = rigidbody->velocity * delta_time;
-				gameobjects[i]->Translate(delta_pos);
 
-				if (gameobjects[i]->name == "new-sphere")
+				if (gameobjects[i]->name == "new-sphere") {
 					std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
+					std::cout << "Position: " << transform->position.x << ",  " << transform->position.y << ",  " << transform->position.z << std::endl;
+					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;
+				}
+				
+				// Check if the object's velocity is very small, if it is, stop it from moving:
+				if (rigidbody->velocity.x <= 0.5f && rigidbody->velocity.x >= -0.5f) 
+					delta_pos.x = 0.0f;
+				if (rigidbody->velocity.y <= 0.5f && rigidbody->velocity.y >= -0.5f) 
+					delta_pos.y = 0.0f;
+				if (rigidbody->velocity.z <= 0.5f && rigidbody->velocity.z >= -0.5f) 
+					delta_pos.z = 0.0f;
+				
+				// Move the object:
+				gameobjects[i]->Translate(delta_pos);
 			}
 		}
 
