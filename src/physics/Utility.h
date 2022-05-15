@@ -27,13 +27,11 @@ namespace Pfg
 		float radius1, 
 		glm::vec3& collision_point);
 
-	glm::vec3 ImpulseSolver(
+	void ImpulseSolver(
 		const float delta_time, 
-		const float elasticity, 
-		const float object0_mass,
-		const float object1_mass, 
-		const glm::vec3 object0_vel, 
-		const glm::vec3 object1_vel, 
+		const std::shared_ptr<SphereCollider> sphere_col,
+		const std::shared_ptr<Rigidbody> sphere_rb, 
+		const std::shared_ptr<Rigidbody> plane_rb,
 		const glm::vec3 normal);
 
 	glm::vec3 SphereToPlaneClipCheck(

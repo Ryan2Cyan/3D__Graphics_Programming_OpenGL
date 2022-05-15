@@ -3,10 +3,13 @@
 #include "PhysicsWorld.h"
 #include "Utility.h"
 #include "CollisionPoints.h"
+#include "Rigidbody.h"
+#include "Collider.h"
 
 
 PhysicsWorld::PhysicsWorld() {
 	start = false;
+	start_simulation = false;
 }
 
 void PhysicsWorld::AddGameObject(std::shared_ptr<GameObject> gameobject) {
@@ -22,8 +25,23 @@ void PhysicsWorld::RemoveGameObject(std::shared_ptr<GameObject> gameobject) {
 void PhysicsWorld::Step(float delta_time) {
 
 	delta_time = 0.05f;
-
 	if (start) {
+
+		// Set values for each gameObject:
+		for (size_t i = 0; i < gameobjects.size(); i++) {
+			if (gameobjects[i]->rigidBody && gameobjects[i]->collider) {
+				if (auto col_0 = std::dynamic_pointer_cast<SphereCollider>(gameobjects[i]->collider)) {
+
+					StartSimulation(gameobjects[i]->rigidBody, col_0);
+				}
+			}
+		}
+
+		start = false;
+		start_simulation = true;
+	}
+
+	if (start_simulation) {
 
 		// Loop through all gameobjects and secure their rigidbodies and transform components:
 		for (size_t i = 0; i < gameobjects.size(); i++) {
@@ -33,6 +51,7 @@ void PhysicsWorld::Step(float delta_time) {
 
 				// Reset net force each frame:
 				rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
+				rigidbody->torque = glm::vec3(0.0f, 0.0f, 0.0f);
 
 				TestCollisions(delta_time, gameobjects[i]);
 
@@ -57,9 +76,18 @@ void PhysicsWorld::Step(float delta_time) {
 					delta_pos.y = 0.0f;
 				if (rigidbody->velocity.z <= 0.5f && rigidbody->velocity.z >= -0.5f) 
 					delta_pos.z = 0.0f;
+
+				CalcRotation(delta_time, rigidbody);
 				
-				// Move the object:
-				gameobjects[i]->Translate(delta_pos);
+				//// Move the object:
+				if (gameobjects[i]->name == "new-sphere") {
+					/*glm::mat4 model_rot = glm::mat4(rigidbody->rotation);
+					glm::quat rot = glm::normalize(glm::quat_cast(rigidbody->rotation));
+					rigidbody->rotation = glm::mat3_cast(rot);
+					gameobjects[i]->SetModelMat(gameobjects[i]->GetModelMat() * glm::mat4_cast(rot));*/
+
+					gameobjects[i]->Translate(delta_pos);
+				}
 			}
 		}
 
@@ -105,19 +133,19 @@ void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> 
 				current_gameobj->rigidBody->has_collided = true;
 				if (Pfg::SphereToSphereCollision(col_0->center, col_1->center, col_0->radius, col_1->radius, collision_point)) {
 					
-					// Apply contact force:
-					current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
+					//// Apply contact force:
+					//current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
 
-					// Calculate the normal between the two collision points:
-					glm::vec3 normal = glm::normalize(col_1->center - col_0->center);
+					//// Calculate the normal between the two collision points:
+					//glm::vec3 normal = glm::normalize(col_1->center - col_0->center);
 
-					// Add impulse force:
-					glm::vec3 impulse_force = Pfg::ImpulseSolver(delta_time, col_0->elasticity, current_gameobj->rigidBody->mass,
-						other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity, other_gameobj->rigidBody->velocity,
-						normal);
+					//// Add impulse force:
+					//glm::vec3 impulse_force = Pfg::ImpulseSolver(delta_time, col_0->elasticity, current_gameobj->rigidBody->mass,
+					//	other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity, other_gameobj->rigidBody->velocity,
+					//	normal);
 
-					// Apply impulse force:
-					current_gameobj->rigidBody->AddForce(impulse_force);
+					//// Apply impulse force:
+					//current_gameobj->rigidBody->AddForce(impulse_force);
 				}
 
 			}
@@ -125,28 +153,64 @@ void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> 
 			else if (auto col_1 = std::dynamic_pointer_cast<PlaneCollider>(other_col)) {
 				if (Pfg::MovingSphereToPlaneCollision(col_1->normal, col_0->center, col_0->center + current_gameobj->GetRigidbody()->velocity * delta_time,
 					col_1->center, col_0->radius, collision_point)) {
+
 					current_gameobj->rigidBody->has_collided = true;
 
 					// Check if sphere is clipping with the plane:
 					current_gameobj->Translate(Pfg::SphereToPlaneClipCheck(col_0->center, col_0->radius, col_1->center, col_1->normal, collision_point));
-				
-
-					// Apply contact force:
-					current_gameobj->rigidBody->AddForce(-current_gameobj->rigidBody->gravity * current_gameobj->rigidBody->mass);
 
 					// Calculate the normal between the two collision points:
 					glm::vec3 normal = glm::normalize(col_1->center - col_0->center);
 
 					// Calculate impulse force:
-					glm::vec3 impulse_force = Pfg::ImpulseSolver( delta_time, current_gameobj->collider->elasticity, 
-						current_gameobj->rigidBody->mass, other_gameobj->rigidBody->mass, current_gameobj->rigidBody->velocity,
-						other_gameobj->rigidBody->velocity,normal);
-
-					// Apply impulse force:
-					current_gameobj->rigidBody->AddForce(impulse_force);
+					Pfg::ImpulseSolver( delta_time, col_0, current_gameobj->rigidBody, other_gameobj->rigidBody,
+						normal);
 				}
 			}
 		}
 	}
 }
 
+void PhysicsWorld::StartSimulation(std::shared_ptr<Rigidbody> rigidbody, std::shared_ptr<SphereCollider> collider) {
+
+	rigidbody->rotation_quaterion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+
+	// Compute body inertia:
+	glm::mat3 body_inertia;
+	body_inertia = glm::mat3{
+		(2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2), 0.0f, 0.0f,
+		0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f), 0.0f,
+		0.0f, 0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f)
+	};
+
+	// Inverse body inertia:
+	rigidbody->body_inertia_tensor_inverse = glm::inverse(body_inertia);
+	rigidbody->interia_tensor_inverse = rigidbody->rotation *
+		rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
+	rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
+
+}
+
+void PhysicsWorld::CalcRotation(float delta_time, std::shared_ptr<Rigidbody> rigidbody) {
+
+	// Compute current angular momentum:
+	rigidbody->angular_momentum = rigidbody->torque * delta_time;
+
+	// Calculate inverse inertia tensor:
+	rigidbody->interia_tensor_inverse = rigidbody->rotation *
+		rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
+
+	// Update angular velocity:
+	rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
+
+	// Calculate skew matrix omega star:
+	glm::mat3 omega_star = glm::mat3(0.0f, -rigidbody->angular_velocity.z, rigidbody->angular_velocity.y,
+		rigidbody->angular_velocity.z, 0.0f, -rigidbody->angular_velocity.x,
+		-rigidbody->angular_velocity.y, rigidbody->angular_velocity.x, 0.0f);
+
+	glm::quat angle_velocity_quaternion = glm::quat(0.0f, -rigidbody->angular_velocity.x,
+		-rigidbody->angular_velocity.y, -rigidbody->angular_velocity.z);
+
+	rigidbody->rotation_quaterion += 0.5f * rigidbody->rotation_quaterion * angle_velocity_quaternion * delta_time;
+	rigidbody->rotation_quaterion = glm::normalize(rigidbody->rotation_quaterion);
+}
