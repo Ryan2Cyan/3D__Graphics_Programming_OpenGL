@@ -15,13 +15,11 @@ struct Rigidbody
 	glm::vec3 velocity;
 	glm::vec3 force;
 	float mass;
-	glm::mat4 oreintation;
 	glm::vec3 torque;
 	glm::vec3 angular_velocity;
 	glm::vec3 angular_momentum;
 	glm::mat3 interia_tensor_inverse;
 	glm::mat3 rotation;
-	glm::mat3 body_inertia;
 	glm::mat3 body_inertia_tensor_inverse;
 	glm::quat rotation_quaterion;
 	bool has_stopped;

@@ -51,6 +51,7 @@ namespace Pfg
 		 const std::shared_ptr<Rigidbody> sphere_rb, const std::shared_ptr<Rigidbody> plane_rb, 
 		const glm::vec3 normal) {
 
+	
 		// Set values:
 		float j_linear = 0.0f;
 		float j_angular = 0.0f;
@@ -102,12 +103,13 @@ namespace Pfg
 		else {
 			friction_force = forward_relative_velocity * -1.0f;
 			sphere_rb->AddForce(friction_force);
+			sphere_rb->has_stopped = true;
 		}
 
 		// Calculate torque:
 		glm::vec3 temp_torque = (glm::cross(r1, contact_force)) + (glm::cross(r1, friction_force));
 		temp_torque.x -= sphere_rb->angular_momentum.x * 20.0f;
-		temp_torque.y -= sphere_rb->angular_momentum.z * 20.0f;
+		temp_torque.z -= sphere_rb->angular_momentum.z * 20.0f;
 		sphere_rb->AddTorque(temp_torque);
 	}
 
@@ -121,30 +123,39 @@ namespace Pfg
 		// Calculate how far the sphere (minus the radius) is from the plane:
 		float distance = DistanceToPlane(plane_normal, sphere_center0 - radius, plane_center);
 
-		// If the normal is positive, check if the object's value (minus its radius) is clipping:
+		// Check for clipping on x-axis:
+		if (plane_normal.x > 0.0f) {
+			if (sphere_center0.x - radius <= plane_center.x) {
+				delta_pos.x -= distance;
+			}
+		}
+		else if (plane_normal.x < 0.0f) {
+			if (sphere_center0.x + radius <= plane_center.x) {
+				delta_pos.x += distance;
+			}
+		}
+
+		// Check for clipping on y-axis:
 		if (plane_normal.y > 0.0f) {
 			if (sphere_center0.y - radius <= plane_center.y) {
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~Clipping~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-				std::cout << "Sphere Pos: " << sphere_center0.y - radius << std::endl;
-				std::cout << "Plane Pos: " << plane_center.y << std::endl;
-				std::cout << "Distance: " << DistanceToPlane(plane_normal, sphere_center0 - radius, plane_center) << std::endl;
-				std::cout << "Clipping: " << std::endl;
-				std::cout << "Collision Point: " << collision_point.x << ", " << collision_point.y << ", " << collision_point.z << std::endl;
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 				delta_pos.y -= distance;
 			}
 		}
-		// If the normal is negative, check if the object's value (plus its radius) is clipping:
-		if (plane_normal.y < 0.0f) {
+		else if (plane_normal.y < 0.0f) {
 			if (sphere_center0.y + radius <= plane_center.y) {
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~Clipping~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-				std::cout << "Sphere Pos: " << sphere_center0.y + radius << std::endl;
-				std::cout << "Plane Pos: " << plane_center.y << std::endl;
-				std::cout << "Distance: " << DistanceToPlane(plane_normal, sphere_center0 + radius, plane_center) << std::endl;
-				std::cout << "Clipping: " << std::endl;
-				std::cout << "Collision Point: " << collision_point.x << ", " << collision_point.y << ", " << collision_point.z << std::endl;
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 				delta_pos.y += distance;
+			}
+		}
+
+		// Check for clipping on z-axis:
+		if (plane_normal.z > 0.0f) {
+			if (sphere_center0.z - radius <= plane_center.z) {
+				delta_pos.z -= distance;
+			}
+		}
+		else if (plane_normal.z < 0.0f) {
+			if (sphere_center0.z + radius <= plane_center.z) {
+				delta_pos.z += distance;
 			}
 		}
 
