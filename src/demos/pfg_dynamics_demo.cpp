@@ -104,10 +104,25 @@ int main()
     bool spawned_sphere = false;
 	float spawn_timer = 0.0f;
 	float spawn_delay = 1.0f;
+    double previousTime = glfwGetTime();
+    int frameCount = 0;
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
     {
+        // Print fps: https://gamedev.stackexchange.com/questions/133173/how-to-calculate-fps-in-glfw
+        double currentTime = glfwGetTime();
+        frameCount++;
+        if (currentTime - previousTime >= 1.0)  // If a second has passed.
+        {
+            // Display the frame count here any way you want.
+            std::cout << "FPS: " << frameCount << std::endl;
+            frameCount = 0;
+            previousTime = currentTime;
+        }
+
+        // Rest of your game loop...
+        
 
         // Resize render textures to be size of window:
         if (render_texture->GetSize().x != (int)main_cam->GetSize().x ||

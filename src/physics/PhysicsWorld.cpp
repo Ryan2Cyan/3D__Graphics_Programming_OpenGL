@@ -69,9 +69,9 @@ void PhysicsWorld::Step(float delta_time) {
 				}
 
 				if (gameobjects[i]->name == "new-sphere") {
-					std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
+					/*std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
 					std::cout << "Position: " << transform->position.x << ",  " << transform->position.y << ",  " << transform->position.z << std::endl;
-					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;
+					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;*/
 				}
 				
 				// Calculate the rotation of the object, according to the collision:
