@@ -36,7 +36,14 @@ const GLchar* model_tree = "Additional_Files/models/tree/tree.obj";
 const GLchar* model_ground = "Additional_Files/models/tree/ground.obj";
 const GLchar* model_skeleton = "Additional_Files/models/tree/skeleton.obj";
 const GLchar* model_bird = "Additional_Files/models/tree/bird.obj";
-const GLchar* sphere_mfp = "Additional_Files/models/Sphere/orange/sphere.obj";
+const GLchar* sphere_o = "Additional_Files/models/Sphere/orange/sphere.obj";
+const GLchar* sphere_b = "Additional_Files/models/Sphere/blue/sphere.obj";
+const GLchar* sphere_c = "Additional_Files/models/Sphere/cyan/sphere.obj";
+const GLchar* sphere_l = "Additional_Files/models/Sphere/lime/sphere.obj";
+const GLchar* sphere_p = "Additional_Files/models/Sphere/purple/sphere.obj";
+const GLchar* sphere_r = "Additional_Files/models/Sphere/red/sphere.obj";
+const GLchar* sphere_rs = "Additional_Files/models/Sphere/rose/sphere.obj";
+const GLchar* sphere_w = "Additional_Files/models/Sphere/white/sphere.obj";
 
 
 int main()
@@ -58,6 +65,7 @@ int main()
 	std::shared_ptr<Shader> theshold_shader = context->CreateShader(postproc_v, threshold_f);
 	std::shared_ptr<Shader> blur_shader = context->CreateShader(postproc_v, blur_f);
 	std::shared_ptr<Shader> merge_shader = context->CreateShader(postproc_v, merge_f);
+	std::shared_ptr<Shader> gui_shader = context->CreateShader(gui_v, gui_f);
 
     // Create camera:
     std::shared_ptr<GameObject> player = context->CreateGameObject();
@@ -109,19 +117,47 @@ int main()
     graveyard_tree->SetPos(glm::vec3(5.0f, 0.0f, 0.0f));
     shader->AddGameObject(graveyard_tree);
 
+	//Load in sphere meshes:
+	 //Load in sphere meshes:
+	std::shared_ptr<Mesh> sphere0 = context->CreateMesh(sphere_o);
+	std::shared_ptr<Mesh> sphere1 = context->CreateMesh(sphere_b);
+	std::shared_ptr<Mesh> sphere2 = context->CreateMesh(sphere_c);
+	std::shared_ptr<Mesh> sphere3 = context->CreateMesh(sphere_l);
+	std::shared_ptr<Mesh> sphere4 = context->CreateMesh(sphere_p);
+	std::shared_ptr<Mesh> sphere5 = context->CreateMesh(sphere_r);
+	std::shared_ptr<Mesh> sphere6 = context->CreateMesh(sphere_rs);
+	std::shared_ptr<Mesh> sphere7 = context->CreateMesh(sphere_w);
+	int sphere_color = 0; // Determine what sphere color to use:
+
     // Create render textures:
     std::shared_ptr<RenderTexture> render_texture = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> threshold_render_texture = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> blur_render_texture0 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> blur_render_texture1 = context->CreateRenderTexture(window_size);
     std::shared_ptr<RenderTexture> merge_render_texture = context->CreateRenderTexture(window_size);
+	std::shared_ptr<RenderTexture> test_rt = context->CreateRenderTexture(window_size);
     std::vector<std::shared_ptr<RenderTexture>> render_textures{
         render_texture,
         threshold_render_texture,
         blur_render_texture0,
         blur_render_texture1,
-        merge_render_texture
+        merge_render_texture,
+		test_rt
     };
+
+	// Make triangle object:
+	std::vector<glm::vec3> triangle_pos = {
+			glm::vec3(-0.5f , -0.5f, 0.0f),
+			glm::vec3(0.5f , -0.5f, 0.0f),
+			glm::vec3(0.0f, 0.5f, 0.0f)
+	};
+	std::vector<glm::vec2> triangle_texcoords = {
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.5f, 1.0f)
+	};
+	std::shared_ptr<VertexArray> triangle = context->Create2D(triangle_pos, triangle_texcoords);
+	/*std::shared_ptr<GameObject> triangle_go = context->CreateGameObject()*/
 
     // Cubemap demo:
     std::vector<std::string> faces = {
@@ -145,6 +181,8 @@ int main()
     bool found = false;
     bool game_active = true;
     phy_world->start = true;
+	float sphere_spawn_delay = 1.0f;
+	float sphere_spawn_timer = 0.0f;
 
     // Render loop (called each frame):
     while (!glfwWindowShouldClose(window))
@@ -174,7 +212,6 @@ int main()
                 game_active = false;
             }
         }
-
         if (!found) {
             // Print positions of player and curuthers:
             std::cout << 
@@ -186,6 +223,52 @@ int main()
                 ",   [y]  " << std::roundf(main_cam->GetTransform().position.y) <<
                 ",   [z]  " << std::roundf(main_cam->GetTransform().position.z) << std::endl;
         }
+		sphere_spawn_timer -= delta_time;
+		if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && sphere_spawn_timer <= 0.0f) {
+			// Create GameObjects:
+			std::cout << "Spawn Sphere" << std::endl;
+			std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
+			// Add random coloured sphere mesh:
+			sphere_color = rand() % (7 - 0 + 1);
+			switch (sphere_color)
+			{
+			case 0:
+				new_gameobject->AddMesh(sphere0);
+				break;
+			case 1:
+				new_gameobject->AddMesh(sphere1);
+				break;
+			case 2:
+				new_gameobject->AddMesh(sphere2);
+				break;
+			case 3:
+				new_gameobject->AddMesh(sphere3);
+				break;
+			case 4:
+				new_gameobject->AddMesh(sphere4);
+				break;
+			case 5:
+				new_gameobject->AddMesh(sphere5);
+				break;
+			case 6:
+				new_gameobject->AddMesh(sphere6);
+				break;
+			case 7:
+				new_gameobject->AddMesh(sphere7);
+				break;
+			default:
+				break;
+			}
+			new_gameobject->name = "new-sphere";
+			new_gameobject->SetPos(glm::vec3(
+				player->GetTransform()->position.x,
+				player->GetTransform()->position.y, 
+				player->GetTransform()->position.z));
+			new_gameobject->Scale(glm::vec3(0.3f, 0.3f, 0.3f));
+			shader->AddGameObject(new_gameobject);
+			sphere_spawn_timer = sphere_spawn_delay;
+		}
+		
 
         // Render:
         shader->Render(main_cam, render_texture, true);
@@ -200,6 +283,14 @@ int main()
 		}
         merge_shader->Swap(blur_render_texture0, merge_render_texture, NULL);
         merge_shader->Swap(merge_render_texture, nullptr, render_texture->GetTexId());
+
+		// Render orthographic:
+		
+		// shader gui
+		/*gui_shader->Render()*/
+		// u_proj <- ortho
+		// use
+		// draw 2 tris / quad
         
         // Physics (collision):
         phy_world->Step(delta_time);
