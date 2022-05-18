@@ -49,17 +49,14 @@ void PhysicsWorld::Step(float delta_time) {
 				std::shared_ptr<Rigidbody> rigidbody = gameobjects[i]->GetRigidbody();
 				std::shared_ptr<Transform> transform = gameobjects[i]->GetTransform();
 
-				// Reset net force each frame:
-				rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
-				rigidbody->torque = glm::vec3(0.0f, 0.0f, 0.0f);
-
+				// Test for collisions and apply force accordingly:
 				TestCollisions(delta_time, gameobjects[i]);
 
-				// Apply gravity:
+				// Newton’s Second Law of Motion - F = ma:
 				if (rigidbody->apply_gravity)
 					rigidbody->force += rigidbody->mass * rigidbody->gravity;
 
-				// Update object's velocity, then position:
+				// Update object's velocity, then position via kinematic equations:
 				rigidbody->velocity += rigidbody->force / rigidbody->mass * delta_time;
 				glm::vec3 delta_pos = rigidbody->velocity * delta_time;
 
@@ -69,9 +66,9 @@ void PhysicsWorld::Step(float delta_time) {
 				}
 
 				if (gameobjects[i]->name == "new-sphere") {
-					/*std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
+					std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
 					std::cout << "Position: " << transform->position.x << ",  " << transform->position.y << ",  " << transform->position.z << std::endl;
-					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;*/
+					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;
 				}
 				
 				// Calculate the rotation of the object, according to the collision:
@@ -85,6 +82,10 @@ void PhysicsWorld::Step(float delta_time) {
 					gameobjects[i]->transform->model = gameobjects[i]->transform->model * glm::mat4_cast(rot);*/
 					gameobjects[i]->Translate(delta_pos);
 				}
+
+				// Reset net force each frame:
+				rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
+				rigidbody->torque = glm::vec3(0.0f, 0.0f, 0.0f);
 			}
 
 		}
