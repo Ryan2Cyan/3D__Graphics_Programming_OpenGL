@@ -2,7 +2,9 @@
 
 Programmed in OpenGL (C++), CyEngine is a University project to learn and implement OpenGL based skills, with game engine architecture and components.
 
-![Alt text](/Additional_Files/images/logoname.png "Title")
+<p align="center">
+<img src="/Additional_Files/images/github/logoname.png">
+ </p>
 
 ## Gameplay
 
