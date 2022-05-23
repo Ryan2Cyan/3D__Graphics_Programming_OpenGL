@@ -26,5 +26,5 @@ void Rigidbody::AddForce(glm::vec3 arg) {
 }
 
 void Rigidbody::AddTorque(glm::vec3 arg) {
-	torque += arg;
+	/*torque += arg;*/
 }

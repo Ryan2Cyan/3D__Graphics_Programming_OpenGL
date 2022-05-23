@@ -73,10 +73,10 @@ int main()
     // Create white cube gameobject:
     std::shared_ptr<GameObject> cube = context->CreateGameObject();
     cube->AddMesh(cube0);
-	cube->name = "cube";
+    cube->name = "cube";
     cube->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
     cube->Scale(glm::vec3(20.0f, 0.1f, 20.0f));
-	cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
+    cube->AddPlaneCollider(0.5f, glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
     cube->AddRigidbody(20.0f, false);
     shader->AddGameObject(cube);
 
@@ -93,17 +93,17 @@ int main()
         blur_render_texture1,
         merge_render_texture
     };
-   
-    
+
+
 
     // Create physics world to apply dynamic physics:
     std::shared_ptr<PhysicsWorld> phy_world = phy_context->CreatePhysicsWorld();
-	phy_world->AddGameObject(cube);
+    phy_world->AddGameObject(cube);
 
-	// Game variables:
+    // Game variables:
     bool spawned_sphere = false;
-	float spawn_timer = 0.0f;
-	float spawn_delay = 1.0f;
+    float spawn_timer = 0.0f;
+    float spawn_delay = 1.0f;
     double previousTime = glfwGetTime();
     int frameCount = 0;
 
@@ -122,7 +122,7 @@ int main()
         }
 
         // Rest of your game loop...
-        
+
 
         // Resize render textures to be size of window:
         if (render_texture->GetSize().x != (int)main_cam->GetSize().x ||
@@ -131,7 +131,7 @@ int main()
                 render_textures[i]->SetSize(main_cam->GetSize());
             }
         }
-      
+
         // Calc delta time:
         float delta_time = context->CalcDeltaTime();
 
@@ -144,7 +144,7 @@ int main()
             phy_world->start = true;
             // Create GameObjects:
             std::shared_ptr<GameObject> new_gameobject = context->CreateGameObject();
-			new_gameobject->name = "new-sphere";
+            new_gameobject->name = "new-sphere";
             switch (sphere_color)
             {
             case 0:
@@ -175,21 +175,21 @@ int main()
                 break;
             }
             sphere_color = rand() % (7 - 0 + 1);
-            new_gameobject->SetPos(glm::vec3(0.0f, 1.0f, 0.0f));
+            new_gameobject->SetPos(glm::vec3(0.0f, 50.0f, 0.0f));
             shader->AddGameObject(new_gameobject);
             new_gameobject->AddRigidbody(1.0f);
-            new_gameobject->GetRigidbody()->AddForce(glm::vec3(300.0f, 500.0f, 0.0f));
-			new_gameobject->AddSphereCollider(0.6f, 1.0f);
+            new_gameobject->GetRigidbody()->AddForce(glm::vec3(0.0f, 0.0f, 0.0f));
+            new_gameobject->AddSphereCollider(0.6f, 1.0f);
             phy_world->AddGameObject(new_gameobject);
 
-			spawn_timer = spawn_delay;
+            spawn_timer = spawn_delay;
             spawned_sphere = true;
         }
-		if (spawned_sphere)
-			spawn_timer -= delta_time;
-		if (spawn_timer <= 0.0f)
-			spawned_sphere = false;
-		
+        if (spawned_sphere)
+            spawn_timer -= delta_time;
+        if (spawn_timer <= 0.0f)
+            spawned_sphere = false;
+
         phy_world->Step(delta_time);
 
         // Render:

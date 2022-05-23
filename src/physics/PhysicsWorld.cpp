@@ -66,13 +66,13 @@ void PhysicsWorld::Step(float delta_time) {
 				}
 
 				if (gameobjects[i]->name == "new-sphere") {
-					std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
+					/*std::cout << "Applied Force: " << rigidbody->force.x << ",  " << rigidbody->force.y << ",  " << rigidbody->force.z << std::endl;
 					std::cout << "Position: " << transform->position.x << ",  " << transform->position.y << ",  " << transform->position.z << std::endl;
-					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;
+					std::cout << "Velocity: " << rigidbody->velocity.x << ",  " << rigidbody->velocity.y << ",  " << rigidbody->velocity.z << std::endl;*/
 				}
 				
 				// Calculate the rotation of the object, according to the collision:
-				CalcRotation(delta_time, rigidbody);
+				/*CalcRotation(delta_time, rigidbody);*/
 
 				// Update model matrix:
 				if (gameobjects[i]->name == "new-sphere") {
@@ -85,7 +85,7 @@ void PhysicsWorld::Step(float delta_time) {
 
 				// Reset net force each frame:
 				rigidbody->force = glm::vec3(0.0f, 0.0f, 0.0f);
-				rigidbody->torque = glm::vec3(0.0f, 0.0f, 0.0f);
+				/*rigidbody->torque = glm::vec3(0.0f, 0.0f, 0.0f);*/
 			}
 
 		}
@@ -171,41 +171,41 @@ void PhysicsWorld::TestCollisions(float delta_time, std::shared_ptr<GameObject> 
 
 void PhysicsWorld::StartSimulation(std::shared_ptr<Rigidbody> rigidbody, std::shared_ptr<SphereCollider> collider) {
 
-	rigidbody->rotation_quaterion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	//rigidbody->rotation_quaterion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 
-	// Compute body inertia:
-	glm::mat3 body_inertia;
-	body_inertia = glm::mat3{
-		(2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f), 0.0f, 0.0f,
-		0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f), 0.0f,
-		0.0f, 0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f)
-	};
+	//// Compute body inertia:
+	//glm::mat3 body_inertia;
+	//body_inertia = glm::mat3{
+	//	(2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f), 0.0f, 0.0f,
+	//	0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f), 0.0f,
+	//	0.0f, 0.0f, (2.0f / 5.0f) * rigidbody->mass * std::pow(collider->radius, 2.0f)
+	//};
 
-	// Inverse body inertia:
-	rigidbody->body_inertia_tensor_inverse = glm::inverse(body_inertia);
-	rigidbody->interia_tensor_inverse = rigidbody->rotation *
-		rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
-	rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
+	//// Inverse body inertia:
+	//rigidbody->body_inertia_tensor_inverse = glm::inverse(body_inertia);
+	//rigidbody->interia_tensor_inverse = rigidbody->rotation *
+	//	rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
+	//rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
 
 }
 
 void PhysicsWorld::CalcRotation(float delta_time, std::shared_ptr<Rigidbody> rigidbody) {
 
-	// Compute current angular momentum:
-	rigidbody->angular_momentum += rigidbody->torque * delta_time;
+	//// Compute current angular momentum:
+	//rigidbody->angular_momentum += rigidbody->torque * delta_time;
 
-	// Calculate inverse inertia tensor:
-	rigidbody->interia_tensor_inverse = rigidbody->rotation *
-		rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
+	//// Calculate inverse inertia tensor:
+	//rigidbody->interia_tensor_inverse = rigidbody->rotation *
+	//	rigidbody->body_inertia_tensor_inverse * glm::transpose(rigidbody->rotation);
 
-	// Update angular velocity:
-	rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
+	//// Update angular velocity:
+	//rigidbody->angular_velocity = rigidbody->interia_tensor_inverse * rigidbody->angular_momentum;
 
-	// Calculate skew matrix omega star:
-	glm::mat3 omega_star = glm::mat3(0.0f, -rigidbody->angular_velocity.z, rigidbody->angular_velocity.y,
-		rigidbody->angular_velocity.z, 0.0f, -rigidbody->angular_velocity.x,
-		-rigidbody->angular_velocity.y, rigidbody->angular_velocity.x, 0.0f);
+	//// Calculate skew matrix omega star:
+	//glm::mat3 omega_star = glm::mat3(0.0f, -rigidbody->angular_velocity.z, rigidbody->angular_velocity.y,
+	//	rigidbody->angular_velocity.z, 0.0f, -rigidbody->angular_velocity.x,
+	//	-rigidbody->angular_velocity.y, rigidbody->angular_velocity.x, 0.0f);
 
-	// Update rotation matrix:
-	rigidbody->rotation += omega_star * rigidbody->rotation * delta_time;
+	//// Update rotation matrix:
+	//rigidbody->rotation += omega_star * rigidbody->rotation * delta_time;
 }

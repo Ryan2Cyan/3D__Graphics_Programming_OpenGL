@@ -63,14 +63,14 @@ namespace Pfg
 		glm::vec3 plane_vel = plane_rb->velocity;
 		glm::vec3 relative_vel = sphere_vel - plane_vel;
 		glm::vec3 contact_normal = normal;
-		glm::mat3 inertia_tensor_inverse = sphere_rb->interia_tensor_inverse;
+		/*glm::mat3 inertia_tensor_inverse = sphere_rb->interia_tensor_inverse;*/
 
 		// Calculate linear force:
 		j_linear = (glm::dot(-(1.0f + e) * (sphere_vel), contact_normal)) / one_over_mass_sphere + one_over_mass_plane;
 
 		// Calcular angular force:
-		j_angular = (glm::dot(-(1.0f + e) * (relative_vel), contact_normal)) / (one_over_mass_sphere + one_over_mass_plane 
-			+ glm::dot(inertia_tensor_inverse * (r1 * contact_normal), contact_normal));
+		/*j_angular = (glm::dot(-(1.0f + e) * (relative_vel), contact_normal)) / (one_over_mass_sphere + one_over_mass_plane 
+			+ glm::dot(inertia_tensor_inverse * (r1 * contact_normal), contact_normal));*/
 
 		// Calculate impulse force & contact force:
 		glm::vec3 impulse_force = (j_angular + j_linear) * contact_normal;
@@ -80,37 +80,37 @@ namespace Pfg
 		sphere_rb->AddForce(impulse_force + contact_force);
 		sphere_rb->velocity += (impulse_force / sphere_rb->mass);
 
-		// Calculate forward relative velocity perpendicular to the contact normal:
-		glm::vec3 forward_relative_velocity = relative_vel - glm::dot(relative_vel, contact_normal) *
-			contact_normal;
+		//// Calculate forward relative velocity perpendicular to the contact normal:
+		//glm::vec3 forward_relative_velocity = relative_vel - glm::dot(relative_vel, contact_normal) *
+		//	contact_normal;
 
-		// Calculate the forward relative direction, perpendicular to the contact normal:
-		glm::vec3 forward_relative_direction = glm::vec3(0.0f, 0.0f, 0.0f);
-		if (forward_relative_velocity != glm::vec3(0.0f, 0.0f, 0.0f)) {
-			forward_relative_direction = glm::normalize(forward_relative_velocity);
-		}
+		//// Calculate the forward relative direction, perpendicular to the contact normal:
+		//glm::vec3 forward_relative_direction = glm::vec3(0.0f, 0.0f, 0.0f);
+		//if (forward_relative_velocity != glm::vec3(0.0f, 0.0f, 0.0f)) {
+		//	forward_relative_direction = glm::normalize(forward_relative_velocity);
+		//}
 
-		// Calculate friction:
-		float mu = 0.5f;
-		glm::vec3 friction_direction = forward_relative_velocity * -1.0f;
-		glm::vec3 friction_force = friction_direction * mu * glm::length(contact_force);
+		//// Calculate friction:
+		//float mu = 0.5f;
+		//glm::vec3 friction_direction = forward_relative_velocity * -1.0f;
+		//glm::vec3 friction_force = friction_direction * mu * glm::length(contact_force);
 
-		// Check whether the friction is enough to stop the object:
-		if (glm::length(forward_relative_velocity) - ((glm::length(friction_force) / sphere_rb->mass) *
-			delta_time) > 0.0f) {
-			sphere_rb->AddForce(friction_force);
-		}
-		else {
-			friction_force = forward_relative_velocity * -1.0f;
-			sphere_rb->AddForce(friction_force);
-			sphere_rb->has_stopped = true;
-		}
+		//// Check whether the friction is enough to stop the object:
+		//if (glm::length(forward_relative_velocity) - ((glm::length(friction_force) / sphere_rb->mass) *
+		//	delta_time) > 0.0f) {
+		//	sphere_rb->AddForce(friction_force);
+		//}
+		//else {
+		//	friction_force = forward_relative_velocity * -1.0f;
+		//	sphere_rb->AddForce(friction_force);
+		//	sphere_rb->has_stopped = true;
+		//}
 
-		// Calculate torque:
-		glm::vec3 temp_torque = (glm::cross(r1, contact_force)) + (glm::cross(r1, friction_force));
-		temp_torque.x -= sphere_rb->angular_momentum.x * 20.0f;
-		temp_torque.z -= sphere_rb->angular_momentum.z * 20.0f;
-		sphere_rb->AddTorque(temp_torque);
+		//// Calculate torque:
+		//glm::vec3 temp_torque = (glm::cross(r1, contact_force)) + (glm::cross(r1, friction_force));
+		//temp_torque.x -= sphere_rb->angular_momentum.x * 20.0f;
+		//temp_torque.z -= sphere_rb->angular_momentum.z * 20.0f;
+		//sphere_rb->AddTorque(temp_torque);
 	}
 
 	// Checks if a sphere has clipped into a plane, and returns how much the sphere needs to move to not clip: 
