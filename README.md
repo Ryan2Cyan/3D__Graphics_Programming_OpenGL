@@ -7,6 +7,9 @@
 Programmed in C++, CyEngine is a university project aiming to combine and implement OpenGL graphics, rudamentary </br>
 physics, and a shader pipeline, in tandem with an exploration of game engine architecture and its components.</br>
 
+![Image](Documentation/Images/CyEngine_0.png)
+![Image](Documentation/Images/CyEngine_1.png)
+
 You can find out more by reading the assignment report - [here.](https://drive.google.com/file/d/1DyAeilZvoHSlmYx-dCd69AUH2iZKmdeB/view?usp=sharing) </br>
 ## Gameplay
 
