@@ -1,16 +1,20 @@
 # CyEngine
 
-Programmed in OpenGL (C++), CyEngine is a University project to learn and implement OpenGL based skills, with game engine architecture and components.
-
 <p align="center">
-<img src="/Additional_Files/images/github/logoname.png">
- </p>
+<img src="/Additional_Files/images/github/logoname.png" width=350>
+</p>
 
+Programmed in C++, CyEngine is a university project aiming to combine and implement OpenGL graphics, rudamentary </br>
+physics, and a shader pipeline, in tandem with an exploration of game engine architecture and its components.</br>
+
+You can find out more by reading the assignment report - [here.](https://drive.google.com/file/d/1DyAeilZvoHSlmYx-dCd69AUH2iZKmdeB/view?usp=sharing) </br>
 ## Gameplay
 
-The console will print two sets of position coordinates: 1.) Your own position, 2.) A model's position. \
-Using this information, track down and locate the model!
-
+The console will print two sets of position coordinates: </br>
+  1.) Your own position,</br> 
+  2.) A model's position.</br>
+Using this information, track down and locate the model. Once collided with, the model will teleport to a new </br>
+location.
 
 ## Inputs
 
@@ -40,7 +44,9 @@ std::shared_ptr<PhContext> phy_context = Ph::CreateContext();
 ```
 ## Shaders
 
-A shader contains two shader source files: 1.) A vertex shader source, 2.) A fragment shader source. \
+A shader contains two shader source files: </br>
+  1.) A vertex shader source, </br>
+  2.) A fragment shader source. \
 Game objects are rendered via Shader::Render():
 
 ```cpp
@@ -103,7 +109,7 @@ shader->AddGameObject(curuthers);
 
 ## Render Loop
 
-Here, objects are rendered, and input is read:
+Here, objects are rendered and input is read:
 
 ```cpp
 while (!glfwWindowShouldClose(window))
@@ -127,6 +133,3 @@ while (!glfwWindowShouldClose(window))
     return 0;
 ```
 
-## Github Page:
-
-https://github.com/Ryan2Cyan/CyEngine
