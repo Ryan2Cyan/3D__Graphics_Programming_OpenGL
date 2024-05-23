@@ -137,8 +137,8 @@ while (!glfwWindowShouldClose(window))
 ```
 
 ## Resources
-OpenGL: https://www.opengl.org/
-GLEW: https://glew.sourceforge.net/
-GLFW: https://www.glfw.org/
+OpenGL: https://www.opengl.org/</br>
+GLEW: https://glew.sourceforge.net/</br>
+GLFW: https://www.glfw.org/</br>
 
 
